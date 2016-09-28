@@ -1,8 +1,6 @@
 Voice Quickstart for Swift
 ===
 
-This repository is located at [https://github.com/twilio/voice-quickstart-swift](https://github.com/twilio/voice-quickstart-swift).
-
 This repository contains a simple iOS application written in Swift that exercises the incoming and outgoing call functionality of the [Twilio Programmable Voice iOS SDK](https://www.twilio.com/docs/api/voice-sdk).
 
 It is intended to be used in conjunction with the server-side component available at [https://github.com/twilio/voice-quickstart-server-python](https://github.com/twilio/voice-quickstart-server-python).
