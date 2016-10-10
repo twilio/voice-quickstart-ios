@@ -85,8 +85,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
         
         let deviceToken = (credentials.token as NSData).description
-        
-        VoiceClient.sharedInstance().register(accessToken, deviceToken: deviceToken) { (error) in
+
+        VoiceClient.sharedInstance().register(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
             if (error != nil) {
                 NSLog("An error occurred while registering: \(error?.localizedDescription)")
             }
@@ -109,7 +109,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             return
         }
         
-        VoiceClient.sharedInstance().unregister(accessToken, deviceToken: deviceToken) { (error) in
+        VoiceClient.sharedInstance().unregister(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
             if (error != nil) {
                 NSLog("An error occurred while unregistering: \(error?.localizedDescription)")
             }
