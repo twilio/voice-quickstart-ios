@@ -10,7 +10,7 @@ import AVFoundation
 import PushKit
 import TwilioVoiceClient
 
-let baseURLString = <#URL TO YOUR ACCESS TOKEN SERVER#>
+let baseURLString = "https://c9a6fc46.ngrok.io"
 let accessTokenEndpoint = "/accessToken"
 
 class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOIncomingCallDelegate, TVOOutgoingCallDelegate {
@@ -66,6 +66,11 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
         
         outgoingCall = VoiceClient.sharedInstance().call(accessToken, params: [:], delegate: self)
+        
+        if (outgoingCall == nil) {
+            NSLog("Failed to start outgoing call")
+            return
+        }
         
         toggleUIState(isEnabled: false)
         startSpin()
@@ -134,6 +139,15 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func incomingCallReceived(_ incomingCall: TVOIncomingCall) {
         NSLog("incomingCallReceived:")
         
+        if (self.incomingCall != nil || self.outgoingCall != nil) {
+            NSLog("Already an active call. Ignoring incoming call from \(incomingCall.from)");
+            return;
+        }
+        
+        self.incomingCall = incomingCall;
+        self.incomingCall?.delegate = self;
+
+        
         let from = incomingCall.from
         let alertMessage = "From: \(from)"
         
@@ -187,6 +201,11 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func incomingCallCancelled(_ incomingCall: TVOIncomingCall?) {
         NSLog("incomingCallCancelled:")
         
+        if (incomingCall?.callSid != self.incomingCall?.callSid) {
+            NSLog("Incoming (but not current) call from \(incomingCall?.from) cancelled. Just ignore it.");
+            return;
+        }
+        
         if (incomingAlertController != nil) {
             dismiss(animated: true) { [weak self] in
                 if let strongSelf = self {
@@ -195,6 +214,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
                 }
             }
         }
+        
+        self.incomingCall = nil
+        
+        UIApplication.shared.cancelAllLocalNotifications()
     }
     
     func notificationError(_ error: Error) {
@@ -203,10 +226,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     
     
     // MARK: TVOIncomingCallDelegate
-    func incomingCallIsConnecting(_ incomingCall: TVOIncomingCall) {
-        NSLog("incomingCallIsConnecting:")
-    }
-    
     func incomingCallDidConnect(_ incomingCall: TVOIncomingCall) {
         NSLog("incomingCallDidConnect:")
         
@@ -233,12 +252,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     
     
     // MARK: TVOOutgoingCallDelegate
-    func outgoingCallIsConnecting(_ outgoingCall: TVOOutgoingCall) {
-        NSLog("outgoingCallIsConnecting:")
-    }
-    
     func outgoingCallDidConnect(_ outgoingCall: TVOOutgoingCall) {
         NSLog("outgoingCallDidConnect:")
+        
+        self.outgoingCall = outgoingCall
         
         toggleUIState(isEnabled: false)
         stopSpin()
