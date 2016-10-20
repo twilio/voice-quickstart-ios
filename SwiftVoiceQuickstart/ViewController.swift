@@ -10,7 +10,7 @@ import AVFoundation
 import PushKit
 import TwilioVoiceClient
 
-let baseURLString = "https://c9a6fc46.ngrok.io"
+let baseURLString = <#URL TO YOUR ACCESS TOKEN SERVER#>
 let accessTokenEndpoint = "/accessToken"
 
 class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOIncomingCallDelegate, TVOOutgoingCallDelegate {
