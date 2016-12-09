@@ -166,7 +166,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
         let rejectAction = UIAlertAction(title: "Reject", style: .default) { [weak self] (action) in
             if let strongSelf = self {
-                self?.stopIncomingRingtone(completion: {_ in
+                strongSelf.stopIncomingRingtone(completion: {_ in
                     incomingCall.reject()
                 })
                 strongSelf.incomingAlertController = nil
