@@ -13,6 +13,9 @@
 		24BA343E1D874AC800B0B4F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343D1D874AC800B0B4F7 /* Assets.xcassets */; };
 		24BA34411D874AC800B0B4F7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343F1D874AC800B0B4F7 /* LaunchScreen.storyboard */; };
 		24BA34491D874BBD00B0B4F7 /* TwilioLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */; };
+		8F1A92811DF9001C00609990 /* disconnect.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8F1A927E1DF9001C00609990 /* disconnect.wav */; };
+		8F1A92821DF9001C00609990 /* incoming.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8F1A927F1DF9001C00609990 /* incoming.wav */; };
+		8F1A92831DF9001C00609990 /* outgoing.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8F1A92801DF9001C00609990 /* outgoing.wav */; };
 		C05310421E9FD588963E3AB5 /* Pods_SwiftVoiceQuickstart.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E10ADF666A5E46DC31C56BB /* Pods_SwiftVoiceQuickstart.framework */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +31,9 @@
 		24BA344A1D874D2B00B0B4F7 /* SwiftVoiceQuickstart.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftVoiceQuickstart.entitlements; sourceTree = "<group>"; };
 		5745F8037F1069D741DA8D6D /* Pods-SwiftVoiceQuickstart.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftVoiceQuickstart.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftVoiceQuickstart/Pods-SwiftVoiceQuickstart.debug.xcconfig"; sourceTree = "<group>"; };
 		7C4D4C9846E9421C7C38ED87 /* Pods-SwiftVoiceQuickstart.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftVoiceQuickstart.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftVoiceQuickstart/Pods-SwiftVoiceQuickstart.release.xcconfig"; sourceTree = "<group>"; };
+		8F1A927E1DF9001C00609990 /* disconnect.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = disconnect.wav; sourceTree = "<group>"; };
+		8F1A927F1DF9001C00609990 /* incoming.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = incoming.wav; sourceTree = "<group>"; };
+		8F1A92801DF9001C00609990 /* outgoing.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = outgoing.wav; sourceTree = "<group>"; };
 		9E10ADF666A5E46DC31C56BB /* Pods_SwiftVoiceQuickstart.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftVoiceQuickstart.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -47,6 +53,7 @@
 			isa = PBXGroup;
 			children = (
 				24BA34351D874AC800B0B4F7 /* SwiftVoiceQuickstart */,
+				8F1A927D1DF9001C00609990 /* Ringtones */,
 				24BA34341D874AC800B0B4F7 /* Products */,
 				55E4DD2B129E858377D08E95 /* Pods */,
 				45B8A87752EE385BD0514D8C /* Frameworks */,
@@ -91,6 +98,16 @@
 				7C4D4C9846E9421C7C38ED87 /* Pods-SwiftVoiceQuickstart.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		8F1A927D1DF9001C00609990 /* Ringtones */ = {
+			isa = PBXGroup;
+			children = (
+				8F1A927E1DF9001C00609990 /* disconnect.wav */,
+				8F1A927F1DF9001C00609990 /* incoming.wav */,
+				8F1A92801DF9001C00609990 /* outgoing.wav */,
+			);
+			path = Ringtones;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -164,9 +181,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				24BA34411D874AC800B0B4F7 /* LaunchScreen.storyboard in Resources */,
+				8F1A92831DF9001C00609990 /* outgoing.wav in Resources */,
 				24BA343E1D874AC800B0B4F7 /* Assets.xcassets in Resources */,
 				24BA34491D874BBD00B0B4F7 /* TwilioLogo.png in Resources */,
 				24BA343C1D874AC800B0B4F7 /* Main.storyboard in Resources */,
+				8F1A92821DF9001C00609990 /* incoming.wav in Resources */,
+				8F1A92811DF9001C00609990 /* disconnect.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
