@@ -315,7 +315,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         do {
             self.ringtonePlayer = try AVAudioPlayer(contentsOf: ringtonePath)
             self.ringtonePlayer?.delegate = self
-            self.ringtonePlayer?.play()
+            
+            playRingtone()
         } catch {
             NSLog("Failed to initialize audio player")
             self.ringtonePlaybackCallback?()
@@ -328,7 +329,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             self.ringtonePlayer = try AVAudioPlayer(contentsOf: ringtonePath)
             self.ringtonePlayer?.delegate = self
             self.ringtonePlayer?.numberOfLoops = -1
-            self.ringtonePlayer?.play()
+            
+            playRingtone()
         } catch {
             NSLog("Failed to initialize audio player")
         }
@@ -351,10 +353,22 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             self.ringtonePlayer = try AVAudioPlayer(contentsOf: ringtonePath)
             self.ringtonePlayer?.delegate = self
             self.ringtonePlaybackCallback = nil
-            self.ringtonePlayer?.play()
+            
+            playRingtone()
         } catch {
             NSLog("Failed to initialize audio player")
         }
+    }
+    
+    func playRingtone() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: .defaultToSpeaker)
+        } catch {
+            NSLog(error.localizedDescription)
+        }
+        
+        self.ringtonePlayer?.volume = 1.0
+        self.ringtonePlayer?.play()
     }
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
@@ -362,6 +376,12 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             DispatchQueue.main.async {
                 self.ringtonePlaybackCallback!()
             }
+        }
+        
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, with: .defaultToSpeaker)
+        } catch {
+            NSLog(error.localizedDescription)
         }
     }
 
