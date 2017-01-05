@@ -13,7 +13,7 @@ import TwilioVoiceClient
 let baseURLString = <#URL TO YOUR ACCESS TOKEN SERVER#>
 let accessTokenEndpoint = "/accessToken"
 
-class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOIncomingCallDelegate, TVOOutgoingCallDelegate {
+class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOIncomingCallDelegate, TVOOutgoingCallDelegate, AVAudioPlayerDelegate {
 
     @IBOutlet weak var placeCallButton: UIButton!
     @IBOutlet weak var iconView: UIImageView!
@@ -27,6 +27,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     var incomingCall:TVOIncomingCall?
     var outgoingCall:TVOOutgoingCall?
+    
+    var ringtonePlayer:AVAudioPlayer?
+    var ringtonePlaybackCallback: (() -> ())?
 
     required init?(coder aDecoder: NSCoder) {
         isSpinning = false
@@ -65,15 +68,19 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             return
         }
         
-        outgoingCall = VoiceClient.sharedInstance().call(accessToken, params: [:], delegate: self)
-        
-        if (outgoingCall == nil) {
-            NSLog("Failed to start outgoing call")
-            return
-        }
-        
-        toggleUIState(isEnabled: false)
-        startSpin()
+        playOutgoingRingtone(completion: { [weak self] in
+            if let strongSelf = self {
+                strongSelf.outgoingCall = VoiceClient.sharedInstance().call(accessToken, params: [:], delegate: strongSelf)
+                
+                if (strongSelf.outgoingCall == nil) {
+                    NSLog("Failed to start outgoing call")
+                    return
+                } else {
+                    strongSelf.toggleUIState(isEnabled: false)
+                    strongSelf.startSpin()
+                }
+            }
+        })
     }
 
 
@@ -151,14 +158,17 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         let from = incomingCall.from
         let alertMessage = "From: \(from)"
         
+        playIncomingRingtone()
+        
         let incomingAlertController = UIAlertController(title: "Incoming",
                                                         message: alertMessage,
                                                         preferredStyle: .alert)
 
         let rejectAction = UIAlertAction(title: "Reject", style: .default) { [weak self] (action) in
-            incomingCall.reject()
-
             if let strongSelf = self {
+                strongSelf.stopIncomingRingtone(completion: {_ in
+                    incomingCall.reject()
+                })
                 strongSelf.incomingAlertController = nil
                 strongSelf.toggleUIState(isEnabled: true)
             }
@@ -166,9 +176,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         incomingAlertController.addAction(rejectAction)
         
         let ignoreAction = UIAlertAction(title: "Ignore", style: .default) { [weak self] (action) in
-            incomingCall.ignore()
-
             if let strongSelf = self {
+                strongSelf.stopIncomingRingtone(completion: nil)
+                incomingCall.ignore()
                 strongSelf.incomingAlertController = nil
                 strongSelf.toggleUIState(isEnabled: true)
             }
@@ -177,7 +187,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         let acceptAction = UIAlertAction(title: "Accept", style: .default) { [weak self] (action) in
             if let strongSelf = self {
-                incomingCall.accept(with: strongSelf)
+                strongSelf.stopIncomingRingtone(completion: {_ in
+                    incomingCall.accept(with: strongSelf)
+                })
 
                 strongSelf.incomingAlertController = nil
                 strongSelf.startSpin()
@@ -205,6 +217,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             NSLog("Incoming (but not current) call from \(incomingCall?.from) cancelled. Just ignore it.");
             return;
         }
+        
+        self.stopIncomingRingtone(completion: nil)
+        playDisconnectSound()
         
         if (incomingAlertController != nil) {
             dismiss(animated: true) { [weak self] in
@@ -238,6 +253,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func incomingCallDidDisconnect(_ incomingCall: TVOIncomingCall) {
         NSLog("incomingCallDidDisconnect:")
         
+        playDisconnectSound()
+        
         self.incomingCall = nil
         toggleUIState(isEnabled: true)
     }
@@ -265,6 +282,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func outgoingCallDidDisconnect(_ outgoingCall: TVOOutgoingCall) {
         NSLog("outgoingCallDidDisconnect:")
         
+        playDisconnectSound()
+        
         self.outgoingCall = nil
         toggleUIState(isEnabled: true)
     }
@@ -281,7 +300,88 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     // MARK: AVAudioSession
     func routeAudioToSpeaker() {
         do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, with: .defaultToSpeaker)
+            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+        } catch {
+            NSLog(error.localizedDescription)
+        }
+    }
+    
+    
+    // MARK: Ringtone player & AVAudioPlayerDelegate
+    func playOutgoingRingtone(completion: @escaping () -> ()) {
+        self.ringtonePlaybackCallback = completion
+        
+        let ringtonePath = URL(fileURLWithPath: Bundle.main.path(forResource: "outgoing", ofType: "wav")!)
+        do {
+            self.ringtonePlayer = try AVAudioPlayer(contentsOf: ringtonePath)
+            self.ringtonePlayer?.delegate = self
+            
+            playRingtone()
+        } catch {
+            NSLog("Failed to initialize audio player")
+            self.ringtonePlaybackCallback?()
+        }
+    }
+    
+    func playIncomingRingtone() {
+        let ringtonePath = URL(fileURLWithPath: Bundle.main.path(forResource: "incoming", ofType: "wav")!)
+        do {
+            self.ringtonePlayer = try AVAudioPlayer(contentsOf: ringtonePath)
+            self.ringtonePlayer?.delegate = self
+            self.ringtonePlayer?.numberOfLoops = -1
+            
+            playRingtone()
+        } catch {
+            NSLog("Failed to initialize audio player")
+        }
+    }
+    
+    func stopIncomingRingtone(completion: ((Void?) -> Void)?) {
+        self.ringtonePlaybackCallback = completion
+        if (self.ringtonePlayer?.isPlaying == false) {
+            self.ringtonePlaybackCallback?()
+            return
+        }
+        
+        self.ringtonePlayer?.delegate = self
+        self.ringtonePlayer?.numberOfLoops = 1
+    }
+    
+    func playDisconnectSound() {
+        let ringtonePath = URL(fileURLWithPath: Bundle.main.path(forResource: "disconnect", ofType: "wav")!)
+        do {
+            self.ringtonePlayer = try AVAudioPlayer(contentsOf: ringtonePath)
+            self.ringtonePlayer?.delegate = self
+            self.ringtonePlaybackCallback = nil
+            
+            playRingtone()
+        } catch {
+            NSLog("Failed to initialize audio player")
+        }
+    }
+    
+    func playRingtone() {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+        } catch {
+            NSLog(error.localizedDescription)
+        }
+        
+        self.routeAudioToSpeaker()
+        
+        self.ringtonePlayer?.volume = 1.0
+        self.ringtonePlayer?.play()
+    }
+    
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        if (self.ringtonePlaybackCallback != nil) {
+            DispatchQueue.main.async {
+                self.ringtonePlaybackCallback!()
+            }
+        }
+        
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord)
         } catch {
             NSLog(error.localizedDescription)
         }
