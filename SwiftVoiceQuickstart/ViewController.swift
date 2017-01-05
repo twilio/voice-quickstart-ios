@@ -300,7 +300,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     // MARK: AVAudioSession
     func routeAudioToSpeaker() {
         do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, with: .defaultToSpeaker)
+            try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
         } catch {
             NSLog(error.localizedDescription)
         }
@@ -362,10 +362,12 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     
     func playRingtone() {
         do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback, with: .defaultToSpeaker)
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
         } catch {
             NSLog(error.localizedDescription)
         }
+        
+        self.routeAudioToSpeaker()
         
         self.ringtonePlayer?.volume = 1.0
         self.ringtonePlayer?.play()
@@ -379,7 +381,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
         
         do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, with: .defaultToSpeaker)
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord)
         } catch {
             NSLog(error.localizedDescription)
         }
