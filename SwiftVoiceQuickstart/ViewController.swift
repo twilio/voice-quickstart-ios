@@ -13,7 +13,7 @@ import TwilioVoiceClient
 let baseURLString = <#URL TO YOUR ACCESS TOKEN SERVER#>
 let accessTokenEndpoint = "/accessToken"
 
-class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOIncomingCallDelegate, TVOOutgoingCallDelegate, AVAudioPlayerDelegate {
+class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOCallDelegate, AVAudioPlayerDelegate {
 
     @IBOutlet weak var placeCallButton: UIButton!
     @IBOutlet weak var iconView: UIImageView!
@@ -25,8 +25,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     var isSpinning: Bool
     var incomingAlertController: UIAlertController?
 
-    var incomingCall:TVOIncomingCall?
-    var outgoingCall:TVOOutgoingCall?
+    var callInvite:TVOCallInvite?
+    var call:TVOCall?
     
     var ringtonePlayer:AVAudioPlayer?
     var ringtonePlaybackCallback: (() -> ())?
@@ -39,6 +39,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
         voipRegistry.delegate = self
         voipRegistry.desiredPushTypes = Set([PKPushType.voIP])
+        
+        VoiceClient.sharedInstance().logLevel = .verbose
     }
 
     override func viewDidLoad() {
@@ -64,23 +66,28 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     }
 
     @IBAction func placeCall(_ sender: UIButton) {
-        guard let accessToken = fetchAccessToken() else {
-            return
-        }
-        
-        playOutgoingRingtone(completion: { [weak self] in
-            if let strongSelf = self {
-                strongSelf.outgoingCall = VoiceClient.sharedInstance().call(accessToken, params: [:], delegate: strongSelf)
-                
-                if (strongSelf.outgoingCall == nil) {
-                    NSLog("Failed to start outgoing call")
-                    return
-                } else {
-                    strongSelf.toggleUIState(isEnabled: false)
-                    strongSelf.startSpin()
-                }
+        if (self.call != nil) {
+            self.call?.disconnect()
+            self.toggleUIState(isEnabled: false)
+        } else {
+            guard let accessToken = fetchAccessToken() else {
+                return
             }
-        })
+            
+            playOutgoingRingtone(completion: { [weak self] in
+                if let strongSelf = self {
+                    strongSelf.call = VoiceClient.sharedInstance().call(accessToken, params: [:], delegate: strongSelf)
+                    
+                    if (strongSelf.call == nil) {
+                        NSLog("Failed to start outgoing call")
+                        return
+                    } else {
+                        strongSelf.toggleUIState(isEnabled: false)
+                        strongSelf.startSpin()
+                    }
+                }
+            })
+        }
     }
 
 
@@ -143,19 +150,19 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
 
     // MARK: TVONotificaitonDelegate
-    func incomingCallReceived(_ incomingCall: TVOIncomingCall) {
-        NSLog("incomingCallReceived:")
+    func callInviteReceived(_ callInvite: TVOCallInvite) {
+        NSLog("callInviteReceived:")
         
-        if (self.incomingCall != nil || self.outgoingCall != nil) {
-            NSLog("Already an active call. Ignoring incoming call from \(incomingCall.from)");
+        if (self.callInvite != nil && self.callInvite?.state == .pending) {
+            NSLog("Already a pending call invite. Ignoring incoming call invite from \(callInvite.from)")
+        } else if (self.call != nil && self.call?.state == .connected) {
+            NSLog("Already an active call. Ignoring incoming call invite from \(callInvite.from)");
             return;
         }
         
-        self.incomingCall = incomingCall;
-        self.incomingCall?.delegate = self;
-
+        self.callInvite = callInvite;
         
-        let from = incomingCall.from
+        let from = callInvite.from
         let alertMessage = "From: \(from)"
         
         playIncomingRingtone()
@@ -167,7 +174,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         let rejectAction = UIAlertAction(title: "Reject", style: .default) { [weak self] (action) in
             if let strongSelf = self {
                 strongSelf.stopIncomingRingtone(completion: {_ in
-                    incomingCall.reject()
+                    callInvite.reject()
                 })
                 strongSelf.incomingAlertController = nil
                 strongSelf.toggleUIState(isEnabled: true)
@@ -177,8 +184,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         let ignoreAction = UIAlertAction(title: "Ignore", style: .default) { [weak self] (action) in
             if let strongSelf = self {
+                /* To ignore the call invite, you don't have to do anything but just literally ignore it */
+                
                 strongSelf.stopIncomingRingtone(completion: nil)
-                incomingCall.ignore()
                 strongSelf.incomingAlertController = nil
                 strongSelf.toggleUIState(isEnabled: true)
             }
@@ -188,7 +196,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         let acceptAction = UIAlertAction(title: "Accept", style: .default) { [weak self] (action) in
             if let strongSelf = self {
                 strongSelf.stopIncomingRingtone(completion: {_ in
-                    incomingCall.accept(with: strongSelf)
+                    callInvite.accept(with: strongSelf)
                 })
 
                 strongSelf.incomingAlertController = nil
@@ -210,11 +218,11 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
     }
     
-    func incomingCallCancelled(_ incomingCall: TVOIncomingCall?) {
-        NSLog("incomingCallCancelled:")
+    func callInviteCancelled(_ callInvite: TVOCallInvite?) {
+        NSLog("callInviteCancelled:")
         
-        if (incomingCall?.callSid != self.incomingCall?.callSid) {
-            NSLog("Incoming (but not current) call from \(incomingCall?.from) cancelled. Just ignore it.");
+        if (callInvite?.callSid != self.callInvite?.callSid) {
+            NSLog("Incoming (but not current) call invite from \(callInvite?.from) cancelled. Just ignore it.");
             return;
         }
         
@@ -230,7 +238,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             }
         }
         
-        self.incomingCall = nil
+        self.callInvite = nil
         
         UIApplication.shared.cancelAllLocalNotifications()
     }
@@ -240,58 +248,35 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     }
     
     
-    // MARK: TVOIncomingCallDelegate
-    func incomingCallDidConnect(_ incomingCall: TVOIncomingCall) {
-        NSLog("incomingCallDidConnect:")
+    // MARK: TVOCallDelegate
+    func callDidConnect(_ call: TVOCall) {
+        NSLog("callDidConnect:")
         
-        self.incomingCall = incomingCall
-        toggleUIState(isEnabled: false)
+        self.call = call
+        
+        self.placeCallButton.setTitle("Hang Up", for: .normal)
+        
+        toggleUIState(isEnabled: true)
         stopSpin()
         routeAudioToSpeaker()
     }
     
-    func incomingCallDidDisconnect(_ incomingCall: TVOIncomingCall) {
-        NSLog("incomingCallDidDisconnect:")
+    func callDidDisconnect(_ call: TVOCall) {
+        NSLog("callDidDisconnect:")
         
         playDisconnectSound()
         
-        self.incomingCall = nil
+        self.call = nil
+        
+        self.placeCallButton.setTitle("Place Outgoing Call", for: .normal)
+        
         toggleUIState(isEnabled: true)
     }
     
-    func incomingCall(_ incomingCall: TVOIncomingCall, didFailWithError error: Error) {
-        NSLog("incomingCall:didFailWithError: \(error.localizedDescription)");
+    func call(_ call: TVOCall, didFailWithError error: Error) {
+        NSLog("call:didFailWithError: \(error.localizedDescription)");
         
-        self.incomingCall = nil
-        toggleUIState(isEnabled: true)
-        stopSpin()
-    }
-    
-    
-    // MARK: TVOOutgoingCallDelegate
-    func outgoingCallDidConnect(_ outgoingCall: TVOOutgoingCall) {
-        NSLog("outgoingCallDidConnect:")
-        
-        self.outgoingCall = outgoingCall
-        
-        toggleUIState(isEnabled: false)
-        stopSpin()
-        routeAudioToSpeaker()
-    }
-    
-    func outgoingCallDidDisconnect(_ outgoingCall: TVOOutgoingCall) {
-        NSLog("outgoingCallDidDisconnect:")
-        
-        playDisconnectSound()
-        
-        self.outgoingCall = nil
-        toggleUIState(isEnabled: true)
-    }
-    
-    func outgoingCall(_ outgoingCall: TVOOutgoingCall, didFailWithError error: Error) {
-        NSLog("outgoingCall:didFailWithError: \(error.localizedDescription)");
-        
-        self.outgoingCall = nil
+        self.call = nil
         toggleUIState(isEnabled: true)
         stopSpin()
     }
@@ -366,8 +351,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         } catch {
             NSLog(error.localizedDescription)
         }
-        
-        self.routeAudioToSpeaker()
         
         self.ringtonePlayer?.volume = 1.0
         self.ringtonePlayer?.play()
