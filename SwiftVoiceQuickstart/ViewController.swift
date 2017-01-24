@@ -155,6 +155,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         if (self.callInvite != nil && self.callInvite?.state == .pending) {
             NSLog("Already a pending call invite. Ignoring incoming call invite from \(callInvite.from)")
+            return
         } else if (self.call != nil && self.call?.state == .connected) {
             NSLog("Already an active call. Ignoring incoming call invite from \(callInvite.from)");
             return;
