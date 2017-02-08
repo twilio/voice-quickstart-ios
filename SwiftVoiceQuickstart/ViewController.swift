@@ -176,6 +176,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             if let strongSelf = self {
                 strongSelf.stopIncomingRingtone(completion: {_ in
                     callInvite.reject()
+                    strongSelf.callInvite = nil
                 })
                 strongSelf.incomingAlertController = nil
                 strongSelf.toggleUIState(isEnabled: true)
@@ -187,6 +188,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             if let strongSelf = self {
                 /* To ignore the call invite, you don't have to do anything but just literally ignore it */
                 
+                strongSelf.callInvite = nil
                 strongSelf.stopIncomingRingtone(completion: nil)
                 strongSelf.incomingAlertController = nil
                 strongSelf.toggleUIState(isEnabled: true)
@@ -198,6 +200,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             if let strongSelf = self {
                 strongSelf.stopIncomingRingtone(completion: {_ in
                     callInvite.accept(with: strongSelf)
+                    strongSelf.callInvite = nil
                 })
 
                 strongSelf.incomingAlertController = nil
