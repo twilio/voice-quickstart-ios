@@ -5,6 +5,7 @@ workspace 'SwiftVoiceQuickstart'
 
 abstract_target 'TwilioVoiceClient' do
   pod 'TwilioVoiceClient', '=2.0.0-beta6'
+  use_frameworks!
 
   target 'SwiftVoiceQuickstart' do
     project 'SwiftVoiceQuickstart.xcproject'
