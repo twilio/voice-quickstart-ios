@@ -7,18 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		14AFD8C720073E05B1A4607B /* Pods_SwiftVoiceCallKitQuickstart.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 015D830542D6D807918879DB /* Pods_SwiftVoiceCallKitQuickstart.framework */; };
 		24BA34371D874AC800B0B4F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24BA34361D874AC800B0B4F7 /* AppDelegate.swift */; };
 		24BA34391D874AC800B0B4F7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24BA34381D874AC800B0B4F7 /* ViewController.swift */; };
 		24BA343C1D874AC800B0B4F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343A1D874AC800B0B4F7 /* Main.storyboard */; };
 		24BA343E1D874AC800B0B4F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343D1D874AC800B0B4F7 /* Assets.xcassets */; };
 		24BA34411D874AC800B0B4F7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343F1D874AC800B0B4F7 /* LaunchScreen.storyboard */; };
 		24BA34491D874BBD00B0B4F7 /* TwilioLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */; };
-		46E93B1BC11C3B38A8CC0FE2 /* libPods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5E884455893ABFC7270BF5C /* libPods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.a */; };
+		D4412FDE438354718D484D13 /* Pods_TwilioVoiceClient_SwiftVoiceCallKitQuickstart.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C07CE085CD060CD14747A723 /* Pods_TwilioVoiceClient_SwiftVoiceCallKitQuickstart.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		015D830542D6D807918879DB /* Pods_SwiftVoiceCallKitQuickstart.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftVoiceCallKitQuickstart.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		19BFB592B42A598EB6741F8E /* Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart/Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.debug.xcconfig"; sourceTree = "<group>"; };
 		24BA34331D874AC800B0B4F7 /* SwiftVoiceCallKitQuickstart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftVoiceCallKitQuickstart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24BA34361D874AC800B0B4F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -31,7 +29,7 @@
 		24BA344A1D874D2B00B0B4F7 /* SwiftVoiceCallKitQuickstart.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftVoiceCallKitQuickstart.entitlements; sourceTree = "<group>"; };
 		5745F8037F1069D741DA8D6D /* Pods-SwiftVoiceCallKitQuickstart.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftVoiceCallKitQuickstart.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftVoiceCallKitQuickstart/Pods-SwiftVoiceCallKitQuickstart.debug.xcconfig"; sourceTree = "<group>"; };
 		7C4D4C9846E9421C7C38ED87 /* Pods-SwiftVoiceCallKitQuickstart.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftVoiceCallKitQuickstart.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftVoiceCallKitQuickstart/Pods-SwiftVoiceCallKitQuickstart.release.xcconfig"; sourceTree = "<group>"; };
-		C5E884455893ABFC7270BF5C /* libPods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C07CE085CD060CD14747A723 /* Pods_TwilioVoiceClient_SwiftVoiceCallKitQuickstart.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TwilioVoiceClient_SwiftVoiceCallKitQuickstart.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB9F1B42F57E30ED84B9BF68 /* Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.release.xcconfig"; path = "Pods/Target Support Files/Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart/Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -40,8 +38,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				14AFD8C720073E05B1A4607B /* Pods_SwiftVoiceCallKitQuickstart.framework in Frameworks */,
-				46E93B1BC11C3B38A8CC0FE2 /* libPods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.a in Frameworks */,
+				D4412FDE438354718D484D13 /* Pods_TwilioVoiceClient_SwiftVoiceCallKitQuickstart.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,8 +81,7 @@
 		45B8A87752EE385BD0514D8C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				015D830542D6D807918879DB /* Pods_SwiftVoiceCallKitQuickstart.framework */,
-				C5E884455893ABFC7270BF5C /* libPods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.a */,
+				C07CE085CD060CD14747A723 /* Pods_TwilioVoiceClient_SwiftVoiceCallKitQuickstart.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
