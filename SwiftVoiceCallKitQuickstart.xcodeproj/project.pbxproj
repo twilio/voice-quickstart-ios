@@ -1,0 +1,412 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		14AFD8C720073E05B1A4607B /* Pods_SwiftVoiceCallKitQuickstart.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 015D830542D6D807918879DB /* Pods_SwiftVoiceCallKitQuickstart.framework */; };
+		24BA34371D874AC800B0B4F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24BA34361D874AC800B0B4F7 /* AppDelegate.swift */; };
+		24BA34391D874AC800B0B4F7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24BA34381D874AC800B0B4F7 /* ViewController.swift */; };
+		24BA343C1D874AC800B0B4F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343A1D874AC800B0B4F7 /* Main.storyboard */; };
+		24BA343E1D874AC800B0B4F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343D1D874AC800B0B4F7 /* Assets.xcassets */; };
+		24BA34411D874AC800B0B4F7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343F1D874AC800B0B4F7 /* LaunchScreen.storyboard */; };
+		24BA34491D874BBD00B0B4F7 /* TwilioLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */; };
+		46E93B1BC11C3B38A8CC0FE2 /* libPods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5E884455893ABFC7270BF5C /* libPods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		015D830542D6D807918879DB /* Pods_SwiftVoiceCallKitQuickstart.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SwiftVoiceCallKitQuickstart.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		19BFB592B42A598EB6741F8E /* Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart/Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.debug.xcconfig"; sourceTree = "<group>"; };
+		24BA34331D874AC800B0B4F7 /* SwiftVoiceCallKitQuickstart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftVoiceCallKitQuickstart.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		24BA34361D874AC800B0B4F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		24BA34381D874AC800B0B4F7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		24BA343B1D874AC800B0B4F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		24BA343D1D874AC800B0B4F7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		24BA34401D874AC800B0B4F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		24BA34421D874AC800B0B4F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TwilioLogo.png; sourceTree = "<group>"; };
+		24BA344A1D874D2B00B0B4F7 /* SwiftVoiceCallKitQuickstart.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftVoiceCallKitQuickstart.entitlements; sourceTree = "<group>"; };
+		5745F8037F1069D741DA8D6D /* Pods-SwiftVoiceCallKitQuickstart.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftVoiceCallKitQuickstart.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftVoiceCallKitQuickstart/Pods-SwiftVoiceCallKitQuickstart.debug.xcconfig"; sourceTree = "<group>"; };
+		7C4D4C9846E9421C7C38ED87 /* Pods-SwiftVoiceCallKitQuickstart.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftVoiceCallKitQuickstart.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftVoiceCallKitQuickstart/Pods-SwiftVoiceCallKitQuickstart.release.xcconfig"; sourceTree = "<group>"; };
+		C5E884455893ABFC7270BF5C /* libPods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FB9F1B42F57E30ED84B9BF68 /* Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.release.xcconfig"; path = "Pods/Target Support Files/Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart/Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		24BA34301D874AC800B0B4F7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				14AFD8C720073E05B1A4607B /* Pods_SwiftVoiceCallKitQuickstart.framework in Frameworks */,
+				46E93B1BC11C3B38A8CC0FE2 /* libPods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		24BA342A1D874AC800B0B4F7 = {
+			isa = PBXGroup;
+			children = (
+				24BA34351D874AC800B0B4F7 /* SwiftVoiceCallKitQuickstart */,
+				24BA34341D874AC800B0B4F7 /* Products */,
+				55E4DD2B129E858377D08E95 /* Pods */,
+				45B8A87752EE385BD0514D8C /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		24BA34341D874AC800B0B4F7 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				24BA34331D874AC800B0B4F7 /* SwiftVoiceCallKitQuickstart.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		24BA34351D874AC800B0B4F7 /* SwiftVoiceCallKitQuickstart */ = {
+			isa = PBXGroup;
+			children = (
+				24BA344A1D874D2B00B0B4F7 /* SwiftVoiceCallKitQuickstart.entitlements */,
+				24BA34361D874AC800B0B4F7 /* AppDelegate.swift */,
+				24BA34381D874AC800B0B4F7 /* ViewController.swift */,
+				24BA343A1D874AC800B0B4F7 /* Main.storyboard */,
+				24BA343D1D874AC800B0B4F7 /* Assets.xcassets */,
+				24BA343F1D874AC800B0B4F7 /* LaunchScreen.storyboard */,
+				24BA34421D874AC800B0B4F7 /* Info.plist */,
+				24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */,
+			);
+			path = SwiftVoiceCallKitQuickstart;
+			sourceTree = "<group>";
+		};
+		45B8A87752EE385BD0514D8C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				015D830542D6D807918879DB /* Pods_SwiftVoiceCallKitQuickstart.framework */,
+				C5E884455893ABFC7270BF5C /* libPods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		55E4DD2B129E858377D08E95 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				5745F8037F1069D741DA8D6D /* Pods-SwiftVoiceCallKitQuickstart.debug.xcconfig */,
+				7C4D4C9846E9421C7C38ED87 /* Pods-SwiftVoiceCallKitQuickstart.release.xcconfig */,
+				19BFB592B42A598EB6741F8E /* Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.debug.xcconfig */,
+				FB9F1B42F57E30ED84B9BF68 /* Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		24BA34321D874AC800B0B4F7 /* SwiftVoiceCallKitQuickstart */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 24BA34451D874AC800B0B4F7 /* Build configuration list for PBXNativeTarget "SwiftVoiceCallKitQuickstart" */;
+			buildPhases = (
+				EDB472251B1426561FEE937D /* [CP] Check Pods Manifest.lock */,
+				24BA342F1D874AC800B0B4F7 /* Sources */,
+				24BA34301D874AC800B0B4F7 /* Frameworks */,
+				24BA34311D874AC800B0B4F7 /* Resources */,
+				00421881F6BE552D14B92FFB /* [CP] Embed Pods Frameworks */,
+				4606DD9E4497EB916F5C2C32 /* [CP] Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SwiftVoiceCallKitQuickstart;
+			productName = SwiftVoiceCallKitQuickstart;
+			productReference = 24BA34331D874AC800B0B4F7 /* SwiftVoiceCallKitQuickstart.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		24BA342B1D874AC800B0B4F7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0800;
+				LastUpgradeCheck = 0800;
+				ORGANIZATIONNAME = "Twilio, Inc.";
+				TargetAttributes = {
+					24BA34321D874AC800B0B4F7 = {
+						CreatedOnToolsVersion = 8.0;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = 24BA342E1D874AC800B0B4F7 /* Build configuration list for PBXProject "SwiftVoiceCallKitQuickstart" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 24BA342A1D874AC800B0B4F7;
+			productRefGroup = 24BA34341D874AC800B0B4F7 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				24BA34321D874AC800B0B4F7 /* SwiftVoiceCallKitQuickstart */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		24BA34311D874AC800B0B4F7 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				24BA34411D874AC800B0B4F7 /* LaunchScreen.storyboard in Resources */,
+				24BA343E1D874AC800B0B4F7 /* Assets.xcassets in Resources */,
+				24BA34491D874BBD00B0B4F7 /* TwilioLogo.png in Resources */,
+				24BA343C1D874AC800B0B4F7 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		00421881F6BE552D14B92FFB /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart/Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4606DD9E4497EB916F5C2C32 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart/Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		EDB472251B1426561FEE937D /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		24BA342F1D874AC800B0B4F7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				24BA34391D874AC800B0B4F7 /* ViewController.swift in Sources */,
+				24BA34371D874AC800B0B4F7 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		24BA343A1D874AC800B0B4F7 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				24BA343B1D874AC800B0B4F7 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		24BA343F1D874AC800B0B4F7 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				24BA34401D874AC800B0B4F7 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		24BA34431D874AC800B0B4F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		24BA34441D874AC800B0B4F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		24BA34461D874AC800B0B4F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 19BFB592B42A598EB6741F8E /* Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SwiftVoiceCallKitQuickstart/SwiftVoiceCallKitQuickstart.entitlements;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = SwiftVoiceCallKitQuickstart/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.SwiftVoiceCallKitQuickstart;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		24BA34471D874AC800B0B4F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FB9F1B42F57E30ED84B9BF68 /* Pods-TwilioVoiceClient-SwiftVoiceCallKitQuickstart.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SwiftVoiceCallKitQuickstart/SwiftVoiceCallKitQuickstart.entitlements;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = SwiftVoiceCallKitQuickstart/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.SwiftVoiceCallKitQuickstart;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		24BA342E1D874AC800B0B4F7 /* Build configuration list for PBXProject "SwiftVoiceCallKitQuickstart" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				24BA34431D874AC800B0B4F7 /* Debug */,
+				24BA34441D874AC800B0B4F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		24BA34451D874AC800B0B4F7 /* Build configuration list for PBXNativeTarget "SwiftVoiceCallKitQuickstart" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				24BA34461D874AC800B0B4F7 /* Debug */,
+				24BA34471D874AC800B0B4F7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 24BA342B1D874AC800B0B4F7 /* Project object */;
+}
