@@ -118,7 +118,7 @@ You can find more documentation on getting started as well as our latest AppleDo
 ## Issues and Support
 Please file any issues you find here on Github [ObjC](https://github.com/twilio/voice-quickstart-objc) [Swift](https://github.com/twilio/voice-quickstart-swift).
 
-For general inquiries related to the Voice SDK you can file a support ticket.
+For general inquiries related to the Voice SDK you can [file a support ticket](https://support.twilio.com/hc/en-us/requests/new).
 
 ## License
 MIT
