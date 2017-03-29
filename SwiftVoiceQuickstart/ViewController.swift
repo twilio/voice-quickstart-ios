@@ -199,7 +199,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         let acceptAction = UIAlertAction(title: "Accept", style: .default) { [weak self] (action) in
             if let strongSelf = self {
                 strongSelf.stopIncomingRingtone()
-                callInvite.accept(with: strongSelf)
+                strongSelf.call = callInvite.accept(with: strongSelf)
                 strongSelf.callInvite = nil
                 
                 strongSelf.incomingAlertController = nil
