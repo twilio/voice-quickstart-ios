@@ -174,10 +174,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
         let rejectAction = UIAlertAction(title: "Reject", style: .default) { [weak self] (action) in
             if let strongSelf = self {
-                strongSelf.stopIncomingRingtone(completion: {_ in
-                    callInvite.reject()
-                    strongSelf.callInvite = nil
-                })
+                strongSelf.stopIncomingRingtone()
+                callInvite.reject()
+                strongSelf.callInvite = nil
+                
                 strongSelf.incomingAlertController = nil
                 strongSelf.toggleUIState(isEnabled: true)
             }
@@ -189,7 +189,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
                 /* To ignore the call invite, you don't have to do anything but just literally ignore it */
                 
                 strongSelf.callInvite = nil
-                strongSelf.stopIncomingRingtone(completion: nil)
+                strongSelf.stopIncomingRingtone()
                 strongSelf.incomingAlertController = nil
                 strongSelf.toggleUIState(isEnabled: true)
             }
@@ -198,11 +198,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         let acceptAction = UIAlertAction(title: "Accept", style: .default) { [weak self] (action) in
             if let strongSelf = self {
-                strongSelf.stopIncomingRingtone(completion: {_ in
-                    callInvite.accept(with: strongSelf)
-                    strongSelf.callInvite = nil
-                })
-
+                strongSelf.stopIncomingRingtone()
+                callInvite.accept(with: strongSelf)
+                strongSelf.callInvite = nil
+                
                 strongSelf.incomingAlertController = nil
                 strongSelf.startSpin()
             }
@@ -230,7 +229,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             return;
         }
         
-        self.stopIncomingRingtone(completion: nil)
+        self.stopIncomingRingtone()
         playDisconnectSound()
         
         if (incomingAlertController != nil) {
@@ -325,15 +324,18 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
     }
     
-    func stopIncomingRingtone(completion: ((Void?) -> Void)?) {
-        self.ringtonePlaybackCallback = completion
+    func stopIncomingRingtone() {
         if (self.ringtonePlayer?.isPlaying == false) {
-            self.ringtonePlaybackCallback?()
             return
         }
         
-        self.ringtonePlayer?.delegate = self
-        self.ringtonePlayer?.numberOfLoops = 1
+        self.ringtonePlayer?.stop()
+        
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord)
+        } catch {
+            NSLog(error.localizedDescription)
+        }
     }
     
     func playDisconnectSound() {
