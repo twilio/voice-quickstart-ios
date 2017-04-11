@@ -13,13 +13,14 @@
 		24BA343E1D874AC800B0B4F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343D1D874AC800B0B4F7 /* Assets.xcassets */; };
 		24BA34411D874AC800B0B4F7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343F1D874AC800B0B4F7 /* LaunchScreen.storyboard */; };
 		24BA34491D874BBD00B0B4F7 /* TwilioLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */; };
-		696C418CCFFC3E25F458F2CA /* Pods_TwilioVoiceClient_SwiftVoiceQuickstart.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFD1F7BE0003276B96DC3485 /* Pods_TwilioVoiceClient_SwiftVoiceQuickstart.framework */; };
+		26DC7B9F7C7AB75F7E8E85E8 /* Pods_TwilioVoice_SwiftVoiceQuickstart.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4267E0EF3BBF95B211EDD557 /* Pods_TwilioVoice_SwiftVoiceQuickstart.framework */; };
 		8F1A92811DF9001C00609990 /* disconnect.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8F1A927E1DF9001C00609990 /* disconnect.wav */; };
 		8F1A92821DF9001C00609990 /* incoming.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8F1A927F1DF9001C00609990 /* incoming.wav */; };
 		8F1A92831DF9001C00609990 /* outgoing.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8F1A92801DF9001C00609990 /* outgoing.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E77380F51BA3747782FC8E1 /* Pods-TwilioVoice-SwiftVoiceQuickstart.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwilioVoice-SwiftVoiceQuickstart.release.xcconfig"; path = "Pods/Target Support Files/Pods-TwilioVoice-SwiftVoiceQuickstart/Pods-TwilioVoice-SwiftVoiceQuickstart.release.xcconfig"; sourceTree = "<group>"; };
 		24BA34331D874AC800B0B4F7 /* SwiftVoiceQuickstart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftVoiceQuickstart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24BA34361D874AC800B0B4F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		24BA34381D874AC800B0B4F7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -29,14 +30,11 @@
 		24BA34421D874AC800B0B4F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TwilioLogo.png; sourceTree = "<group>"; };
 		24BA344A1D874D2B00B0B4F7 /* SwiftVoiceQuickstart.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftVoiceQuickstart.entitlements; sourceTree = "<group>"; };
-		281656F9C2B2EEE319CFB837 /* Pods-TwilioVoiceClient-SwiftVoiceQuickstart.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwilioVoiceClient-SwiftVoiceQuickstart.release.xcconfig"; path = "Pods/Target Support Files/Pods-TwilioVoiceClient-SwiftVoiceQuickstart/Pods-TwilioVoiceClient-SwiftVoiceQuickstart.release.xcconfig"; sourceTree = "<group>"; };
-		3B64417AD55977FB028451F4 /* Pods-TwilioVoiceClient-SwiftVoiceQuickstart.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwilioVoiceClient-SwiftVoiceQuickstart.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TwilioVoiceClient-SwiftVoiceQuickstart/Pods-TwilioVoiceClient-SwiftVoiceQuickstart.debug.xcconfig"; sourceTree = "<group>"; };
-		5745F8037F1069D741DA8D6D /* Pods-SwiftVoiceQuickstart.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftVoiceQuickstart.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftVoiceQuickstart/Pods-SwiftVoiceQuickstart.debug.xcconfig"; sourceTree = "<group>"; };
-		7C4D4C9846E9421C7C38ED87 /* Pods-SwiftVoiceQuickstart.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SwiftVoiceQuickstart.release.xcconfig"; path = "Pods/Target Support Files/Pods-SwiftVoiceQuickstart/Pods-SwiftVoiceQuickstart.release.xcconfig"; sourceTree = "<group>"; };
+		30CEEC345C195AA1B43C5ACF /* Pods-TwilioVoice-SwiftVoiceQuickstart.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwilioVoice-SwiftVoiceQuickstart.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TwilioVoice-SwiftVoiceQuickstart/Pods-TwilioVoice-SwiftVoiceQuickstart.debug.xcconfig"; sourceTree = "<group>"; };
+		4267E0EF3BBF95B211EDD557 /* Pods_TwilioVoice_SwiftVoiceQuickstart.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TwilioVoice_SwiftVoiceQuickstart.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F1A927E1DF9001C00609990 /* disconnect.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = disconnect.wav; sourceTree = "<group>"; };
 		8F1A927F1DF9001C00609990 /* incoming.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = incoming.wav; sourceTree = "<group>"; };
 		8F1A92801DF9001C00609990 /* outgoing.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = outgoing.wav; sourceTree = "<group>"; };
-		EFD1F7BE0003276B96DC3485 /* Pods_TwilioVoiceClient_SwiftVoiceQuickstart.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TwilioVoiceClient_SwiftVoiceQuickstart.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -44,7 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				696C418CCFFC3E25F458F2CA /* Pods_TwilioVoiceClient_SwiftVoiceQuickstart.framework in Frameworks */,
+				26DC7B9F7C7AB75F7E8E85E8 /* Pods_TwilioVoice_SwiftVoiceQuickstart.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,7 +86,7 @@
 		45B8A87752EE385BD0514D8C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				EFD1F7BE0003276B96DC3485 /* Pods_TwilioVoiceClient_SwiftVoiceQuickstart.framework */,
+				4267E0EF3BBF95B211EDD557 /* Pods_TwilioVoice_SwiftVoiceQuickstart.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -96,10 +94,8 @@
 		55E4DD2B129E858377D08E95 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				5745F8037F1069D741DA8D6D /* Pods-SwiftVoiceQuickstart.debug.xcconfig */,
-				7C4D4C9846E9421C7C38ED87 /* Pods-SwiftVoiceQuickstart.release.xcconfig */,
-				3B64417AD55977FB028451F4 /* Pods-TwilioVoiceClient-SwiftVoiceQuickstart.debug.xcconfig */,
-				281656F9C2B2EEE319CFB837 /* Pods-TwilioVoiceClient-SwiftVoiceQuickstart.release.xcconfig */,
+				30CEEC345C195AA1B43C5ACF /* Pods-TwilioVoice-SwiftVoiceQuickstart.debug.xcconfig */,
+				0E77380F51BA3747782FC8E1 /* Pods-TwilioVoice-SwiftVoiceQuickstart.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -209,7 +205,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TwilioVoiceClient-SwiftVoiceQuickstart/Pods-TwilioVoiceClient-SwiftVoiceQuickstart-frameworks.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TwilioVoice-SwiftVoiceQuickstart/Pods-TwilioVoice-SwiftVoiceQuickstart-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		4606DD9E4497EB916F5C2C32 /* [CP] Copy Pods Resources */ = {
@@ -224,7 +220,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TwilioVoiceClient-SwiftVoiceQuickstart/Pods-TwilioVoiceClient-SwiftVoiceQuickstart-resources.sh\"\n";
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TwilioVoice-SwiftVoiceQuickstart/Pods-TwilioVoice-SwiftVoiceQuickstart-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		EDB472251B1426561FEE937D /* [CP] Check Pods Manifest.lock */ = {
@@ -371,7 +367,7 @@
 		};
 		24BA34461D874AC800B0B4F7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3B64417AD55977FB028451F4 /* Pods-TwilioVoiceClient-SwiftVoiceQuickstart.debug.xcconfig */;
+			baseConfigurationReference = 30CEEC345C195AA1B43C5ACF /* Pods-TwilioVoice-SwiftVoiceQuickstart.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SwiftVoiceQuickstart/SwiftVoiceQuickstart.entitlements;
@@ -387,7 +383,7 @@
 		};
 		24BA34471D874AC800B0B4F7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 281656F9C2B2EEE319CFB837 /* Pods-TwilioVoiceClient-SwiftVoiceQuickstart.release.xcconfig */;
+			baseConfigurationReference = 0E77380F51BA3747782FC8E1 /* Pods-TwilioVoice-SwiftVoiceQuickstart.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SwiftVoiceQuickstart/SwiftVoiceQuickstart.entitlements;

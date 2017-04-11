@@ -9,7 +9,7 @@ import UIKit
 import AVFoundation
 import PushKit
 import CallKit
-import TwilioVoiceClient
+import TwilioVoice
 
 let baseURLString = <#URL TO YOUR ACCESS TOKEN SERVER#>
 let accessTokenEndpoint = "/accessToken"
@@ -36,7 +36,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         isSpinning = false
         voipRegistry = PKPushRegistry.init(queue: DispatchQueue.main)
         
-        VoiceClient.sharedInstance().logLevel = .verbose
+        TwilioVoice.sharedInstance().logLevel = .verbose
 
         let configuration = CXProviderConfiguration(localizedName: "CallKit Quickstart")
         configuration.maximumCallGroups = 1
@@ -105,7 +105,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         let deviceToken = (credentials.token as NSData).description
 
-        VoiceClient.sharedInstance().register(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
+        TwilioVoice.sharedInstance().register(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
             if (error != nil) {
                 NSLog("An error occurred while registering: \(error?.localizedDescription)")
             }
@@ -128,7 +128,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             return
         }
         
-        VoiceClient.sharedInstance().unregister(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
+        TwilioVoice.sharedInstance().unregister(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
             if (error != nil) {
                 NSLog("An error occurred while unregistering: \(error?.localizedDescription)")
             }
@@ -144,7 +144,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:")
 
         if (type == PKPushType.voIP) {
-            VoiceClient.sharedInstance().handleNotification(payload.dictionaryPayload, delegate: self)
+            TwilioVoice.sharedInstance().handleNotification(payload.dictionaryPayload, delegate: self)
         }
     }
 
@@ -277,7 +277,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
         NSLog("provider:didActivateAudioSession:")
 
-        VoiceClient.sharedInstance().startAudioDevice()
+        TwilioVoice.sharedInstance().startAudioDevice()
     }
 
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
@@ -296,9 +296,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             return
         }
 
-        VoiceClient.sharedInstance().configureAudioSession()
+        TwilioVoice.sharedInstance().configureAudioSession()
 
-        call = VoiceClient.sharedInstance().call(accessToken, params: [:], delegate: self)
+        call = TwilioVoice.sharedInstance().call(accessToken, params: [:], delegate: self)
 
         guard let call = call else {
             NSLog("Failed to start outgoing call")
@@ -320,7 +320,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         // RCP: Workaround from https://forums.developer.apple.com/message/169511 suggests configuring audio in the
         //      completion block of the `reportNewIncomingCallWithUUID:update:completion:` method instead of in
         //      `provider:performAnswerCallAction:` per the WWDC examples.
-        // VoiceClient.sharedInstance().configureAudioSession()
+        // TwilioVoice.sharedInstance().configureAudioSession()
 
         guard let call = self.callInvite?.accept(with: self) else {
             action.fail()
@@ -336,7 +336,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
         NSLog("provider:performEndCallAction:")
 
-        VoiceClient.sharedInstance().stopAudioDevice()
+        TwilioVoice.sharedInstance().stopAudioDevice()
 
         if (self.callInvite != nil && self.callInvite?.state == .pending) {
             self.callInvite?.reject()
@@ -394,7 +394,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             NSLog("Incoming call successfully reported.")
 
             // RCP: Workaround per https://forums.developer.apple.com/message/169511
-            VoiceClient.sharedInstance().configureAudioSession()
+            TwilioVoice.sharedInstance().configureAudioSession()
         }
     }
 
