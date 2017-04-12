@@ -3,8 +3,8 @@ source 'https://github.com/CocoaPods/Specs.git'
 
 workspace 'SwiftVoiceQuickstart'
 
-abstract_target 'TwilioVoiceClient' do
-  pod 'TwilioVoiceClient', '=2.0.0-beta7'
+abstract_target 'TwilioVoice' do
+  pod 'TwilioVoice', '=2.0.0-beta8'
   use_frameworks!
 
   target 'SwiftVoiceQuickstart' do

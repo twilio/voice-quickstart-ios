@@ -8,7 +8,7 @@
 import UIKit
 import AVFoundation
 import PushKit
-import TwilioVoiceClient
+import TwilioVoice
 
 let baseURLString = <#URL TO YOUR ACCESS TOKEN SERVER#>
 let accessTokenEndpoint = "/accessToken"
@@ -40,7 +40,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         voipRegistry.delegate = self
         voipRegistry.desiredPushTypes = Set([PKPushType.voIP])
         
-        VoiceClient.sharedInstance().logLevel = .verbose
+        TwilioVoice.sharedInstance().logLevel = .verbose
     }
 
     override func viewDidLoad() {
@@ -76,7 +76,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             
             playOutgoingRingtone(completion: { [weak self] in
                 if let strongSelf = self {
-                    strongSelf.call = VoiceClient.sharedInstance().call(accessToken, params: [:], delegate: strongSelf)
+                    strongSelf.call = TwilioVoice.sharedInstance().call(accessToken, params: [:], delegate: strongSelf)
                     
                     if (strongSelf.call == nil) {
                         NSLog("Failed to start outgoing call")
@@ -105,7 +105,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         let deviceToken = (credentials.token as NSData).description
 
-        VoiceClient.sharedInstance().register(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
+        TwilioVoice.sharedInstance().register(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
             if (error != nil) {
                 NSLog("An error occurred while registering: \(error?.localizedDescription)")
             }
@@ -128,7 +128,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             return
         }
         
-        VoiceClient.sharedInstance().unregister(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
+        TwilioVoice.sharedInstance().unregister(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
             if (error != nil) {
                 NSLog("An error occurred while unregistering: \(error?.localizedDescription)")
             }
@@ -144,7 +144,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:")
 
         if (type == PKPushType.voIP) {
-            VoiceClient.sharedInstance().handleNotification(payload.dictionaryPayload, delegate: self)
+            TwilioVoice.sharedInstance().handleNotification(payload.dictionaryPayload, delegate: self)
         }
     }
 

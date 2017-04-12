@@ -8,7 +8,7 @@
 ## Quickstart
 To get started with the quickstart application follow these steps. Steps 1-6 will enable the application to make a call. The remaining steps 7-10 will enable the application to receive incoming calls in the form of push notifications using Apple’s VoIP Service.
 
-1. [Install the TwilioVoiceClient framework using Cocoapods](#bullet1)
+1. [Install the TwilioVoice framework using Cocoapods](#bullet1)
 2. [Create a Voice API key](#bullet2)
 3. [Configure a server to generate an access token to be used in the app](#bullet3)
 4. [Create a TwiML application](#bullet4)
@@ -19,7 +19,7 @@ To get started with the quickstart application follow these steps. Steps 1-6 wil
 9. [Configure Xcode project settings for VoIP push notifications](#bullet9)
 10. [Receive an incoming call](#bullet10)
 
-### <a name="bullet1"></a>1. Install the TwilioVoiceClient framework using Cocoapods
+### <a name="bullet1"></a>1. Install the TwilioVoice framework using Cocoapods
 Under the quickstart path, run `pod install` and let the Cocoapods library create the workspace for you. Also please make sure to use **Cocoapods v1.0 and later**.
 Once Cocoapods finishes installing, open the `SwiftCVoiceQuickstart.xcworkspace` and you will find a basic Swift quickstart project and a CallKit quickstart project.
 
