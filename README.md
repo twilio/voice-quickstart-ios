@@ -91,7 +91,12 @@ Export your VoIP Service Certificate as a .p12 file, then extract the certificat
     $> openssl rsa -in key.pem -out key.pem
     $> openssl pkcs12 -in PATH_TO_YOUR_P12 -clcerts -nokeys -out cert.pem
 
-Go to the [Push Credentials page](https://www.twilio.com/console/voice/credentials) and create a new Push Credential. Paste the certificate and private key extracted from your certificate, and **remember to check the “Sandbox” option**. This is important. The VoIP Service Certificate you generated can be used both in production and with Apple's sandbox infrastructure. Checking this box tells Twilio to send your pushes to the Apple sandbox infrastructure which is appropriate with your development provisioning profile.
+Go to the [Push Credentials page](https://www.twilio.com/console/voice/credentials) and create a new Push Credential. Paste the certificate and private key extracted from your certificate. You must paste the keys in as plaintext:
+
+* For the `cert.pem` you should paste everything from `-----BEGIN CERTIFICATE-----` to `-----END CERTIFICATE-----`. 
+* For the `key.pem` you should paste everything from `-----BEGIN RSA PRIVATE KEY-----` to `-----END RSA PRIVATE KEY-----`. 
+
+**Remember to check the “Sandbox” option**. This is important. The VoIP Service Certificate you generated can be used both in production and with Apple's sandbox infrastructure. Checking this box tells Twilio to send your pushes to the Apple sandbox infrastructure which is appropriate with your development provisioning profile.
 
 <img src="Images/add-push-credential.png"/>
 
