@@ -55,6 +55,11 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         voipRegistry.delegate = self
         voipRegistry.desiredPushTypes = Set([PKPushType.voIP])
     }
+    
+    deinit {
+        // CallKit has an odd API contract where the developer must call invalidate or the CXProvider is leaked.
+        callKitProvider.invalidate()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
