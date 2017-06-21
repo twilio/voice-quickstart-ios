@@ -213,10 +213,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         toggleUIState(isEnabled: true)
     }
     
-    func call(_ call: TVOCall, didFailWithError error: Error) {
+    func call(_ call: TVOCall?, didFailWithError error: Error) {
         NSLog("call:didFailWithError: \(error.localizedDescription)")
 
-        performEndCallAction(uuid: call.uuid)
+        performEndCallAction(uuid: (call?.uuid)!)
 
         self.call = nil
         toggleUIState(isEnabled: true)
@@ -287,6 +287,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
         NSLog("provider:didDeactivateAudioSession:")
+        
+        TwilioVoice.sharedInstance().audioSessionDeactivated()
     }
 
     func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
