@@ -288,7 +288,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
         NSLog("provider:didDeactivateAudioSession:")
         
-        TwilioVoice .sharedInstance().audioSessionDeactivated()
+        TwilioVoice.sharedInstance().audioSessionDeactivated()
     }
 
     func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
