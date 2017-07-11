@@ -221,11 +221,11 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
     }
     
-    func callInviteCancelled(_ callInvite: TVOCallInvite?) {
-        NSLog("callInviteCancelled:")
+    func callInviteCanceled(_ callInvite: TVOCallInvite?) {
+        NSLog("callInviteCanceled:")
         
         if (callInvite?.callSid != self.callInvite?.callSid) {
-            NSLog("Incoming (but not current) call invite from \(callInvite?.from) cancelled. Just ignore it.");
+            NSLog("Incoming (but not current) call invite from \(callInvite?.from) canceled. Just ignore it.");
             return;
         }
         
@@ -276,7 +276,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         toggleUIState(isEnabled: true)
     }
     
-    func call(_ call: TVOCall, didFailWithError error: Error) {
+    func call(_ call: TVOCall?, didFailWithError error: Error) {
         NSLog("call:didFailWithError: \(error.localizedDescription)");
         
         self.call = nil
