@@ -173,8 +173,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         reportIncomingCall(from: "Voice Bot", uuid: callInvite.uuid)
     }
     
-    func callInviteCancelled(_ callInvite: TVOCallInvite?) {
-        NSLog("callInviteCancelled:")
+    func callInviteCanceled(_ callInvite: TVOCallInvite?) {
+        NSLog("callInviteCanceled:")
         
         if let callInvite = callInvite {
             performEndCallAction(uuid: callInvite.uuid)
