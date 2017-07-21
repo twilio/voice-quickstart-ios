@@ -44,7 +44,7 @@ All relevant version information for the issue.
 
 #### Voice iOS SDK
 
-[e.g. 1.2.0 via CocoaPods]
+[e.g. 2.0.0-beta13 via CocoaPods]
 
 #### Xcode
 
