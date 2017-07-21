@@ -2,7 +2,7 @@
 > Before filing an issue please check that the issue is not already addressed by the following:
 >  * [Voice SDK Guides](twilio.com/docs/api/voice-sdk)
 >  * [GitHub Issues](https://github.com/twilio/voice-quickstart-swift/issues)
->  * [Changelog](CHANGELOG.md)
+>  * [Changelog](https://www.twilio.com/docs/api/voice-sdk/ios/changelog)
 
 ### Description
 
