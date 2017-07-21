@@ -42,7 +42,7 @@
 
 All relevant version information for the issue.
 
-#### Video iOS SDK
+#### Voice iOS SDK
 
 [e.g. 1.2.0 via CocoaPods]
 
