@@ -13,14 +13,12 @@
 		24BA343E1D874AC800B0B4F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343D1D874AC800B0B4F7 /* Assets.xcassets */; };
 		24BA34411D874AC800B0B4F7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343F1D874AC800B0B4F7 /* LaunchScreen.storyboard */; };
 		24BA34491D874BBD00B0B4F7 /* TwilioLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */; };
-		26DC7B9F7C7AB75F7E8E85E8 /* Pods_TwilioVoice_SwiftVoiceQuickstart.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4267E0EF3BBF95B211EDD557 /* Pods_TwilioVoice_SwiftVoiceQuickstart.framework */; };
 		8F1A92811DF9001C00609990 /* disconnect.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8F1A927E1DF9001C00609990 /* disconnect.wav */; };
 		8F1A92821DF9001C00609990 /* incoming.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8F1A927F1DF9001C00609990 /* incoming.wav */; };
 		8F1A92831DF9001C00609990 /* outgoing.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8F1A92801DF9001C00609990 /* outgoing.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		0E77380F51BA3747782FC8E1 /* Pods-TwilioVoice-SwiftVoiceQuickstart.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwilioVoice-SwiftVoiceQuickstart.release.xcconfig"; path = "Pods/Target Support Files/Pods-TwilioVoice-SwiftVoiceQuickstart/Pods-TwilioVoice-SwiftVoiceQuickstart.release.xcconfig"; sourceTree = "<group>"; };
 		24BA34331D874AC800B0B4F7 /* SwiftVoiceQuickstart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftVoiceQuickstart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24BA34361D874AC800B0B4F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		24BA34381D874AC800B0B4F7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -30,8 +28,6 @@
 		24BA34421D874AC800B0B4F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TwilioLogo.png; sourceTree = "<group>"; };
 		24BA344A1D874D2B00B0B4F7 /* SwiftVoiceQuickstart.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftVoiceQuickstart.entitlements; sourceTree = "<group>"; };
-		30CEEC345C195AA1B43C5ACF /* Pods-TwilioVoice-SwiftVoiceQuickstart.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwilioVoice-SwiftVoiceQuickstart.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TwilioVoice-SwiftVoiceQuickstart/Pods-TwilioVoice-SwiftVoiceQuickstart.debug.xcconfig"; sourceTree = "<group>"; };
-		4267E0EF3BBF95B211EDD557 /* Pods_TwilioVoice_SwiftVoiceQuickstart.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TwilioVoice_SwiftVoiceQuickstart.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F1A927E1DF9001C00609990 /* disconnect.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = disconnect.wav; sourceTree = "<group>"; };
 		8F1A927F1DF9001C00609990 /* incoming.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = incoming.wav; sourceTree = "<group>"; };
 		8F1A92801DF9001C00609990 /* outgoing.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = outgoing.wav; sourceTree = "<group>"; };
@@ -42,7 +38,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				26DC7B9F7C7AB75F7E8E85E8 /* Pods_TwilioVoice_SwiftVoiceQuickstart.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,7 +50,6 @@
 				24BA34351D874AC800B0B4F7 /* SwiftVoiceQuickstart */,
 				8F1A927D1DF9001C00609990 /* Ringtones */,
 				24BA34341D874AC800B0B4F7 /* Products */,
-				55E4DD2B129E858377D08E95 /* Pods */,
 				45B8A87752EE385BD0514D8C /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -86,18 +80,8 @@
 		45B8A87752EE385BD0514D8C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4267E0EF3BBF95B211EDD557 /* Pods_TwilioVoice_SwiftVoiceQuickstart.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		55E4DD2B129E858377D08E95 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				30CEEC345C195AA1B43C5ACF /* Pods-TwilioVoice-SwiftVoiceQuickstart.debug.xcconfig */,
-				0E77380F51BA3747782FC8E1 /* Pods-TwilioVoice-SwiftVoiceQuickstart.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		8F1A927D1DF9001C00609990 /* Ringtones */ = {
@@ -117,12 +101,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 24BA34451D874AC800B0B4F7 /* Build configuration list for PBXNativeTarget "SwiftVoiceQuickstart" */;
 			buildPhases = (
-				EDB472251B1426561FEE937D /* [CP] Check Pods Manifest.lock */,
 				24BA342F1D874AC800B0B4F7 /* Sources */,
 				24BA34301D874AC800B0B4F7 /* Frameworks */,
 				24BA34311D874AC800B0B4F7 /* Resources */,
-				00421881F6BE552D14B92FFB /* [CP] Embed Pods Frameworks */,
-				4606DD9E4497EB916F5C2C32 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -191,54 +172,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		00421881F6BE552D14B92FFB /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TwilioVoice-SwiftVoiceQuickstart/Pods-TwilioVoice-SwiftVoiceQuickstart-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		4606DD9E4497EB916F5C2C32 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-TwilioVoice-SwiftVoiceQuickstart/Pods-TwilioVoice-SwiftVoiceQuickstart-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		EDB472251B1426561FEE937D /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		24BA342F1D874AC800B0B4F7 /* Sources */ = {
@@ -367,7 +300,6 @@
 		};
 		24BA34461D874AC800B0B4F7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 30CEEC345C195AA1B43C5ACF /* Pods-TwilioVoice-SwiftVoiceQuickstart.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SwiftVoiceQuickstart/SwiftVoiceQuickstart.entitlements;
@@ -383,7 +315,6 @@
 		};
 		24BA34471D874AC800B0B4F7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 0E77380F51BA3747782FC8E1 /* Pods-TwilioVoice-SwiftVoiceQuickstart.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SwiftVoiceQuickstart/SwiftVoiceQuickstart.entitlements;
