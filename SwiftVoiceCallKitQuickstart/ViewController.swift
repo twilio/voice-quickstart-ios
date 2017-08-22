@@ -194,6 +194,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         self.call = call
         
+        self.callKitProvider.reportOutgoingCall(with: (self.call?.uuid)!, connectedAt: Date())
+        
         self.placeCallButton.setTitle("Hang Up", for: .normal)
         
         toggleUIState(isEnabled: true)
