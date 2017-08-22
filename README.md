@@ -24,7 +24,7 @@ Under the quickstart path, run `pod install` and let the Cocoapods library creat
 Once Cocoapods finishes installing, open the `SwiftCVoiceQuickstart.xcworkspace` and you will find a basic Swift quickstart project and a CallKit quickstart project.
 
 ### <a name="bullet2"></a>2. Create a Voice API key
-Go to the [Voice API Keys](https://www.twilio.com/console/voice/dev-tools/api-keys) page and create a new API key:
+Go to the [Voice API Keys](https://www.twilio.com/console/voice/runtime/api-keys) page and create a new API key:
 
 <img src="Images/create-api-key.png"/>
 
