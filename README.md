@@ -21,7 +21,7 @@ To get started with the quickstart application follow these steps. Steps 1-6 wil
 
 ### <a name="bullet1"></a>1. Install the TwilioVoice framework using Cocoapods
 Under the quickstart path, run `pod install` and let the Cocoapods library create the workspace for you. Also please make sure to use **Cocoapods v1.0 and later**.
-Once Cocoapods finishes installing, open the `SwiftCVoiceQuickstart.xcworkspace` and you will find a basic Swift quickstart project and a CallKit quickstart project.
+Once Cocoapods finishes installing, open the `SwiftVoiceQuickstart.xcworkspace` and you will find a basic Swift quickstart project and a CallKit quickstart project.
 
 ### <a name="bullet2"></a>2. Create a Voice API key
 Go to the [Voice API Keys](https://www.twilio.com/console/voice/runtime/api-keys) page and create a new API key:
