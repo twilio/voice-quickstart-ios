@@ -195,6 +195,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         self.call = call
         self.callKitCompletionCallback!(true)
+        self.callKitCompletionCallback = nil
         
         self.placeCallButton.setTitle("Hang Up", for: .normal)
         
@@ -221,6 +222,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
         performEndCallAction(uuid: (call?.uuid)!)
         self.callKitCompletionCallback!(false)
+        self.callKitCompletionCallback = nil
 
         self.call = nil
         toggleUIState(isEnabled: true)
@@ -328,7 +330,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         // TwilioVoice.sharedInstance().configureAudioSession()
         
         self.performAnswerVoiceCall(uuid: action.callUUID) { (success) in
-            if (!success) {
+            if (success) {
+                action.fulfill()
+            } else {
                 action.fail()
             }
         }
