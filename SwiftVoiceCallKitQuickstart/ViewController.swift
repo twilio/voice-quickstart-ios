@@ -28,6 +28,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     var callInvite:TVOCallInvite?
     var call:TVOCall?
+    var callKitCompletionCallback: ((Bool)->Swift.Void?)? = nil
 
     let callKitProvider:CXProvider
     let callKitCallController:CXCallController
@@ -193,6 +194,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         NSLog("callDidConnect:")
         
         self.call = call
+        self.callKitCompletionCallback!(true)
+        self.callKitCompletionCallback = nil
         
         self.placeCallButton.setTitle("Hang Up", for: .normal)
         
@@ -207,6 +210,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         performEndCallAction(uuid: call.uuid)
 
         self.call = nil
+        self.callKitCompletionCallback = nil
         
         self.placeCallButton.setTitle("Place Outgoing Call", for: .normal)
         
@@ -217,6 +221,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         NSLog("call:didFailWithError: \(error.localizedDescription)")
 
         performEndCallAction(uuid: (call?.uuid)!)
+        self.callKitCompletionCallback!(false)
+        self.callKitCompletionCallback = nil
 
         self.call = nil
         toggleUIState(isEnabled: true)
@@ -297,28 +303,22 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
         NSLog("provider:performStartCallAction:")
-
-        guard let accessToken = fetchAccessToken() else {
-            action.fail()
-            return
-        }
-
-        TwilioVoice.sharedInstance().configureAudioSession()
-
-        call = TwilioVoice.sharedInstance().call(accessToken, params: [:], delegate: self)
-
-        guard let call = call else {
-            NSLog("Failed to start outgoing call")
-            action.fail()
-            return
-        }
-
-        call.uuid = action.callUUID
-
+        
         toggleUIState(isEnabled: false)
         startSpin()
 
-        action.fulfill(withDateStarted: Date())
+        TwilioVoice.sharedInstance().configureAudioSession()
+        
+        provider.reportOutgoingCall(with: action.callUUID, startedConnectingAt: Date())
+        
+        self.performVoiceCall(uuid: action.callUUID, client: "") { (success) in
+            if (success) {
+                provider.reportOutgoingCall(with: action.callUUID, connectedAt: Date())
+                action.fulfill()
+            } else {
+                action.fail()
+            }
+        }
     }
 
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
@@ -328,15 +328,15 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         //      completion block of the `reportNewIncomingCallWithUUID:update:completion:` method instead of in
         //      `provider:performAnswerCallAction:` per the WWDC examples.
         // TwilioVoice.sharedInstance().configureAudioSession()
-
-        guard let call = self.callInvite?.accept(with: self) else {
-            action.fail()
-            return
+        
+        self.performAnswerVoiceCall(uuid: action.callUUID) { (success) in
+            if (success) {
+                action.fulfill()
+            } else {
+                action.fail()
+            }
         }
         
-        self.callInvite = nil
-
-        call.uuid = action.callUUID
         action.fulfill()
     }
 
@@ -418,5 +418,36 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
             NSLog("EndCallAction transaction request successful")
         }
+    }
+    
+    func performVoiceCall(uuid: UUID, client: String?, completionHandler: @escaping (Bool) -> Swift.Void) {
+        guard let accessToken = fetchAccessToken() else {
+            completionHandler(false)
+            return
+        }
+        
+        call = TwilioVoice.sharedInstance().call(accessToken, params: [:], delegate: self)
+        
+        guard let call = call else {
+            NSLog("Failed to start outgoing call")
+            completionHandler(false)
+            return
+        }
+        
+        call.uuid = uuid
+        
+        self.callKitCompletionCallback = completionHandler
+    }
+    
+    func performAnswerVoiceCall(uuid: UUID, completionHandler: @escaping (Bool) -> Swift.Void) {
+        guard let call = self.callInvite?.accept(with: self) else {
+            completionHandler(false)
+            return
+        }
+        
+        call.uuid = uuid
+        
+        self.callInvite = nil
+        self.callKitCompletionCallback = completionHandler
     }
 }
