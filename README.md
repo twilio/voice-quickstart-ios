@@ -21,7 +21,7 @@ To get started with the quickstart application follow these steps. Steps 1-6 wil
 
 ### <a name="bullet1"></a>1. Install the TwilioVoice framework using Cocoapods
 Under the quickstart path, run `pod install` and let the Cocoapods library create the workspace for you. Also please make sure to use **Cocoapods v1.0 and later**.
-Once Cocoapods finishes installing, open the `SwiftCVoiceQuickstart.xcworkspace` and you will find a basic Swift quickstart project and a CallKit quickstart project.
+Once Cocoapods finishes installing, open the `SwiftVoiceQuickstart.xcworkspace` and you will find a basic Swift quickstart project and a CallKit quickstart project.
 
 ### <a name="bullet2"></a>2. Create a Voice API key
 Go to the [Voice API Keys](https://www.twilio.com/console/voice/runtime/api-keys) page and create a new API key:
@@ -60,7 +60,7 @@ Once you’ve done that, restart the server so it uses the new configuration inf
 Open up a browser and visit the URL for your application server's **Access Token endpoint**: `https://{YOUR-SERVER}/accessToken`. If everything is configured correctly, you should see a long string of letters and numbers, which is a Twilio Access Token. Your iOS app will use a token like this to connect to Twilio.
 
 ### <a name="bullet6"></a>6. Run the app
-Now let’s go back to the `SwiftCVoiceQuickstart.xcworkspace`. Update the placeholder of `baseURLString` with your ngrok public URL
+Now let’s go back to the `SwiftVoiceQuickstart.xcworkspace`. Update the placeholder of `baseURLString` with your ngrok public URL
 
 <img src="Images/update-base-url.png"/>
 
