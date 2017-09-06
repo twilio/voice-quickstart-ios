@@ -60,7 +60,7 @@ Once you’ve done that, restart the server so it uses the new configuration inf
 Open up a browser and visit the URL for your application server's **Access Token endpoint**: `https://{YOUR-SERVER}/accessToken`. If everything is configured correctly, you should see a long string of letters and numbers, which is a Twilio Access Token. Your iOS app will use a token like this to connect to Twilio.
 
 ### <a name="bullet6"></a>6. Run the app
-Now let’s go back to the `SwiftCVoiceQuickstart.xcworkspace`. Update the placeholder of `baseURLString` with your ngrok public URL
+Now let’s go back to the `SwiftVoiceQuickstart.xcworkspace`. Update the placeholder of `baseURLString` with your ngrok public URL
 
 <img src="Images/update-base-url.png"/>
 
