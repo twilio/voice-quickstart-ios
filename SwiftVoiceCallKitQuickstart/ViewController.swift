@@ -288,13 +288,13 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
         NSLog("provider:didActivateAudioSession:")
 
-        TwilioVoice.sharedInstance().startAudioDevice()
+        TwilioVoice.sharedInstance().startAudio()
     }
 
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
         NSLog("provider:didDeactivateAudioSession:")
         
-        TwilioVoice.sharedInstance().audioSessionDeactivated()
+        TwilioVoice.sharedInstance().stopAudio()
     }
 
     func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
@@ -342,8 +342,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
         NSLog("provider:performEndCallAction:")
-
-        TwilioVoice.sharedInstance().stopAudioDevice()
 
         if (self.callInvite != nil && self.callInvite?.state == .pending) {
             self.callInvite?.reject()
