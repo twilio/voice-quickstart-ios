@@ -151,6 +151,14 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     // MARK: TVONotificaitonDelegate
     func callInviteReceived(_ callInvite: TVOCallInvite) {
+        if (callInvite.state == .pending) {
+            handleCallInviteReceived(callInvite)
+        } else if (callInvite.state == .canceled) {
+            handleCallInviteCanceled(callInvite)
+        }
+    }
+    
+    func handleCallInviteReceived(_ callInvite: TVOCallInvite) {
         NSLog("callInviteReceived:")
         
         if (self.callInvite != nil && self.callInvite?.state == .pending) {
@@ -221,11 +229,11 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
     }
     
-    func callInviteCanceled(_ callInvite: TVOCallInvite?) {
+    func handleCallInviteCanceled(_ callInvite: TVOCallInvite) {
         NSLog("callInviteCanceled:")
         
-        if (callInvite?.callSid != self.callInvite?.callSid) {
-            NSLog("Incoming (but not current) call invite from \(callInvite?.from) canceled. Just ignore it.");
+        if (callInvite.callSid != self.callInvite?.callSid) {
+            NSLog("Incoming (but not current) call invite from \(callInvite.from) canceled. Just ignore it.");
             return;
         }
         
@@ -395,7 +403,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
                        options: options,
                        animations: { [weak iconView] in
             if let iconView = iconView {
-                iconView.transform = iconView.transform.rotated(by: CGFloat(M_PI/2))
+                iconView.transform = iconView.transform.rotated(by: CGFloat(Double.pi/2))
             }
         }) { [weak self] (finished: Bool) in
             guard let strongSelf = self else {
