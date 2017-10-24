@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        NSLog("Twilio Voice Version: %@", TwilioVoice.sharedInstance().version())
+        NSLog("Twilio Voice Version: %@", TwilioVoice.version())
         self.configureUserNotifications()
 
         return true
