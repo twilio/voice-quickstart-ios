@@ -40,7 +40,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         voipRegistry.delegate = self
         voipRegistry.desiredPushTypes = Set([PKPushType.voIP])
         
-        TwilioVoice.sharedInstance().logLevel = .verbose
+        TwilioVoice.logLevel = .verbose
     }
 
     override func viewDidLoad() {
@@ -76,7 +76,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             
             playOutgoingRingtone(completion: { [weak self] in
                 if let strongSelf = self {
-                    strongSelf.call = TwilioVoice.sharedInstance().call(accessToken, params: [:], delegate: strongSelf)
+                    strongSelf.call = TwilioVoice.call(accessToken, params: [:], delegate: strongSelf)
                     
                     if (strongSelf.call == nil) {
                         NSLog("Failed to start outgoing call")
@@ -105,7 +105,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         let deviceToken = (credentials.token as NSData).description
 
-        TwilioVoice.sharedInstance().register(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
+        TwilioVoice.register(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
             if (error != nil) {
                 NSLog("An error occurred while registering: \(error?.localizedDescription)")
             }
@@ -128,7 +128,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             return
         }
         
-        TwilioVoice.sharedInstance().unregister(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
+        TwilioVoice.unregister(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
             if (error != nil) {
                 NSLog("An error occurred while unregistering: \(error?.localizedDescription)")
             }
@@ -144,7 +144,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:")
 
         if (type == PKPushType.voIP) {
-            TwilioVoice.sharedInstance().handleNotification(payload.dictionaryPayload, delegate: self)
+            TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)
         }
     }
 
@@ -272,24 +272,29 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         routeAudioToSpeaker()
     }
     
-    func callDidDisconnect(_ call: TVOCall) {
-        NSLog("callDidDisconnect:")
+    func call(_ call: TVOCall, didFailToConnectWithError error: Error) {
+        NSLog("Call failed to connect: \(error.localizedDescription)")
         
-        playDisconnectSound()
-        
-        self.call = nil
-        
-        self.placeCallButton.setTitle("Place Outgoing Call", for: .normal)
-        
-        toggleUIState(isEnabled: true)
+        callDisconnected()
     }
     
-    func call(_ call: TVOCall?, didFailWithError error: Error) {
-        NSLog("call:didFailWithError: \(error.localizedDescription)");
+    func call(_ call: TVOCall, didDisconnectWithError error: Error?) {
+        if let error = error {
+            NSLog("Call failed: \(error.localizedDescription)")
+        } else {
+            NSLog("Call disconnected")
+        }
         
+         callDisconnected()
+    }
+    
+    func callDisconnected() {
         self.call = nil
+        
+        playDisconnectSound()
         toggleUIState(isEnabled: true)
         stopSpin()
+        self.placeCallButton.setTitle("Place Outgoing Call", for: .normal)
     }
     
     
