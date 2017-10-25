@@ -224,10 +224,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func call(_ call: TVOCall, didDisconnectWithError error: Error?) {
         if let error = error {
             NSLog("Call failed: \(error.localizedDescription)")
-            
-            if let completion = self.callKitCompletionCallback {
-                completion(false)
-            }
         } else {
             NSLog("Call disconnected")
         }
