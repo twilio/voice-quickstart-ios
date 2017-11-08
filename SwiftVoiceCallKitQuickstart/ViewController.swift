@@ -217,7 +217,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             completion(false)
         }
         
-        performEndCallAction(uuid: call.uuid)
+        performEndCallAction(uuid: call.uuid!)
         callDisconnected()
     }
     
@@ -228,7 +228,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             NSLog("Call disconnected")
         }
         
-        performEndCallAction(uuid: call.uuid)
+        performEndCallAction(uuid: call.uuid!)
         callDisconnected()
     }
     
