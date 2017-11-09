@@ -217,6 +217,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             completion(false)
         }
         
+        /**
+         * 1. performVoiceCall mutates call.uuid by setting it to a non-null value.
+         * 2. performOutgoingVoiceCall produces a call with a valid UUID.
+         */
         performEndCallAction(uuid: call.uuid!)
         callDisconnected()
     }
@@ -228,6 +232,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             NSLog("Call disconnected")
         }
         
+        /**
+         * 1. performVoiceCall mutates call.uuid by setting it to a non-null value.
+         * 2. performOutgoingVoiceCall produces a call with a valid UUID.
+         */
         performEndCallAction(uuid: call.uuid!)
         callDisconnected()
     }
