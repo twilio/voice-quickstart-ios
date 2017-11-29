@@ -221,7 +221,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
          * 1. performVoiceCall mutates call.uuid by setting it to a non-null value.
          * 2. performOutgoingVoiceCall produces a call with a valid UUID.
          */
-        performEndCallAction(uuid: call.uuid!)
+        performEndCallAction(uuid: call.uuid)
         callDisconnected()
     }
     
@@ -236,7 +236,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
          * 1. performVoiceCall mutates call.uuid by setting it to a non-null value.
          * 2. performOutgoingVoiceCall produces a call with a valid UUID.
          */
-        performEndCallAction(uuid: call.uuid!)
+        performEndCallAction(uuid: call.uuid)
         callDisconnected()
     }
     
@@ -444,27 +444,12 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             return
         }
         
-        call = TwilioVoice.call(accessToken, params: [:], delegate: self)
-        
-        guard let call = call else {
-            NSLog("Failed to start outgoing call")
-            completionHandler(false)
-            return
-        }
-        
-        call.uuid = uuid
-        
+        call = TwilioVoice.call(accessToken, params: [:], uuid:uuid, delegate: self)
         self.callKitCompletionCallback = completionHandler
     }
     
     func performAnswerVoiceCall(uuid: UUID, completionHandler: @escaping (Bool) -> Swift.Void) {
-        guard let call = self.callInvite?.accept(with: self) else {
-            completionHandler(false)
-            return
-        }
-        
-        call.uuid = uuid
-        
+        call = self.callInvite?.accept(with: self)
         self.callInvite = nil
         self.callKitCompletionCallback = completionHandler
     }
