@@ -216,11 +216,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         if let completion = self.callKitCompletionCallback {
             completion(false)
         }
-        
-        /**
-         * 1. performVoiceCall mutates call.uuid by setting it to a non-null value.
-         * 2. performOutgoingVoiceCall produces a call with a valid UUID.
-         */
+
         performEndCallAction(uuid: call.uuid)
         callDisconnected()
     }
@@ -232,10 +228,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             NSLog("Call disconnected")
         }
         
-        /**
-         * 1. performVoiceCall mutates call.uuid by setting it to a non-null value.
-         * 2. performOutgoingVoiceCall produces a call with a valid UUID.
-         */
         performEndCallAction(uuid: call.uuid)
         callDisconnected()
     }
@@ -349,6 +341,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         //      `provider:performAnswerCallAction:` per the WWDC examples.
         // TwilioVoice.configureAudioSession()
         
+        assert(action.callUUID == self.callInvite?.uuid)
+        
         self.performAnswerVoiceCall(uuid: action.callUUID) { (success) in
             if (success) {
                 action.fulfill()
@@ -372,6 +366,16 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
         action.fulfill()
     }
+    
+    func provider(_ provider: CXProvider, perform action: CXSetHeldCallAction) {
+        NSLog("provider:performSetHeldAction:")
+        if (self.call?.state == .connected) {
+            self.call?.isOnHold = action.isOnHold
+            action.fulfill()
+        } else {
+            action.fail()
+        }
+    }
 
     // MARK: Call Kit Actions
     func performStartCallAction(uuid: UUID, handle: String) {
@@ -390,7 +394,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             let callUpdate = CXCallUpdate()
             callUpdate.remoteHandle = callHandle
             callUpdate.supportsDTMF = true
-            callUpdate.supportsHolding = false
+            callUpdate.supportsHolding = true
             callUpdate.supportsGrouping = false
             callUpdate.supportsUngrouping = false
             callUpdate.hasVideo = false
@@ -405,7 +409,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         let callUpdate = CXCallUpdate()
         callUpdate.remoteHandle = callHandle
         callUpdate.supportsDTMF = true
-        callUpdate.supportsHolding = false
+        callUpdate.supportsHolding = true
         callUpdate.supportsGrouping = false
         callUpdate.supportsUngrouping = false
         callUpdate.hasVideo = false
