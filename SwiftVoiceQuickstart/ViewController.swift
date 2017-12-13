@@ -270,9 +270,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         NSLog("Call failed to connect: \(error.localizedDescription)")
         
         callDisconnected()
-        
-        // Restore to audio enabled
-        TwilioVoice.isAudioEnabled = true
     }
     
     func call(_ call: TVOCall, didDisconnectWithError error: Error?) {
@@ -283,9 +280,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
         
         callDisconnected()
-        
-        // Restore to audio enabled
-        TwilioVoice.isAudioEnabled = true
     }
     
     func callDisconnected() {
