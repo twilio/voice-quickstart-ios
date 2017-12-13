@@ -342,6 +342,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         // TwilioVoice.configureAudioSession()
         
         assert(action.callUUID == self.callInvite?.uuid)
+        
+        TwilioVoice.isAudioEnabled = false
         self.performAnswerVoiceCall(uuid: action.callUUID) { (success) in
             if (success) {
                 action.fulfill()
@@ -423,7 +425,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
             // RCP: Workaround per https://forums.developer.apple.com/message/169511
             TwilioVoice.configureAudioSession()
-            TwilioVoice.isAudioEnabled = false
         }
     }
 
