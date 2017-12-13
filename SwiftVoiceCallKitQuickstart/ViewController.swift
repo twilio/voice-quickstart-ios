@@ -291,6 +291,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     // MARK: CXProviderDelegate
     func providerDidReset(_ provider: CXProvider) {
         NSLog("providerDidReset:")
+        TwilioVoice.isAudioEnabled = true
     }
 
     func providerDidBegin(_ provider: CXProvider) {
@@ -299,14 +300,12 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
         NSLog("provider:didActivateAudioSession:")
-
-        TwilioVoice.startAudio()
+        TwilioVoice.isAudioEnabled = true
     }
 
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
         NSLog("provider:didDeactivateAudioSession:")
-        
-        TwilioVoice.stopAudio()
+        TwilioVoice.isAudioEnabled = false
     }
 
     func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
@@ -320,6 +319,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         startSpin()
 
         TwilioVoice.configureAudioSession()
+        TwilioVoice.isAudioEnabled = false
         
         provider.reportOutgoingCall(with: action.callUUID, startedConnectingAt: Date())
         
@@ -342,7 +342,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         // TwilioVoice.configureAudioSession()
         
         assert(action.callUUID == self.callInvite?.uuid)
-        
         self.performAnswerVoiceCall(uuid: action.callUUID) { (success) in
             if (success) {
                 action.fulfill()
@@ -424,6 +423,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
             // RCP: Workaround per https://forums.developer.apple.com/message/169511
             TwilioVoice.configureAudioSession()
+            TwilioVoice.isAudioEnabled = false
         }
     }
 

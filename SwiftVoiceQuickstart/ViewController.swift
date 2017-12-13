@@ -279,7 +279,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             NSLog("Call disconnected")
         }
         
-         callDisconnected()
+        callDisconnected()
     }
     
     func callDisconnected() {
