@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11201" systemVersion="15G1004" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,35 +23,50 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uic-jJ-PVN">
-                                <state key="normal" title="Place Outgoing Call"/>
-                                <connections>
-                                    <action selector="placeCall:" destination="BYZ-38-t0r" eventType="touchUpInside" id="VPR-2L-Qq8"/>
-                                </connections>
-                            </button>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TwilioLogo.png" translatesAutoresizingMaskIntoConstraints="NO" id="wqn-ZD-zTx">
+                                <rect key="frame" x="67" y="116" width="240" height="240"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="wqn-ZD-zTx" secondAttribute="height" multiplier="1:1" id="Ixe-Ao-E58"/>
                                     <constraint firstAttribute="width" constant="240" id="eQS-aZ-GXk"/>
                                 </constraints>
                             </imageView>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rhQ-vm-Q9J">
+                                <rect key="frame" x="67" y="379" width="240" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="240" id="7F4-BI-EYe"/>
+                                </constraints>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uic-jJ-PVN">
+                                <rect key="frame" x="120" y="432" width="135" height="30"/>
+                                <state key="normal" title="Place Outgoing Call"/>
+                                <connections>
+                                    <action selector="placeCall:" destination="BYZ-38-t0r" eventType="touchUpInside" id="VPR-2L-Qq8"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="wqn-ZD-zTx" firstAttribute="width" secondItem="wqn-ZD-zTx" secondAttribute="height" multiplier="1:1" id="3fG-Bb-d0i"/>
-                            <constraint firstItem="Uic-jJ-PVN" firstAttribute="top" secondItem="wqn-ZD-zTx" secondAttribute="bottom" constant="38" id="5Pe-Y9-dmx"/>
                             <constraint firstItem="wqn-ZD-zTx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="7tL-jC-ghz"/>
                             <constraint firstItem="Uic-jJ-PVN" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="TDj-X9-ccD"/>
-                            <constraint firstItem="wqn-ZD-zTx" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="dib-4M-LIF"/>
+                            <constraint firstItem="rhQ-vm-Q9J" firstAttribute="firstBaseline" secondItem="wqn-ZD-zTx" secondAttribute="baseline" constant="42.5" id="ckB-PB-Pwa"/>
+                            <constraint firstItem="wqn-ZD-zTx" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-97.5" id="dib-4M-LIF"/>
+                            <constraint firstItem="Uic-jJ-PVN" firstAttribute="top" secondItem="rhQ-vm-Q9J" secondAttribute="bottom" constant="23" id="e9l-oU-do5"/>
+                            <constraint firstItem="rhQ-vm-Q9J" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="usP-tX-t3X"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="iconView" destination="wqn-ZD-zTx" id="Wko-Lc-Lcn"/>
+                        <outlet property="outgoingValue" destination="rhQ-vm-Q9J" id="MSu-Nc-DfV"/>
                         <outlet property="placeCallButton" destination="Uic-jJ-PVN" id="oeG-C0-Aoq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="117.59999999999999" y="118.29085457271366"/>
         </scene>
     </scenes>
     <resources>

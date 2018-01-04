@@ -12,12 +12,14 @@ import TwilioVoice
 
 let baseURLString = <#URL TO YOUR ACCESS TOKEN SERVER#>
 let accessTokenEndpoint = "/accessToken"
+let twimlParamTo = "server_param_to"
 
-class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOCallDelegate, AVAudioPlayerDelegate {
+class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOCallDelegate, AVAudioPlayerDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var placeCallButton: UIButton!
     @IBOutlet weak var iconView: UIImageView!
-
+    @IBOutlet weak var outgoingValue: UITextField!
+    
     var deviceTokenString:String?
 
     var voipRegistry:PKPushRegistry
@@ -47,6 +49,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         super.viewDidLoad()
 
         toggleUIState(isEnabled: true)
+        outgoingValue.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -76,7 +79,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             
             playOutgoingRingtone(completion: { [weak self] in
                 if let strongSelf = self {
-                    strongSelf.call = TwilioVoice.call(accessToken, params: [:], delegate: strongSelf)
+                    strongSelf.call = TwilioVoice.call(accessToken, params: [twimlParamTo : outgoingValue.text!], delegate: strongSelf)
                     strongSelf.toggleUIState(isEnabled: false)
                     strongSelf.startSpin()
                 }
@@ -84,6 +87,11 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
     }
 
+    // MARK: UITextFieldDelegate
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        outgoingValue.resignFirstResponder()
+        return true
+    }
 
     // MARK: PKPushRegistryDelegate
     func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, forType type: PKPushType) {
