@@ -76,7 +76,7 @@ Tap the “Place Outgoing Call” button to make a call, then tap “Hang Up” 
 The Programmable Voice SDK uses Apple’s VoIP Services to let your application know when it is receiving an incoming call. If you want your users to receive incoming calls, you’ll need to enable VoIP Services in your application and generate a VoIP Services Certificate.
 
 Go to [Apple Developer portal](https://developer.apple.com/) and you’ll need to do the following:
-- An Apple Developer membership to be able to creatae the certificate.
+- An Apple Developer membership to be able to create the certificate.
 - Make sure your App ID has the “Push Notifications” service enabled.
 - Create a corresponding Provisioning Profile for your app ID.
 - Create an [Apple VoIP Services Certificate](https://developer.apple.com/library/prerelease/content/documentation/Performance/Conceptual/EnergyGuide-iOS/OptimizeVoIP.html#//apple_ref/doc/uid/TP40015243-CH30-SW1) for this app. 
