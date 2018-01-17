@@ -121,7 +121,7 @@ You are now ready to receive incoming calls. Rebuild your app and hit your appli
 ### <a name="bullet11"></a>11. Make client to client call
 Update your TwiML application and use the public URL of your application server’s `/makeCall` endpoint as the the Voice Request URL.
 
-<img height="667px" src="Images/twiml-makecall.png"/>
+<img src="Images/twiml-makecall.png"/>
 
 To make client to client calls, you need the application running on two devices. To run the application on an additional device, make sure you use a different identity in your access token when registering the new device.
 
