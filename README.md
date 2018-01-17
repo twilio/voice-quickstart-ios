@@ -18,6 +18,8 @@ To get started with the quickstart application follow these steps. Steps 1-6 wil
 8. [Create a Push Credential with your VoIP Service Certificate](#bullet8)
 9. [Configure Xcode project settings for VoIP push notifications](#bullet9)
 10. [Receive an incoming call](#bullet10)
+11. [Make client to client call](#bullet11)
+12. [Make client to PSTN call](#bullet12)
 
 ### <a name="bullet1"></a>1. Install the TwilioVoice framework using Cocoapods
 Under the quickstart path, run `pod install` and let the Cocoapods library create the workspace for you. Also please make sure to use **Cocoapods v1.0 and later**.
@@ -40,46 +42,12 @@ Follow the instructions in the README to get the application server up and runni
 
 ### <a name="bullet4"></a>4. Create a TwiML application
 Next, we need to create a TwiML application. A TwiML application identifies a public URL for retrieving [TwiML call control instructions](https://www.twilio.com/docs/api/twiml). When your iOS app makes a call to the Twilio cloud, Twilio will make a webhook request to this URL, your application server will respond with generated TwiML, and Twilio will execute the instructions you’ve provided.
-To create a TwiML application, go to the [TwiML app page](https://www.twilio.com/console/voice/dev-tools/twiml-apps). Create a new TwiML application, and use the public URL of your application server’s `/placeCall` endpoint as the Voice Request URL.
+To create a TwiML application, go to the [TwiML app page](https://www.twilio.com/console/voice/dev-tools/twiml-apps). Create a new TwiML application, and use the public URL of your application server’s `/outgoing` endpoint as the Voice Request URL.
 
 <img src="Images/create-twiml-app.png"/>
 
 As you can see we’ve used our [ngrok](https://ngrok.com/) public address in the Request URL field above.
 Save your TwiML Application configuration, and grab the **TwiML Application SID** (a long identifier beginning with the characters `AP`).
-
-You can also use `Twilio Functions` to create the TwiML application. Go to the [Functions Page](https://www.twilio.com/console/runtime/functions/manage) and create a new `Function` by choosing the `Blank` template. Provide `FUNCTION NAME` and `PATH`.
-
-The code snippet below demonstrates a simple TwiML application using `Twilio Functions` that enables making outgoing calls to a client or a phone number provided as `server_param_to` argument.
-
-```
-exports.handler = function(context, event, callback) {
-    let twiml = new Twilio.twiml.VoiceResponse();
-    let from = (event.server_param_from) ?
-               ("client:" + event.server_param_from) :
-               (event.From);
-    console.log(from);
-    to = event.server_param_to;
-
-     // Change to a Twilio number or a verified caller ID on your account
-    defaultCallerId = "1234567890";
-    phoneNumberChars = "+1234567890";
-
-    // Check if the call is made to a number or an identity. For simplicity, the following code assumes that identity name starts only with letters and not with numbers.
-    if (!to) {
-        console.log("TwiML Say");
-        twiml.say("Hello! Goodbye!");
-    } else if (phoneNumberChars.indexOf(to[0]) != -1) {
-        console.log("TwiML Dial Number");
-        twiml.dial({callerId : defaultCallerId}).number(to);
-    } else {
-        console.log("TwiML Dial Client");
-        twiml.dial({callerId : from}).client(to);
-    }
-
-    console.log(twiml.toString());
-    callback(null, twiml);
-};
-```
 
 ### <a name="bullet5"></a>5. Configure your application server
 Let's put the remaining `APP_SID` configuration info into `server.py` 
@@ -102,7 +70,7 @@ Build and run the app
 
 <img height="667px" src="Images/build-and-run.png"/>
 
-Use the text field to specify the number or the identity of the call receiver, then tap the “Place Outgoing Call” button to make a call. The TwiML parameters used in `TwilioVoice.call()` method should match the name used in the server. Tap “Hang Up” to disconnect
+Tap the “Place Outgoing Call” button to make a call, then tap “Hang Up” to disconnect
 
 <img height="667px" src="Images/hang-up.png"/>
 
@@ -149,6 +117,24 @@ On the project’s Capabilities tab, enable “**Push Notifications**”, and en
 You are now ready to receive incoming calls. Rebuild your app and hit your application server's **/placeCall** endpoint: `https://{YOUR-SERVER}/placeCall`. This will trigger a Twilio REST API request that will make an inbound call to your mobile app. Once your app accepts the call, you should hear a congratulatory message.
 
 <img height="667px" src="Images/incoming-call.png"/>
+
+### <a name="bullet11"></a>11. Make client to client call
+Update your TwiML application and use the public URL of your application server’s `/makeCall` endpoint as the the Voice Request URL.
+
+<img height="667px" src="Images/twiml-makecall.png"/>
+
+To make client to client calls, you need the application running on two devices. To run the application on an additional device, make sure you use a different identity in your access token when registering the new device.
+
+Use the text field to specify the identity of the call receiver, then tap the “Place Outgoing Call” button to make a call. The TwiML parameters used in `TwilioVoice.call()` method should match the name used in the server.
+
+<img height="667px" src="Images/client-to-client.png"/>
+
+### <a name="bullet12"></a>12. Make client to PSTN call
+A verified phone number is one that you can use as your Caller ID when making outbound calls with Twilio. This number has not been ported into Twilio and you do not pay Twilio for this phone number.
+
+To make client to number calls, first get a valid Twilio number to your account via https://www.twilio.com/console/phone-numbers/verified. Update `server.py` and replace `CALLER_NUMBER` with the verified number. Restart the server so it uses the new value. Voice Request URL of your TwiML application should point to the public URL of your application server’s `/makeCall` endpoint.
+
+<img height="667px" src="Images/client-to-pstn.png"/>
 
 ## More Documentation
 You can find more documentation on getting started as well as our latest AppleDoc below:
