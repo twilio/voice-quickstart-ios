@@ -70,7 +70,7 @@ Build and run the app
 
 <img height="667px" src="Images/build-and-run.png"/>
 
-Tap the “Call” button to make a call, then tap “Hang Up” to disconnect
+Leave the text field empty and press the call button to start a call. You will hear the congratulatory message. Support for dialing another client or number is described in steps 10 and 11. Tap "Hang Up" to disconnect.
 
 <img height="667px" src="Images/hang-up.png"/>
 
