@@ -13,11 +13,13 @@ import TwilioVoice
 
 let baseURLString = <#URL TO YOUR ACCESS TOKEN SERVER#>
 let accessTokenEndpoint = "/accessToken"
+let twimlParamTo = "to"
 
-class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOCallDelegate, CXProviderDelegate {
+class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOCallDelegate, CXProviderDelegate, UITextFieldDelegate {
 
     @IBOutlet weak var placeCallButton: UIButton!
     @IBOutlet weak var iconView: UIImageView!
+    @IBOutlet weak var outgoingValue: UITextField!
 
     var deviceTokenString:String?
 
@@ -66,6 +68,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         super.viewDidLoad()
 
         toggleUIState(isEnabled: true)
+        outgoingValue.delegate = self
     }
 
     override func didReceiveMemoryWarning() {
@@ -94,6 +97,13 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             
             performStartCallAction(uuid: uuid, handle: handle)
         }
+    }
+    
+    
+    // MARK: UITextFieldDelegate
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        outgoingValue.resignFirstResponder()
+        return true
     }
 
 
@@ -238,7 +248,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         stopSpin()
         toggleUIState(isEnabled: true)
-        self.placeCallButton.setTitle("Place Outgoing Call", for: .normal)
+        self.placeCallButton.setTitle("Call", for: .normal)
     }
     
     
@@ -449,7 +459,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             return
         }
         
-        call = TwilioVoice.call(accessToken, params: [:], uuid:uuid, delegate: self)
+        call = TwilioVoice.call(accessToken, params: [twimlParamTo : outgoingValue.text!], uuid:uuid, delegate: self)
         self.callKitCompletionCallback = completionHandler
     }
     
