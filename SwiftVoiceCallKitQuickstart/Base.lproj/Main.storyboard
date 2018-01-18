@@ -39,9 +39,20 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Dial a client name or phone number. Leaving the field empty results in an automated response." translatesAutoresizingMaskIntoConstraints="NO" id="z3V-7u-1eI">
+                                <rect key="frame" x="48" y="417" width="300" height="48"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="9Gv-az-zVe"/>
+                                    <constraint firstAttribute="height" constant="48" id="RAC-Lh-jPG"/>
+                                </constraints>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uic-jJ-PVN">
-                                <rect key="frame" x="120" y="432" width="135" height="30"/>
-                                <state key="normal" title="Place Outgoing Call"/>
+                                <rect key="frame" x="172.5" y="462" width="30" height="30"/>
+                                <state key="normal" title="Call"/>
                                 <connections>
                                     <action selector="placeCall:" destination="BYZ-38-t0r" eventType="touchUpInside" id="VPR-2L-Qq8"/>
                                 </connections>
@@ -51,10 +62,12 @@
                         <constraints>
                             <constraint firstItem="wqn-ZD-zTx" firstAttribute="width" secondItem="wqn-ZD-zTx" secondAttribute="height" multiplier="1:1" id="3fG-Bb-d0i"/>
                             <constraint firstItem="wqn-ZD-zTx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="7tL-jC-ghz"/>
+                            <constraint firstItem="z3V-7u-1eI" firstAttribute="top" secondItem="rhQ-vm-Q9J" secondAttribute="bottom" constant="8" id="K76-Pj-vru"/>
                             <constraint firstItem="Uic-jJ-PVN" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="TDj-X9-ccD"/>
                             <constraint firstItem="rhQ-vm-Q9J" firstAttribute="firstBaseline" secondItem="wqn-ZD-zTx" secondAttribute="baseline" constant="42.5" id="ckB-PB-Pwa"/>
                             <constraint firstItem="wqn-ZD-zTx" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-97.5" id="dib-4M-LIF"/>
-                            <constraint firstItem="Uic-jJ-PVN" firstAttribute="top" secondItem="rhQ-vm-Q9J" secondAttribute="bottom" constant="23" id="e9l-oU-do5"/>
+                            <constraint firstItem="Uic-jJ-PVN" firstAttribute="top" secondItem="rhQ-vm-Q9J" secondAttribute="bottom" constant="53" id="e9l-oU-do5"/>
+                            <constraint firstItem="z3V-7u-1eI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="10.5" id="uHx-nq-p8z"/>
                             <constraint firstItem="rhQ-vm-Q9J" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="usP-tX-t3X"/>
                         </constraints>
                     </view>

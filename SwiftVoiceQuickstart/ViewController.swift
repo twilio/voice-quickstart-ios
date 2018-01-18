@@ -296,7 +296,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         playDisconnectSound()
         toggleUIState(isEnabled: true)
         stopSpin()
-        self.placeCallButton.setTitle("Place Outgoing Call", for: .normal)
+        self.placeCallButton.setTitle("Call", for: .normal)
     }
     
     
