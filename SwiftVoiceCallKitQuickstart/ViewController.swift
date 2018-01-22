@@ -459,7 +459,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             return
         }
         
-        call = TwilioVoice.call(accessToken, params: [twimlParamTo : outgoingValue.text!], uuid:uuid, delegate: self)
+        call = TwilioVoice.call(accessToken, params: [twimlParamTo : self.outgoingValue.text!], uuid:uuid, delegate: self)
         self.callKitCompletionCallback = completionHandler
     }
     

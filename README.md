@@ -22,7 +22,7 @@ To get started with the quickstart application follow these steps. Steps 1-6 wil
 12. [Make client to PSTN call](#bullet12)
 
 ### <a name="bullet1"></a>1. Install the TwilioVoice framework using Cocoapods
-Under the quickstart path, run `pod install` and let the Cocoapods library create the workspace for you. Also please make sure to use **Cocoapods v1.0 and later**.
+Under the quickstart path, run `pod update` and `pod install` and let the Cocoapods library create the workspace for you. Also please make sure to use **Cocoapods v1.0 and later**.
 Once Cocoapods finishes installing, open the `SwiftVoiceQuickstart.xcworkspace` and you will find a basic Swift quickstart project and a CallKit quickstart project.
 
 ### <a name="bullet2"></a>2. Create a Voice API key
@@ -110,9 +110,19 @@ Now let's go back to `server.py` and update the Push Credential SID. The Push Cr
     PUSH_CREDENTIAL_SID = 'CR***'
 
 ### <a name="bullet9"></a>9. Configure Xcode project settings for push notifications
-On the project’s Capabilities tab, enable “**Push Notifications**”, and enable both “**Voice over IP**” and “**Audio, AirPlay and Picture in Picture**” capabilities in the Background Modes
+On the project’s Capabilities tab, enable “**Push Notifications**”.
+In Xcode 8 or earlier, enable both “**Voice over IP**” and “**Audio, AirPlay and Picture in Picture**” capabilities in the Background Modes
 
 <img src="Images/xcode-project-capabilities.png"/>
+
+In Xcode 9, add a "**UIBackgroundModes**" dictionary with "**audio**" and "**voip**" to the app's plist.
+```
+<key>UIBackgroundModes</key>
+<array>
+  <string>audio</string>
+  <string>voip</string>
+</array>
+```
 
 ### <a name="bullet10"></a>10. Receive an incoming call
 You are now ready to receive incoming calls. Rebuild your app and hit your application server's **/placeCall** endpoint: `https://{YOUR-SERVER}/placeCall`. This will trigger a Twilio REST API request that will make an inbound call to your mobile app. Once your app accepts the call, you should hear a congratulatory message.
