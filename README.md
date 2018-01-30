@@ -34,8 +34,15 @@ Go to the [Voice API Keys](https://www.twilio.com/console/voice/runtime/api-keys
 **Save the generated `API_KEY` and `API_KEY_SECRET` in your notepad**. You will need them in the next step.
 
 ### <a name="bullet3"></a>3. Configure a server to generate an access token to be used in the app
-Download the [starter project for the server](https://github.com/twilio/voice-quickstart-server-python).
-Follow the instructions in the README to get the application server up and running locally and accessible via the public Internet. For now just replace the **Twilio Account SID** that you can obtain from the [console](https://www.twilio.com/console), and the `API_KEY` and `API_SECRET` you obtained in the previous step. 
+
+Download one of the starter projects for the server.
+
+* [voice-quickstart-server-python](https://github.com/twilio/voice-quickstart-server-python)
+* [voice-quickstart-server-node](https://github.com/twilio/voice-quickstart-server-node)
+* [voice-quickstart-server-java](https://github.com/twilio/voice-quickstart-server-java)
+* [voice-quickstart-server-php](https://github.com/twilio/voice-quickstart-server-php)
+
+Follow the instructions in the server's README to get the application server up and running locally and accessible via the public Internet. For now just replace the **Twilio Account SID** that you can obtain from the [console](https://www.twilio.com/console), and the `API_KEY` and `API_SECRET` you obtained in the previous step.
     
     ACCOUNT_SID = 'AC***'
     API_KEY = 'SK***'
@@ -60,7 +67,7 @@ Let's put the remaining `APP_SID` configuration info into `server.py`
 
 Once you’ve done that, restart the server so it uses the new configuration info. Now it's time to test.
 
-Open up a browser and visit the URL for your application server's **Access Token endpoint**: `https://{YOUR-SERVER}/accessToken`. If everything is configured correctly, you should see a long string of letters and numbers, which is a Twilio Access Token. Your iOS app will use a token like this to connect to Twilio.
+Open up a browser and visit the URL for your application server's **Access Token endpoint**: `https://{YOUR_SERVER_URL}/accessToken`. If everything is configured correctly, you should see a long string of letters and numbers, which is a Twilio Access Token. Your iOS app will use a token like this to connect to Twilio.
 
 ### <a name="bullet6"></a>6. Run the app
 Now let’s go back to the `SwiftVoiceQuickstart.xcworkspace`. Update the placeholder of `baseURLString` with your ngrok public URL
@@ -116,7 +123,7 @@ On the project’s Capabilities tab, enable “**Push Notifications**”, and en
 <img src="Images/xcode-project-capabilities.png"/>
 
 ### <a name="bullet10"></a>10. Receive an incoming call
-You are now ready to receive incoming calls. Rebuild your app and hit your application server's **/placeCall** endpoint: `https://{YOUR-SERVER}/placeCall`. This will trigger a Twilio REST API request that will make an inbound call to your mobile app. Once your app accepts the call, you should hear a congratulatory message.
+You are now ready to receive incoming calls. Rebuild your app and hit your application server's **/placeCall** endpoint: `https://{YOUR_SERVER_URL}/placeCall`. This will trigger a Twilio REST API request that will make an inbound call to your mobile app. Once your app accepts the call, you should hear a congratulatory message.
 
 <img height="667px" src="Images/incoming-call.png"/>
 
