@@ -37,10 +37,10 @@ Go to the [Voice API Keys](https://www.twilio.com/console/voice/runtime/api-keys
 
 Download one of the starter projects for the server.
 
-* [voice-quickstart-server-python](https://github.com/twilio/voice-quickstart-server-python)
-* [voice-quickstart-server-node](https://github.com/twilio/voice-quickstart-server-node)
 * [voice-quickstart-server-java](https://github.com/twilio/voice-quickstart-server-java)
+* [voice-quickstart-server-node](https://github.com/twilio/voice-quickstart-server-node)
 * [voice-quickstart-server-php](https://github.com/twilio/voice-quickstart-server-php)
+* [voice-quickstart-server-python](https://github.com/twilio/voice-quickstart-server-python)
 
 Follow the instructions in the server's README to get the application server up and running locally and accessible via the public Internet. For now just replace the **Twilio Account SID** that you can obtain from the [console](https://www.twilio.com/console), and the `API_KEY` and `API_SECRET` you obtained in the previous step.
     
