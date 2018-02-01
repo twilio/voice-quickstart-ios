@@ -106,7 +106,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     }
     
     @IBAction func speakerSwitchToggled(_ sender: UISwitch) {
-        routeAudioToSpeaker(toSpeaker: sender.isOn)
+        toggleAudioRoute(toSpeaker: sender.isOn)
     }
     
     // MARK: UITextFieldDelegate
@@ -293,7 +293,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         toggleUIState(isEnabled: true, showCallControl: true)
         stopSpin()
-        routeAudioToSpeaker(toSpeaker: true)
+        toggleAudioRoute(toSpeaker: true)
     }
     
     func call(_ call: TVOCall, didFailToConnectWithError error: Error) {
@@ -323,7 +323,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     
     
     // MARK: AVAudioSession
-    func routeAudioToSpeaker(toSpeaker: Bool) {
+    func toggleAudioRoute(toSpeaker: Bool) {
         do {
             if (toSpeaker) {
                 try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
