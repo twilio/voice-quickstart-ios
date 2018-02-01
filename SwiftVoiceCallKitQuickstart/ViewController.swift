@@ -20,7 +20,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     @IBOutlet weak var placeCallButton: UIButton!
     @IBOutlet weak var iconView: UIImageView!
     @IBOutlet weak var outgoingValue: UITextField!
-
+    @IBOutlet weak var callControlView: UIView!
+    @IBOutlet weak var muteSwitch: UISwitch!
+    @IBOutlet weak var speakerSwitch: UISwitch!
+    
     var deviceTokenString:String?
 
     var voipRegistry:PKPushRegistry
@@ -67,7 +70,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        toggleUIState(isEnabled: true)
+        toggleUIState(isEnabled: true, showCallControl: false)
         outgoingValue.delegate = self
     }
 
@@ -83,14 +86,21 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         return try? String.init(contentsOf: accessTokenURL, encoding: .utf8)
     }
     
-    func toggleUIState(isEnabled: Bool) {
+    func toggleUIState(isEnabled: Bool, showCallControl: Bool) {
         placeCallButton.isEnabled = isEnabled
+        if (showCallControl) {
+            callControlView.isHidden = false
+            muteSwitch.isOn = false
+            speakerSwitch.isOn = true
+        } else {
+            callControlView.isHidden = true
+        }
     }
 
     @IBAction func placeCall(_ sender: UIButton) {
         if (self.call != nil && self.call?.state == .connected) {
             self.call?.disconnect()
-            self.toggleUIState(isEnabled: false)
+            self.toggleUIState(isEnabled: false, showCallControl: false)
         } else {
             let uuid = UUID()
             let handle = "Voice Bot"
@@ -99,6 +109,17 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
     }
     
+    @IBAction func muteSwitchToggled(_ sender: UISwitch) {
+        if let call = call {
+            call.isMuted = sender.isOn
+        } else {
+            NSLog("No active call to be muted")
+        }
+    }
+    
+    @IBAction func speakerSwitchToggled(_ sender: UISwitch) {
+        routeAudioToSpeaker(toSpeaker: sender.isOn)
+    }
     
     // MARK: UITextFieldDelegate
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -122,8 +143,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         let deviceToken = (credentials.token as NSData).description
 
         TwilioVoice.register(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
-            if (error != nil) {
-                NSLog("An error occurred while registering: \(error?.localizedDescription)")
+            if let error = error {
+                NSLog("An error occurred while registering: \(error.localizedDescription)")
             }
             else {
                 NSLog("Successfully registered for VoIP push notifications.")
@@ -145,8 +166,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
         
         TwilioVoice.unregister(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
-            if (error != nil) {
-                NSLog("An error occurred while unregistering: \(error?.localizedDescription)")
+            if let error = error {
+                NSLog("An error occurred while unregistering: \(error.localizedDescription)")
             }
             else {
                 NSLog("Successfully unregistered from VoIP push notifications.")
@@ -215,9 +236,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         self.placeCallButton.setTitle("Hang Up", for: .normal)
         
-        toggleUIState(isEnabled: true)
+        toggleUIState(isEnabled: true, showCallControl: true)
         stopSpin()
-        routeAudioToSpeaker()
+        routeAudioToSpeaker(toSpeaker: true)
     }
     
     func call(_ call: TVOCall, didFailToConnectWithError error: Error) {
@@ -247,15 +268,19 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         self.callKitCompletionCallback = nil
         
         stopSpin()
-        toggleUIState(isEnabled: true)
+        toggleUIState(isEnabled: true, showCallControl: false)
         self.placeCallButton.setTitle("Call", for: .normal)
     }
     
     
     // MARK: AVAudioSession
-    func routeAudioToSpeaker() {
+    func routeAudioToSpeaker(toSpeaker: Bool) {
         do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, with: .defaultToSpeaker)
+            if (toSpeaker) {
+                try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+            } else {
+                try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+            }
         } catch {
             NSLog(error.localizedDescription)
         }
@@ -325,7 +350,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
         NSLog("provider:performStartCallAction:")
         
-        toggleUIState(isEnabled: false)
+        toggleUIState(isEnabled: false, showCallControl: false)
         startSpin()
 
         TwilioVoice.configureAudioSession()
