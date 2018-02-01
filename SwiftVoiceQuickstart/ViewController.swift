@@ -90,7 +90,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             playOutgoingRingtone(completion: { [weak self] in
                 if let strongSelf = self {
                     strongSelf.call = TwilioVoice.call(accessToken, params: [twimlParamTo : strongSelf.outgoingValue.text!], delegate: strongSelf)
-                    strongSelf.toggleUIState(isEnabled: false)
+                    strongSelf.toggleUIState(isEnabled: false, showCallControl: false)
                     strongSelf.startSpin()
                 }
             })
