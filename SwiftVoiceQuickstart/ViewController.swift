@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  Twilio Voice Quickstart - Swift
 //
-//  Copyright © 2016-2017 Twilio, Inc. All rights reserved.
+//  Copyright © 2017-2018 Twilio, Inc. All rights reserved.
 //
 
 import UIKit
@@ -11,6 +11,10 @@ import PushKit
 import TwilioVoice
 
 let baseURLString = <#URL TO YOUR ACCESS TOKEN SERVER#>
+/**
+ If your token server is written in PHP, accessTokenEndpoint needs .php extension at the end.
+ For example : /accessToken.php
+ */
 let accessTokenEndpoint = "/accessToken"
 let twimlParamTo = "to"
 
