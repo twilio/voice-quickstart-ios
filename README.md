@@ -74,7 +74,19 @@ Open up a browser and visit the URL for your application server's **Access Token
 ### <a name="bullet6"></a>6. Run the app
 Now let’s go back to the `SwiftVoiceQuickstart.xcworkspace`. Update the placeholder of `baseURLString` with your ngrok public URL
 
-<kbd><img src="Images/update-base-url.png"/></kbd>
+```swift
+import UIKit
+import AVFoundation
+import PushKit
+import TwilioVoice
+
+let baseURLString = "https://3b57e324.ngrok.io"
+let accessTokenEndpoint = "/accessToken"
+let identity = "alice"
+let twimlParamTo = "to"
+
+class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOCallDelegate, AVAudioPlayerDelegate, UITextFieldDelegate {
+```
 
 Build and run the app
 
@@ -140,7 +152,13 @@ You are now ready to receive incoming calls. Rebuild your app and hit your appli
 <kbd><img height="667px" src="Images/incoming-call.png"/></kbd>
 
 ### <a name="bullet11"></a>11. Make client to client call
-To make client to client calls, you need the application running on two devices. To run the application on an additional device, make sure you use a different identity in your access token when registering the new device.
+To make client to client calls, you need the application running on two devices. To run the application on an additional device, make sure you use a different identity in your access token when registering the new device. For example, change `kIdentity` to `bob` and run the application
+
+```swift
+let accessTokenEndpoint = "/accessToken"
+let identity = "bob"
+let twimlParamTo = "to"
+```
 
 Use the text field to specify the identity of the call receiver, then tap the “Call” button to make a call. The TwiML parameters used in `TwilioVoice.call()` method should match the name used in the server.
 

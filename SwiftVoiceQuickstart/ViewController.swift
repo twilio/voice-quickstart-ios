@@ -13,6 +13,7 @@ import TwilioVoice
 let baseURLString = <#URL TO YOUR ACCESS TOKEN SERVER#>
 // If your token server is written in PHP, accessTokenEndpoint needs .php extension at the end. For example : /accessToken.php
 let accessTokenEndpoint = "/accessToken"
+let identity = "alice"
 let twimlParamTo = "to"
 
 class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOCallDelegate, AVAudioPlayerDelegate, UITextFieldDelegate {
@@ -61,7 +62,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     }
 
     func fetchAccessToken() -> String? {
-        guard let accessTokenURL = URL(string: baseURLString + accessTokenEndpoint) else {
+        let endpointWithIdentity = String(format: "%@?identity=%@", accessTokenEndpoint, identity)
+        guard let accessTokenURL = URL(string: baseURLString + endpointWithIdentity) else {
             return nil
         }
 
