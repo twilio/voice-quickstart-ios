@@ -11,8 +11,7 @@ import PushKit
 import TwilioVoice
 
 let baseURLString = <#URL TO YOUR ACCESS TOKEN SERVER#>
-// If your token server is written in PHP, accessTokenEndpoint needs .php extension at the end.
-// For example : /accessToken.php
+// If your token server is written in PHP, accessTokenEndpoint needs .php extension at the end. For example : /accessToken.php
 let accessTokenEndpoint = "/accessToken"
 let twimlParamTo = "to"
 
