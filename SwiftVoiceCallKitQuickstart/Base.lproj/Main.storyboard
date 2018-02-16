@@ -39,17 +39,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Dial a client name or phone number. Leaving the field empty results in an automated response." translatesAutoresizingMaskIntoConstraints="NO" id="z3V-7u-1eI">
-                                <rect key="frame" x="48" y="417" width="300" height="48"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="300" id="9Gv-az-zVe"/>
-                                    <constraint firstAttribute="height" constant="48" id="RAC-Lh-jPG"/>
-                                </constraints>
-                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uic-jJ-PVN">
                                 <rect key="frame" x="172.5" y="462" width="30" height="30"/>
                                 <state key="normal" title="Call"/>
@@ -95,18 +84,28 @@
                                     <constraint firstAttribute="height" constant="88" id="edv-q4-hws"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dial a client name or phone number. Leaving the field empty results in an automated response." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zwV-cd-S0l">
+                                <rect key="frame" x="59" y="417" width="256" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="hZt-6Q-bpz"/>
+                                    <constraint firstAttribute="width" constant="256" id="qsn-tN-Cej"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="Uic-jJ-PVN" firstAttribute="top" secondItem="zwV-cd-S0l" secondAttribute="bottom" constant="5" id="0IJ-fk-VDK"/>
                             <constraint firstItem="wqn-ZD-zTx" firstAttribute="width" secondItem="wqn-ZD-zTx" secondAttribute="height" multiplier="1:1" id="3fG-Bb-d0i"/>
                             <constraint firstItem="wqn-ZD-zTx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="7tL-jC-ghz"/>
-                            <constraint firstItem="z3V-7u-1eI" firstAttribute="top" secondItem="rhQ-vm-Q9J" secondAttribute="bottom" constant="8" id="K76-Pj-vru"/>
                             <constraint firstItem="Uic-jJ-PVN" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="TDj-X9-ccD"/>
                             <constraint firstItem="Ruy-Jc-pNi" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Wtn-zO-iEK"/>
                             <constraint firstItem="rhQ-vm-Q9J" firstAttribute="firstBaseline" secondItem="wqn-ZD-zTx" secondAttribute="baseline" constant="42.5" id="ckB-PB-Pwa"/>
                             <constraint firstItem="wqn-ZD-zTx" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-97.5" id="dib-4M-LIF"/>
-                            <constraint firstItem="Uic-jJ-PVN" firstAttribute="top" secondItem="rhQ-vm-Q9J" secondAttribute="bottom" constant="53" id="e9l-oU-do5"/>
-                            <constraint firstItem="z3V-7u-1eI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="10.5" id="uHx-nq-p8z"/>
+                            <constraint firstItem="zwV-cd-S0l" firstAttribute="top" secondItem="rhQ-vm-Q9J" secondAttribute="bottom" constant="8" id="iHE-nh-FMY"/>
+                            <constraint firstItem="zwV-cd-S0l" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="jUO-8C-BeK"/>
                             <constraint firstItem="rhQ-vm-Q9J" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="usP-tX-t3X"/>
                             <constraint firstItem="Ruy-Jc-pNi" firstAttribute="top" secondItem="Uic-jJ-PVN" secondAttribute="bottom" constant="8" id="zYm-Ph-T9F"/>
                         </constraints>
