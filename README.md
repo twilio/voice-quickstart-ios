@@ -9,7 +9,7 @@
 ## Quickstart
 To get started with the quickstart application follow these steps. Steps 1-6 will enable the application to make a call. The remaining steps 7-10 will enable the application to receive incoming calls in the form of push notifications using Apple’s VoIP Service.
 
-1. [Install the TwilioVoice framework using Cocoapods](#bullet1)
+1. [Install the TwilioVoice framework](#bullet1)
 2. [Create a Voice API key](#bullet2)
 3. [Configure a server to generate an access token to be used in the app](#bullet3)
 4. [Create a TwiML application](#bullet4)
@@ -22,7 +22,32 @@ To get started with the quickstart application follow these steps. Steps 1-6 wil
 11. [Make client to client call](#bullet11)
 12. [Make client to PSTN call](#bullet12)
 
-### <a name="bullet1"></a>1. Install the TwilioVoice framework using Cocoapods
+### <a name="bullet1"></a>1. Install the TwilioVoice framework
+
+**Carthage**
+
+Add the following line to your Cartfile
+
+```
+github "twilio/twilio-voice-ios"
+```
+
+Then run `carthage bootstrap` (or `carthage update` if you are updating your SDKs)
+
+On your application targets’ “Build Phases” settings tab, click the “+” icon and choose “New Run Script Phase”. Create a Run Script in which you specify your shell (ex: `/bin/sh`), add the following contents to the script area below the shell:
+
+```
+/usr/local/bin/carthage copy-frameworks
+```
+
+Add the paths to the frameworks you want to use under “Input Files”, e.g.:
+
+```
+$(SRCROOT)/Carthage/Build/iOS/TwilioVoice.framework
+```
+
+**Cocoapods**
+
 Under the quickstart path, run `pod install` and let the Cocoapods library create the workspace for you. Also please make sure to use **Cocoapods v1.0 and later**.
 Once Cocoapods finishes installing, open the `SwiftVoiceQuickstart.xcworkspace` and you will find a basic Swift quickstart project and a CallKit quickstart project.
 
