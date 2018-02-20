@@ -6,7 +6,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -39,17 +38,6 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Dial a client name or phone number. Leaving the field empty results in an automated response." translatesAutoresizingMaskIntoConstraints="NO" id="FY3-Uq-9WD">
-                                <rect key="frame" x="49" y="429" width="300" height="48"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="300" id="7gl-Hh-Mbu"/>
-                                    <constraint firstAttribute="height" constant="48" id="Uql-5S-C2D"/>
-                                </constraints>
-                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uic-jJ-PVN">
                                 <rect key="frame" x="172" y="476" width="30" height="30"/>
                                 <state key="normal" title="Call"/>
@@ -95,20 +83,29 @@
                                     <constraint firstAttribute="width" constant="240" id="O17-uz-OD8"/>
                                 </constraints>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dial a client name or phone number. Leaving the field empty results in an automated response." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VXD-4x-KDu">
+                                <rect key="frame" x="59" y="429" width="256" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="256" id="XBC-2h-WXV"/>
+                                    <constraint firstAttribute="height" constant="40" id="bNO-Rg-Fsv"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="wqn-ZD-zTx" firstAttribute="width" secondItem="wqn-ZD-zTx" secondAttribute="height" multiplier="1:1" id="3fG-Bb-d0i"/>
-                            <constraint firstItem="Uic-jJ-PVN" firstAttribute="top" secondItem="wqn-ZD-zTx" secondAttribute="bottom" constant="120" id="5Pe-Y9-dmx"/>
                             <constraint firstItem="ezO-Z8-CWI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6g4-nb-agL"/>
-                            <constraint firstItem="FY3-Uq-9WD" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" constant="11.5" id="6ua-jb-hZq"/>
                             <constraint firstItem="wqn-ZD-zTx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="7tL-jC-ghz"/>
-                            <constraint firstItem="FY3-Uq-9WD" firstAttribute="top" secondItem="aGZ-uG-U9y" secondAttribute="bottom" constant="8" id="EUc-d0-QFu"/>
                             <constraint firstItem="ezO-Z8-CWI" firstAttribute="top" secondItem="Uic-jJ-PVN" secondAttribute="bottom" constant="8" id="GtX-Db-8Yr"/>
-                            <constraint firstItem="Uic-jJ-PVN" firstAttribute="firstBaseline" secondItem="aGZ-uG-U9y" secondAttribute="baseline" constant="86" id="RiK-g0-qWb"/>
                             <constraint firstItem="Uic-jJ-PVN" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="TDj-X9-ccD"/>
                             <constraint firstItem="aGZ-uG-U9y" firstAttribute="top" secondItem="wqn-ZD-zTx" secondAttribute="bottom" constant="35" id="TGC-7M-X4h"/>
+                            <constraint firstItem="Uic-jJ-PVN" firstAttribute="top" secondItem="VXD-4x-KDu" secondAttribute="bottom" constant="7" id="UuK-nT-VTe"/>
+                            <constraint firstItem="VXD-4x-KDu" firstAttribute="top" secondItem="aGZ-uG-U9y" secondAttribute="bottom" constant="8" id="YpG-ET-NAb"/>
                             <constraint firstItem="aGZ-uG-U9y" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="b0B-fF-msQ"/>
+                            <constraint firstItem="VXD-4x-KDu" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="cEK-iA-eK1"/>
                             <constraint firstItem="wqn-ZD-zTx" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-97.5" id="dib-4M-LIF"/>
                         </constraints>
                     </view>
