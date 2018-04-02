@@ -88,7 +88,7 @@ As you can see we’ve used our [ngrok](https://ngrok.com/) public address in th
 Save your TwiML Application configuration, and grab the **TwiML Application SID** (a long identifier beginning with the characters `AP`).
 
 ### <a name="bullet5"></a>5. Configure your application server
-Let's put the remaining `APP_SID` configuration info into `server.py` 
+Let's put the remaining `APP_SID` configuration info into your server code. 
 
     ACCOUNT_SID = 'AC***'
     API_KEY = 'SK***'
@@ -155,7 +155,7 @@ Once the app is ready for store submission, update the plist with “APS Environ
 
 <kbd><img src="Images/add-push-credential.png"/></kbd>
 
-Now let's go back to `server.py` and update the Push Credential SID. The Push Credential SID will now be embedded in your access token.
+Now let's go back to your server code and update the Push Credential SID. The Push Credential SID will now be embedded in your access token.
 
     PUSH_CREDENTIAL_SID = 'CR***'
 
@@ -195,7 +195,7 @@ Use the text field to specify the identity of the call receiver, then tap the �
 ### <a name="bullet12"></a>12. Make client to PSTN call
 A verified phone number is one that you can use as your Caller ID when making outbound calls with Twilio. This number has not been ported into Twilio and you do not pay Twilio for this phone number.
 
-To make client to number calls, first get a valid Twilio number to your account via https://www.twilio.com/console/phone-numbers/verified. Update `server.py` and replace `CALLER_NUMBER` with the verified number. Restart the server so it uses the new value. Voice Request URL of your TwiML application should point to the public URL of your application server’s `/makeCall` endpoint.
+To make client to number calls, first get a valid Twilio number to your account via https://www.twilio.com/console/phone-numbers/verified. Update your server code and replace `CALLER_NUMBER` with the verified number. Restart the server so it uses the new value. Voice Request URL of your TwiML application should point to the public URL of your application server’s `/makeCall` endpoint.
 
 <kbd><img height="667px" src="Images/client-to-pstn.png"/></kbd>
 
