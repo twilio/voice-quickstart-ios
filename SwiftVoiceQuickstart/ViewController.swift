@@ -180,7 +180,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     }
     
     /**
-     * This is delegate method is available in iOS 11 and above. Call the completion handler once the
+     * This delegate method is available in iOS 11 and above. Call the completion handler once the
      * notification payload is passed to the `TwilioVoice.handleNotification()` method.
      */
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
