@@ -180,6 +180,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         self.deviceTokenString = nil
     }
 
+    /**
+     * Try using the `pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:` method if
+     * your application is targeting iOS 11. According to the docs, this delegate method is deprecated by Apple.
+     */
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:")
 
@@ -188,6 +192,19 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
     }
 
+    /**
+     * This delegate method is available on iOS 11 and above. Call the completion handler once the
+     * notification payload is passed to the `TwilioVoice.handleNotification()` method.
+     */
+    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
+        NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:completion:")
+        
+        if (type == PKPushType.voIP) {
+            TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)
+        }
+        
+        completion()
+    }
 
     // MARK: TVONotificaitonDelegate
     func callInviteReceived(_ callInvite: TVOCallInvite) {
