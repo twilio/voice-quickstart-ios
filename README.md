@@ -302,6 +302,9 @@ To learn more about how to use TwiML and the Programmable Voice Calls API, check
 
 ## Issues and Support
 Please file any issues you find here on Github: [Voice Swift Quickstart](https://github.com/twilio/voice-quickstart-swift).
+Please ensure that you are not sharing any
+[Personally Identifiable Information(PII)](https://www.twilio.com/docs/glossary/what-is-personally-identifiable-information-pii)
+or sensitive account information (API keys, credentials, etc.) when reporting an issue.
 
 For general inquiries related to the Voice SDK you can [file a support ticket](https://support.twilio.com/hc/en-us/requests/new).
 
