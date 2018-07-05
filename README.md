@@ -61,7 +61,7 @@ Once Cocoapods finishes installing, open the `SwiftVoiceQuickstart.xcworkspace` 
 Note: You may need to update the [CocoaPods Master Spec Repo](https://github.com/CocoaPods/Specs) by running `pod repo update master` in order to fetch the latest specs for TwilioVoice.
 
 ### <a name="bullet2"></a>2. Create a Voice API key
-Go to the [Voice API Keys](https://www.twilio.com/console/voice/runtime/api-keys) page and create a new API key:
+Go to the [Voice API Keys](https://www.twilio.com/console/voice/settings/api-keys) page and create a new API key:
 
 <kbd><img src="Images/create-api-key.png"/></kbd>
 
@@ -148,7 +148,7 @@ Export your VoIP Service Certificate as a .p12 file, then extract the certificat
     $> openssl rsa -in key.pem -out key.pem
     $> openssl pkcs12 -in PATH_TO_YOUR_P12 -clcerts -nokeys -out cert.pem
 
-Go to the [Push Credentials page](https://www.twilio.com/console/voice/credentials) and create a new Push Credential. Paste the certificate and private key extracted from your certificate. You must paste the keys in as plaintext:
+Go to the [Push Credentials page](https://www.twilio.com/console/voice/sdks/credentials) and create a new Push Credential. Paste the certificate and private key extracted from your certificate. You must paste the keys in as plaintext:
 
 * For the `cert.pem` you should paste everything from `-----BEGIN CERTIFICATE-----` to `-----END CERTIFICATE-----`. 
 * For the `key.pem` you should paste everything from `-----BEGIN RSA PRIVATE KEY-----` to `-----END RSA PRIVATE KEY-----`.
