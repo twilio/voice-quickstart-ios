@@ -140,9 +140,9 @@ Go to [Apple Developer portal](https://developer.apple.com/) and you’ll need t
 <kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/create-voip-service-certificate.png"/></kbd>
 
 ### <a name="bullet8"></a>8. Create a Push Credential with your VoIP Service Certificate
-Once you have generated the VoIP Services Certificate, you will need to upload it to Twilio so that Twilio can send push notifications to your app on your behalf.
+Once you have generated the VoIP Services Certificate using Keychain Access, you will need to upload it to Twilio so that Twilio can send push notifications to your app on your behalf.
 
-Export your VoIP Service Certificate as a .p12 file, then extract the certificate and private key from the .p12 file using the `openssl` command
+Export your VoIP Service Certificate as a .p12 file from Keychain Access, then extract the certificate and private key from the .p12 file using the `openssl` command. If .p12 is not an option for exporting type `voip` into the search bar of Keychain Access and make sure you select both items when exporting the certificate.
 
     $> openssl pkcs12 -in PATH_TO_YOUR_P12 -nocerts -out key.pem
     $> openssl rsa -in key.pem -out key.pem
@@ -169,7 +169,7 @@ In Xcode 8 or earlier, enable both “**Voice over IP**” and “**Audio, AirPl
 
 <kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/xcode-project-capabilities.png"/></kbd>
 
-In Xcode 9+, add a "**UIBackgroundModes**" dictionary with "**audio**" and "**voip**" to the app's plist.
+In Xcode 9+, make sure that the “**Audio, AirPlay and Picture in Picture**” capability is enabled and a "**UIBackgroundModes**" dictionary with "**audio**" and "**voip**" is in the app's plist.
 ```
 <key>UIBackgroundModes</key>
 <array>
