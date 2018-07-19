@@ -135,7 +135,7 @@ Go to [Apple Developer portal](https://developer.apple.com/) and you’ll need t
 - An Apple Developer membership to be able to create the certificate.
 - Make sure your App ID has the “Push Notifications” service enabled.
 - Create a corresponding Provisioning Profile for your app ID.
-- Create an [Apple VoIP Services Certificate](https://developer.apple.com/library/prerelease/content/documentation/Performance/Conceptual/EnergyGuide-iOS/OptimizeVoIP.html#//apple_ref/doc/uid/TP40015243-CH30-SW1) for this app. 
+- Create an [Apple VoIP Services Certificate](https://developer.apple.com/library/prerelease/content/documentation/Performance/Conceptual/EnergyGuide-iOS/OptimizeVoIP.html#//apple_ref/doc/uid/TP40015243-CH30-SW1) for this app by navigating to Certificates --> Production and clicking the `+` on the top right to add the new certificate.
 
 <kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/create-voip-service-certificate.png"/></kbd>
 
