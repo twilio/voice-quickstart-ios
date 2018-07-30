@@ -51,8 +51,6 @@ Add the paths to the frameworks you want to use under “Input Files”, e.g.:
 $(SRCROOT)/Carthage/Build/iOS/TwilioVoice.framework
 ```
 
-<kbd><img src="Images/carthage.png"/></kbd>
-
 **Cocoapods**
 
 Under the quickstart path, run `pod install` and let the Cocoapods library create the workspace for you. Also please make sure to use **Cocoapods v1.0 and later**.
