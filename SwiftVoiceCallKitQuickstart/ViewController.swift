@@ -90,10 +90,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     func fetchAccessToken() -> String? {
         let endpointWithIdentity = String(format: "%@?identity=%@", accessTokenEndpoint, identity)
-        guard let accessTokenURL = URL(string: "https://client:chunder@chunder-interactive.appspot.com/accessToken?realm=prod&identity=voiceqs&push_platform=apn_sandbox") else {
+        guard let accessTokenURL = URL(string: baseURLString + endpointWithIdentity) else {
             return nil
         }
-
+        
         return try? String.init(contentsOf: accessTokenURL, encoding: .utf8)
     }
     
