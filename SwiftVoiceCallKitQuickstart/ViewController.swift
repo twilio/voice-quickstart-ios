@@ -44,8 +44,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     required init?(coder aDecoder: NSCoder) {
         isSpinning = false
         voipRegistry = PKPushRegistry.init(queue: DispatchQueue.main)
-        
-        TwilioVoice.logLevel = .all
 
         let configuration = CXProviderConfiguration(localizedName: "CallKit Quickstart")
         configuration.maximumCallGroups = 1

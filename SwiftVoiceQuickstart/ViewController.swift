@@ -46,8 +46,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
         voipRegistry.delegate = self
         voipRegistry.desiredPushTypes = Set([PKPushType.voIP])
-        
-        TwilioVoice.logLevel = .all
     }
 
     override func viewDidLoad() {
