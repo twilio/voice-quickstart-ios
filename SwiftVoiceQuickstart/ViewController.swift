@@ -349,15 +349,20 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     // MARK: AVAudioSession
     func toggleAudioRoute(toSpeaker: Bool) {
         // The mode set by the Voice SDK is "VoiceChat" so the default audio route is the built-in receiver. Use port override to switch the route.
-        do {
-            if (toSpeaker) {
-                try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
-            } else {
-                try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+        let audioDevice: TVODefaultAudioDevice = TwilioVoice.audioDevice as! TVODefaultAudioDevice
+        audioDevice.block = {
+            kDefaultAVAudioSessionConfigurationBlock()
+            do {
+                if (toSpeaker) {
+                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+                } else {
+                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+                }
+            } catch {
+                NSLog(error.localizedDescription)
             }
-        } catch {
-            NSLog(error.localizedDescription)
         }
+        audioDevice.block()
     }
     
     
