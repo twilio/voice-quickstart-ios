@@ -94,7 +94,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         return try? String.init(contentsOf: accessTokenURL, encoding: .utf8)
     }
-    
+
     func toggleUIState(isEnabled: Bool, showCallControl: Bool) {
         placeCallButton.isEnabled = isEnabled
         if (showCallControl) {
