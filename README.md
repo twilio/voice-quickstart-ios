@@ -1,8 +1,7 @@
 # Twilio Voice Swift Quickstart for iOS
 
-> **Deprecation Notice - Versions 2.0.0-beta9 to 2.0.0-beta12**
->
-> Please note that **versions 2.0.0-beta9 to 2.0.0-beta12 of the Programmable Voice iOS library are deprecated and will stop working on September 13, 2018**. Please make sure you’re using the latest version of the library in your apps, and make sure your customers update their apps by that date. For more information please review the following knowledge base [article](https://support.twilio.com/hc/en-us/articles/360002897814-Legacy-Twilio-Programmable-Voice-SDKs-impacted-by-SSL-certificate-deprecation).
+> This is a developer preview release of the Programmable Voice 3.X SDK for iOS. This major version now uses WebRTC and is still under active development. APIs are subject to change and we recommend you look at known issues provided in the [changelog](https://www.twilio.com/docs/voice/voip-sdk/ios/changelog).
+> To use a generally available version of the Programmable Voice SDKs for iOS please see the [master](https://github.com/twilio/video-quickstart-swift/tree/master) branch based on the 2.X APIs.
 
 ## Get started with Voice on iOS:
 * [Quickstart](#quickstart) - Run the quickstart app
@@ -287,7 +286,7 @@ CXTransaction *transaction = [[CXTransaction alloc] initWithAction:setHeldCallAc
 You can find more documentation on getting started as well as our latest AppleDoc below:
 
 * [Getting Started](https://www.twilio.com/docs/api/voice-sdk/ios/getting-started)
-* [AppleDoc](https://media.twiliocdn.com/sdk/ios/voice/latest/docs)
+* [AppleDoc](https://media.twiliocdn.com/sdk/ios/voice/releases/3.0.0-preview1/docs)
 
 ## Twilio Helper Libraries
 To learn more about how to use TwiML and the Programmable Voice Calls API, check out our TwiML quickstarts:

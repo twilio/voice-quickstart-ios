@@ -33,9 +33,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     var isSpinning: Bool
     var incomingAlertController: UIAlertController?
 
-    var callInvite:TVOCallInvite?
-    var call:TVOCall?
+    var callInvite: TVOCallInvite?
+    var call: TVOCall?
     var callKitCompletionCallback: ((Bool)->Swift.Void?)? = nil
+    var audioDevice: TVODefaultAudioDevice = TVODefaultAudioDevice()
 
     let callKitProvider:CXProvider
     let callKitCallController:CXCallController
@@ -43,8 +44,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     required init?(coder aDecoder: NSCoder) {
         isSpinning = false
         voipRegistry = PKPushRegistry.init(queue: DispatchQueue.main)
-        
-        TwilioVoice.logLevel = .verbose
 
         let configuration = CXProviderConfiguration(localizedName: "CallKit Quickstart")
         configuration.maximumCallGroups = 1
@@ -74,6 +73,13 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
         toggleUIState(isEnabled: true, showCallControl: false)
         outgoingValue.delegate = self
+        
+        /*
+         * The important thing to remember when providing a TVOAudioDevice is that the device must be set
+         * before performing any other actions with the SDK (such as connecting a Call, or accepting an incoming Call).
+         * In this case we've already initialized our own `TVODefaultAudioDevice` instance which we will now set.
+         */
+        TwilioVoice.audioDevice = audioDevice
     }
 
     override func didReceiveMemoryWarning() {
@@ -85,10 +91,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         guard let accessTokenURL = URL(string: baseURLString + endpointWithIdentity) else {
             return nil
         }
-
+        
         return try? String.init(contentsOf: accessTokenURL, encoding: .utf8)
     }
-    
+
     func toggleUIState(isEnabled: Bool, showCallControl: Bool) {
         placeCallButton.isEnabled = isEnabled
         if (showCallControl) {
@@ -203,7 +209,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)
         }
         
-        completion()
+        DispatchQueue.main.async {
+            completion()
+        }
     }
 
     // MARK: TVONotificaitonDelegate
@@ -296,15 +304,19 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     // MARK: AVAudioSession
     func toggleAudioRoute(toSpeaker: Bool) {
         // The mode set by the Voice SDK is "VoiceChat" so the default audio route is the built-in receiver. Use port override to switch the route.
-        do {
-            if (toSpeaker) {
-                try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
-            } else {
-                try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+        audioDevice.block = {
+            kDefaultAVAudioSessionConfigurationBlock()
+            do {
+                if (toSpeaker) {
+                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+                } else {
+                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+                }
+            } catch {
+                NSLog(error.localizedDescription)
             }
-        } catch {
-            NSLog(error.localizedDescription)
         }
+        audioDevice.block()
     }
 
 
@@ -347,7 +359,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     // MARK: CXProviderDelegate
     func providerDidReset(_ provider: CXProvider) {
         NSLog("providerDidReset:")
-        TwilioVoice.isAudioEnabled = true
+        audioDevice.isEnabled = true
     }
 
     func providerDidBegin(_ provider: CXProvider) {
@@ -356,12 +368,11 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
         NSLog("provider:didActivateAudioSession:")
-        TwilioVoice.isAudioEnabled = true
+        audioDevice.isEnabled = true
     }
 
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
         NSLog("provider:didDeactivateAudioSession:")
-        TwilioVoice.isAudioEnabled = false
     }
 
     func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
@@ -374,8 +385,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         toggleUIState(isEnabled: false, showCallControl: false)
         startSpin()
 
-        TwilioVoice.configureAudioSession()
-        TwilioVoice.isAudioEnabled = false
+        audioDevice.isEnabled = false
+        audioDevice.block();
         
         provider.reportOutgoingCall(with: action.callUUID, startedConnectingAt: Date())
         
@@ -392,14 +403,11 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         NSLog("provider:performAnswerCallAction:")
 
-        // RCP: Workaround from https://forums.developer.apple.com/message/169511 suggests configuring audio in the
-        //      completion block of the `reportNewIncomingCallWithUUID:update:completion:` method instead of in
-        //      `provider:performAnswerCallAction:` per the WWDC examples.
-        // TwilioVoice.configureAudioSession()
-        
         assert(action.callUUID == self.callInvite?.uuid)
         
-        TwilioVoice.isAudioEnabled = false
+        audioDevice.isEnabled = false
+        audioDevice.block();
+        
         self.performAnswerVoiceCall(uuid: action.callUUID) { (success) in
             if (success) {
                 action.fulfill()
@@ -421,6 +429,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             self.call?.disconnect()
         }
 
+        audioDevice.isEnabled = true
         action.fulfill()
     }
     
@@ -478,9 +487,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             }
 
             NSLog("Incoming call successfully reported.")
-
-            // RCP: Workaround per https://forums.developer.apple.com/message/169511
-            TwilioVoice.configureAudioSession()
         }
     }
 
@@ -505,12 +511,19 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             return
         }
         
-        call = TwilioVoice.call(accessToken, params: [twimlParamTo : self.outgoingValue.text!], uuid:uuid, delegate: self)
+        let connectOptions: TVOConnectOptions = TVOConnectOptions(accessToken: accessToken) { (builder) in
+            builder.params = [twimlParamTo : self.outgoingValue.text!]
+            builder.uuid = uuid
+        }
+        call = TwilioVoice.connect(with: connectOptions, delegate: self)
         self.callKitCompletionCallback = completionHandler
     }
     
     func performAnswerVoiceCall(uuid: UUID, completionHandler: @escaping (Bool) -> Swift.Void) {
-        call = self.callInvite?.accept(with: self)
+        let acceptOptions: TVOAcceptOptions = TVOAcceptOptions(callInvite: self.callInvite!) { (builder) in
+            builder.uuid = self.callInvite?.uuid
+        }
+        call = self.callInvite?.accept(with: acceptOptions, delegate: self)
         self.callInvite = nil
         self.callKitCompletionCallback = completionHandler
     }

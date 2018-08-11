@@ -46,8 +46,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
         voipRegistry.delegate = self
         voipRegistry.desiredPushTypes = Set([PKPushType.voIP])
-        
-        TwilioVoice.logLevel = .verbose
     }
 
     override func viewDidLoad() {
@@ -92,7 +90,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             
             playOutgoingRingtone(completion: { [weak self] in
                 if let strongSelf = self {
-                    strongSelf.call = TwilioVoice.call(accessToken, params: [twimlParamTo : strongSelf.outgoingValue.text!], delegate: strongSelf)
+                    let connectOptions: TVOConnectOptions = TVOConnectOptions(accessToken: accessToken) { (builder) in
+                        builder.params = [twimlParamTo : strongSelf.outgoingValue.text!]
+                    }
+                    strongSelf.call = TwilioVoice.connect(with: connectOptions, delegate: strongSelf)
                     strongSelf.toggleUIState(isEnabled: false, showCallControl: false)
                     strongSelf.startSpin()
                 }
@@ -251,7 +252,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         let acceptAction = UIAlertAction(title: "Accept", style: .default) { [weak self] (action) in
             if let strongSelf = self {
                 strongSelf.stopIncomingRingtone()
-                strongSelf.call = callInvite.accept(with: strongSelf)
+                let acceptOptions: TVOAcceptOptions = TVOAcceptOptions(callInvite: callInvite) { (builder) in
+                    builder.uuid = strongSelf.callInvite?.uuid
+                }
+                strongSelf.call = callInvite.accept(with: acceptOptions, delegate: strongSelf)
                 strongSelf.callInvite = nil
                 
                 strongSelf.incomingAlertController = nil
@@ -345,15 +349,20 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     // MARK: AVAudioSession
     func toggleAudioRoute(toSpeaker: Bool) {
         // The mode set by the Voice SDK is "VoiceChat" so the default audio route is the built-in receiver. Use port override to switch the route.
-        do {
-            if (toSpeaker) {
-                try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
-            } else {
-                try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+        let audioDevice: TVODefaultAudioDevice = TwilioVoice.audioDevice as! TVODefaultAudioDevice
+        audioDevice.block = {
+            kDefaultAVAudioSessionConfigurationBlock()
+            do {
+                if (toSpeaker) {
+                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+                } else {
+                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+                }
+            } catch {
+                NSLog(error.localizedDescription)
             }
-        } catch {
-            NSLog(error.localizedDescription)
         }
+        audioDevice.block()
     }
     
     
