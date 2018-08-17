@@ -190,7 +190,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)
         }
         
-        completion()
+        DispatchQueue.main.async {
+            completion()
+        }
     }
 
     // MARK: TVONotificaitonDelegate
