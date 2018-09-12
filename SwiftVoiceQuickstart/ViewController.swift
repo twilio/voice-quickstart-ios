@@ -196,17 +196,17 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     // MARK: TVONotificaitonDelegate
     func callInviteReceived(_ callInvite: TVOCallInvite) {
-        if (callInvite.state == .pending) {
-            handleCallInviteReceived(callInvite)
-        } else if (callInvite.state == .canceled) {
-            handleCallInviteCanceled(callInvite)
-        }
+        handleCallInviteReceived(callInvite)
+    }
+
+    func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite) {
+        handleCallInviteCancelled(cancelledCallInvite)
     }
     
     func handleCallInviteReceived(_ callInvite: TVOCallInvite) {
         NSLog("callInviteReceived:")
         
-        if (self.callInvite != nil && self.callInvite?.state == .pending) {
+        if (self.callInvite != nil) {
             NSLog("Already a pending call invite. Ignoring incoming call invite from \(callInvite.from)")
             return
         } else if (self.call != nil && self.call?.state == .connected) {
@@ -277,12 +277,13 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
     }
     
-    func handleCallInviteCanceled(_ callInvite: TVOCallInvite) {
+    func handleCallInviteCancelled(_ cancelledCallInvite: TVOCancelledCallInvite) {
         NSLog("callInviteCanceled:")
         
-        if (callInvite.callSid != self.callInvite?.callSid) {
-            NSLog("Incoming (but not current) call invite from \(callInvite.from) canceled. Just ignore it.");
-            return;
+        if (self.callInvite == nil ||
+            self.callInvite!.callSid != cancelledCallInvite.callSid) {
+            NSLog("No matching pending Call Invite. Ignoring the Cancelled Call Invite")
+            return
         }
         
         self.stopIncomingRingtone()
@@ -301,12 +302,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         UIApplication.shared.cancelAllLocalNotifications()
     }
-    
-    func notificationError(_ error: Error) {
-        NSLog("notificationError: \(error.localizedDescription)")
-    }
-    
-    
+
     // MARK: TVOCallDelegate
     func callDidConnect(_ call: TVOCall) {
         NSLog("callDidConnect:")
