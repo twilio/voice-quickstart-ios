@@ -216,19 +216,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     // MARK: TVONotificaitonDelegate
     func callInviteReceived(_ callInvite: TVOCallInvite) {
-        if (callInvite.state == .pending) {
-            handleCallInviteReceived(callInvite)
-        } else if (callInvite.state == .canceled) {
-            handleCallInviteCanceled(callInvite)
-        }
-    }
-    
-    func handleCallInviteReceived(_ callInvite: TVOCallInvite) {
         NSLog("callInviteReceived:")
         
-        if (self.callInvite != nil && self.callInvite?.state == .pending) {
-            NSLog("Already a pending incoming call invite.");
-            NSLog("  >> Ignoring call from %@", callInvite.from);
+        if (self.callInvite != nil) {
+            NSLog("A CallInvite is already in progress. Ignoring the incoming CallInvite from \(callInvite.from)")
             return;
         } else if (self.call != nil) {
             NSLog("Already an active call.");
@@ -241,19 +232,20 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         reportIncomingCall(from: "Voice Bot", uuid: callInvite.uuid)
     }
     
-    func handleCallInviteCanceled(_ callInvite: TVOCallInvite) {
-        NSLog("callInviteCanceled:")
+    func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite) {
+        NSLog("cancelledCallInviteCanceled:")
         
-        performEndCallAction(uuid: callInvite.uuid)
+        if (self.callInvite == nil ||
+            self.callInvite!.callSid != cancelledCallInvite.callSid) {
+            NSLog("No matching pending CallInvite. Ignoring the Cancelled CallInvite")
+            return
+        }
+        
+        performEndCallAction(uuid: self.callInvite!.uuid)
 
         self.callInvite = nil
     }
-    
-    func notificationError(_ error: Error) {
-        NSLog("notificationError: \(error.localizedDescription)")
-    }
-    
-    
+
     // MARK: TVOCallDelegate
     func callDidConnect(_ call: TVOCall) {
         NSLog("callDidConnect:")
@@ -422,8 +414,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
         NSLog("provider:performEndCallAction:")
 
-        if (self.callInvite != nil && self.callInvite?.state == .pending) {
-            self.callInvite?.reject()
+        if (self.callInvite != nil) {
+            self.callInvite!.reject()
             self.callInvite = nil
         } else if (self.call != nil) {
             self.call?.disconnect()
