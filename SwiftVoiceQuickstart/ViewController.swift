@@ -196,18 +196,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     // MARK: TVONotificaitonDelegate
     func callInviteReceived(_ callInvite: TVOCallInvite) {
-        handleCallInviteReceived(callInvite)
-    }
-
-    func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite) {
-        handleCallInviteCancelled(cancelledCallInvite)
-    }
-    
-    func handleCallInviteReceived(_ callInvite: TVOCallInvite) {
         NSLog("callInviteReceived:")
         
         if (self.callInvite != nil) {
-            NSLog("Already a pending call invite. Ignoring incoming call invite from \(callInvite.from)")
+            NSLog("A callInvite is already in progress. Ignoring the incoming call invite from \(callInvite.from)")
             return
         } else if (self.call != nil && self.call?.state == .connected) {
             NSLog("Already an active call. Ignoring incoming call invite from \(callInvite.from)");
@@ -277,7 +269,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
     }
     
-    func handleCallInviteCancelled(_ cancelledCallInvite: TVOCancelledCallInvite) {
+    func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite) {
         NSLog("callInviteCanceled:")
         
         if (self.callInvite == nil ||
