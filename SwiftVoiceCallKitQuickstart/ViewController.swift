@@ -219,7 +219,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         NSLog("callInviteReceived:")
         
         if (self.callInvite != nil) {
-            NSLog("A callInvite is already in progress. Ignoring the incoming call invite from \(callInvite.from)")
+            NSLog("A CallInvite is already in progress. Ignoring the incoming CallInvite from \(callInvite.from)")
             return;
         } else if (self.call != nil) {
             NSLog("Already an active call.");
@@ -233,11 +233,11 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     }
     
     func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite) {
-        NSLog("callInviteCanceled:")
+        NSLog("cancelledCallInviteCanceled:")
         
         if (self.callInvite == nil ||
             self.callInvite!.callSid != cancelledCallInvite.callSid) {
-            NSLog("No matching pending Call Invite. Ignoring the Cancelled Call Invite")
+            NSLog("No matching pending CallInvite. Ignoring the Cancelled CallInvite")
             return
         }
         

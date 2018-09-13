@@ -199,10 +199,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         NSLog("callInviteReceived:")
         
         if (self.callInvite != nil) {
-            NSLog("A callInvite is already in progress. Ignoring the incoming call invite from \(callInvite.from)")
+            NSLog("A CallInvite is already in progress. Ignoring the incoming CallInvite from \(callInvite.from)")
             return
         } else if (self.call != nil && self.call?.state == .connected) {
-            NSLog("Already an active call. Ignoring incoming call invite from \(callInvite.from)");
+            NSLog("Already an active call. Ignoring incoming CallInvite from \(callInvite.from)");
             return;
         }
         
@@ -231,7 +231,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         let ignoreAction = UIAlertAction(title: "Ignore", style: .default) { [weak self] (action) in
             if let strongSelf = self {
-                /* To ignore the call invite, you don't have to do anything but just literally ignore it */
+                /* To ignore the CallInvite, you don't have to do anything but just literally ignore it */
                 
                 strongSelf.callInvite = nil
                 strongSelf.stopIncomingRingtone()
@@ -270,11 +270,11 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     }
     
     func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite) {
-        NSLog("callInviteCanceled:")
+        NSLog("cancelledCallInviteCanceled:")
         
         if (self.callInvite == nil ||
             self.callInvite!.callSid != cancelledCallInvite.callSid) {
-            NSLog("No matching pending Call Invite. Ignoring the Cancelled Call Invite")
+            NSLog("No matching pending CallInvite. Ignoring the Cancelled CallInvite")
             return
         }
         
