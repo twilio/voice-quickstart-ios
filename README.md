@@ -2,7 +2,7 @@
 
 > **Deprecation Notice - Versions 2.0.0-beta9 to 2.0.0-beta12**
 >
-> Please note that **versions 2.0.0-beta9 to 2.0.0-beta12 of the Programmable Voice iOS library are deprecated and will stop working on September 13, 2018**. Please make sure you’re using the latest version of the library in your apps, and make sure your customers update their apps by that date. For more information please review the following knowledge base [article](https://support.twilio.com/hc/en-us/articles/360002897814-Legacy-Twilio-Programmable-Voice-SDKs-impacted-by-SSL-certificate-deprecation).
+> Please note that versions 2.0.0-beta9 to 2.0.0-beta12 of the Programmable Voice iOS library are deprecated and will stop working on September 13, 2018. Please make sure you’re using the latest version of the library in your apps, and make sure your customers update their apps by that date. For more information please review the following knowledge base [article](https://support.twilio.com/hc/en-us/articles/360002897814-Legacy-Twilio-Programmable-Voice-SDKs-impacted-by-SSL-certificate-deprecation).
 
 ## Get started with Voice on iOS:
 * [Quickstart](#quickstart) - Run the quickstart app
