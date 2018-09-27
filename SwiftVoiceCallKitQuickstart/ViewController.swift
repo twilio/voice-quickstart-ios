@@ -102,7 +102,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     @IBAction func placeCall(_ sender: UIButton) {
         if (self.call != nil && self.call?.state == .connected) {
-            self.call?.disconnect()
+            performEndCallAction(uuid: self.call!.uuid)
             self.toggleUIState(isEnabled: false, showCallControl: false)
         } else {
             let uuid = UUID()
@@ -278,8 +278,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         } else {
             NSLog("Call disconnected")
         }
-        
-        performEndCallAction(uuid: call.uuid)
+
         callDisconnected()
     }
     
