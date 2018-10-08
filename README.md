@@ -223,27 +223,25 @@ There are number of techniques you can use to ensure that access token expiry is
 - Retain the access token along with the timestamp of when it was requested so you can verify ahead of time whether the token has already expired based on the `time-to-live` being used by your server.
 - Prefetch the access token whenever the `UIApplication`, or `UIViewController` associated with an outgoing call is created.
 
-## Migragion Guide
+## Migration Guide
 This section describes API changes and additions to ease migration from Voice iOS 2.X to Voice iOS 3.X. Each section provides code snippets to assist in transitioning to the new API.
 
 ### TVOCallInvite Changes
 In Voice iOS 3.X, the `notificationError:` delegate method is removed from the `TVONotificationDelegate` protocol and the `[TwilioVoice handleNotification:]` method no longer raises errors via this method if an invalid notification is provided, instead a `BOOL` value is returned when `[TwilioVoice handleNotification:]` is called. The returned value is `YES` when the provided data resulted in a `TVOCallInvite` or `TVOCancelledCallInvite` received in the `TVONotificationDelegate` methods. If `NO` is returned it means the data provided was not a Twilio Voice push notification.
 
-```.objc
-- (void)pushRegistry:(PKPushRegistry *)registry
-didReceiveIncomingPushWithPayload:(PKPushPayload *)payload
-             forType:(NSString *)type {
-    if (![TwilioVoice handleNotification:payload.dictionaryPayload delegate:self]) {
+```.swift
+func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
+    if (!TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)) {
         // The push notification was not a Twilio Voice push notification.
     }
 }
 
-#pragma mark - TVONotificationDelegate
-- (void)callInviteReceived:(TVOCallInvite *)callInvite {
+// MARK: TVONotificationDelegate
+func callInviteReceived(_ callInvite: TVOCallInvite) {
     // Show notification to answer or reject call
 }
 
-- (void)cancelledCallInviteReceived:(TVOCancelledCallInvite *)cancelledCallInvite {
+func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite) {
     // Hide notification
 }
 ```
@@ -253,39 +251,35 @@ The `TVOCallInvite` has an `accept()` and `reject()` method. `TVOCallInviteState
 ### Specifying a media region
 Previously, a media region could be specified via `[TwilioVoice setRegion:]`. Now this configuration can be provided as part of `TVOConnectOptions` or `TVOAcceptOptions` as shown below:
 
-```.objc
-TVOConnectOptions *options = [TVOConnectOptions optionsWithAccessToken:accessToken
-                                                                 block:^(TVOConnectOptionsBuilder *builder) {
-    builder.region = region;
-}];
+```.swift
+let connectOptions: TVOConnectOptions = TVOConnectOptions(accessToken: accessToken) { (builder) in
+    builder.region = region
+}
 
-TVOAcceptOptions *options = [TVOAcceptOptions optionsWithCallInvite:callInvite
-                                                              block:^(TVOAcceptOptionsBuilder *builder) {
-    builder.region = region;
-}];
+let acceptOptions: TVOAcceptOptions = TVOAcceptOptions(callInvite: callInvite!) { (builder) in
+    builder.region = region
+}
 ```
 
 ### TVOConnectOptions & TVOAcceptOptions
 To support configurability upon making or accepting a call, new classes have been added. Create a `TVOConnectOptions` object and make configurations via the `TVOConnectOptionsBuilder` in the `block`. Once `TVOConnectOptions` is created it can be provided when connecting a Call as shown below:
 
-```.objc
-TVOConnectOptions *options = [TVOConnectOptions optionsWithAccessToken:accessToken
-                                                                 block:^(TVOConnectOptionsBuilder *builder) {
-    builder.params = params;
-}];
+```.swift
+let options: TVOConnectOptions = TVOConnectOptions(accessToken: accessToken) { (builder) in
+    builder.params = params
+}
 
-self.call = [TwilioVoice connectWithOptions:options delegate:self];
+call = TwilioVoice.connect(with: options, delegate: self)
 ```
 
 A `TVOCallInvite` can also be accepted using `TVOAcceptOptions` as shown below:
 
-```.objc
-TVOAcceptOptions *options = [TVOAcceptOptions optionsWithCallInvite:callInvite
-                                                              block:^(TVOAcceptOptionsBuilder *builder) {
-    builder.region = region;
-}];
+```.swift
+let options: TVOAcceptOptions = TVOAcceptOptions(callInvite: callInvite!) { (builder) in
+    builder.uuid = callInvite.uuid
+}
 
-self.call = [callInvite acceptWithOptions:options delegate:self];
+call = callInvite.accept(with: options, delegate: self)
 ```
 
 ### Ringing
@@ -311,49 +305,76 @@ typedef NS_ENUM(NSUInteger, TVOCallState) {
 @end
 ```
 
+### Media Establishment & Connectivity
+The Voice iOS 3.X SDK uses WebRTC. The exchange of real-time media requires the use of Interactive Connectivity Establishment(ICE) to establish a media connection between the client and the media server. In some network environments where network access is restricted it may be necessary to provide ICE servers to establish a media connection. We reccomend using the [Network Traversal Service (NTS)](https://www.twilio.com/stun-turn) to obtain ICE servers. ICE servers can be provided when making or accepting a call by passing them into `TVOConnectOptions` or `TVOAcceptOptions` in the following way:
+
+```.swift
+var iceServers: Array<TVOIceServer> = Array()
+let iceServer1: TVOIceServer = TVOIceServer(urlString: "stun:global.stun.twilio.com:3478?transport=udp",
+                                            username: "",
+                                            password: "")
+iceServers.append(iceServer1)
+
+let iceServer2: TVOIceServer = TVOIceServer(urlString: "turn:global.turn.twilio.com:3478?transport=udp",
+                                            username: "TURN_USERNAME",
+                                            password: "TURN_PASSWORD")
+iceServers.append(iceServer2)
+
+let iceOptions: TVOIceOptions = TVOIceOptions { (builder) in
+    builder.servers = iceServers
+}
+
+// Specify ICE options in the builder
+let connectOptions: TVOConnectOptions = TVOConnectOptions(accessToken: accessToken) { (builder) in
+    builder.iceOptions = iceOptions
+}
+
+let acceptOptions: TVOAcceptOptions = TVOAcceptOptions(callInvite: callInvite!) { (builder) in
+    builder.iceOptions = iceOptions
+}
+```
+
 ### Audio Device
 The Voice iOS 3.X SDK deprecates the `CallKitIntegration` category from `TwilioVoice` in favor of a new property called `TVODefaultAudioDevice.enabled`. This property provides developers with a mechanism to enable or disable the activation of the audio device prior to connecting to a Call or to stop or start the audio device while you are already connected to a Call. A Cal can now be connected without activating the audio device by setting `TVODefaultAudioDevice.enabled` to `NO` and can be enabled during the lifecycle of the Call by setting `TVODefaultAudioDevice.enabled` to `YES`. The default value is `YES`. This API change was made to ensure full compatibility with CallKit as well as supporting other use cases where developers may need to disable the audio device during a call.
 
 Examples #1 - Changing the audio route from receiver to the speaker in a live call:
 
-```.objc
+```.swift
 // The Voice SDK uses TVODefaultAudioDevice by default.
 // ... connect to a Call. The `TVODefaultAudioDevice` is configured to route audio to the receiver by default.
 
-TVODefaultAudioDevice *audioDevice = (TVODefaultAudioDevice *)TwilioVoice.audioDevice;
-
-audioDevice.block =  ^ {
+let audioDevice: TVODefaultAudioDevice = TwilioVoice.audioDevice as! TVODefaultAudioDevice
+audioDevice.block = {
     // We will execute `kDefaultAVAudioSessionConfigurationBlock` first.
-    kDefaultAVAudioSessionConfigurationBlock();
+    kDefaultAVAudioSessionConfigurationBlock()
 
-    if (![session overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error]) {
-        NSLog(@"AVAudiosession overrideOutputAudioPort %@",error);
+    let session: AVAudioSession = AVAudioSession.sharedInstance()
+    do {
+        try session.overrideOutputAudioPort(.speaker)
+    } catch _ {
+        // Failed to change audio route from receiver to the speaker
     }
-};
+}
+
 audioDevice.block();
 ```
 Example #2 - Connecting to a Call using the `AVAudioSessionCategoryPlayback` category:
 
-```.objc
-id<TVOAudioDevice> audioDevice = [TVODefaultAudioDevice audioDeviceWithBlock:^ {
-
+```.swift
+let audioDevice: TVOAudioDevice = TVODefaultAudioDevice { (builder) in
     // Execute the `kDefaultAVAudioSessionConfigurationBlock` first.
     kDefaultAVAudioSessionConfigurationBlock();
 
-    // Overwrite the category to `playback`
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    NSError *error = nil;
-    if (![session setCategory:AVAudioSessionCategoryPlayback
-                         mode:AVAudioSessionModeVoiceChat
-                      options:AVAudioSessionCategoryOptionAllowBluetooth
-                        error:&error]) {
-        NSLog(@"AVAudioSession setCategory:options:mode:error: %@",error);
+    let session: AVAudioSession = AVAudioSession.sharedInstance()
+    do {
+        try session.setCategory(AVAudioSessionCategoryPlayback, mode: AVAudioSessionModeVoiceChat, options: .allowBluetooth)
+    } catch _ {
+        // Failed to set AVAudioSession category
     }
-}];
+}
 
-TwilioVoice.audioDevice = audioDevice;
-
-TVOCall *call = [TwilioVoice connectWithOptions:connectOptions delegate:self];
+TwilioVoice.audioDevice = audioDevice
+call = TwilioVoice.connect(with: connectOptions, delegate: self)
 ```
 
 ### Custom Parameters
