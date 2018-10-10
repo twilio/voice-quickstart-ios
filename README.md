@@ -360,7 +360,7 @@ audioDevice.block();
 ```
 
 #### CallKit
-The Voice iOS 3.X SDK deprecates the `CallKitIntegration` category from `TwilioVoice` in favor of a new property called `TVODefaultAudioDevice.enabled`. This property provides developers with a mechanism to enable or disable the activation of the audio device prior to connecting to a Call or to stop or start the audio device while you are already connected to a Call. A Cal can now be connected without activating the audio device by setting `TVODefaultAudioDevice.enabled` to `NO` and can be enabled during the lifecycle of the Call by setting `TVODefaultAudioDevice.enabled` to `YES`. The default value is `YES`. This API change was made to ensure full compatibility with CallKit as well as supporting other use cases where developers may need to disable the audio device during a call.
+The Voice iOS 3.X SDK deprecates the `CallKitIntegration` category from `TwilioVoice` in favor of a new property called `TVODefaultAudioDevice.enabled`. This property provides developers with a mechanism to enable or disable the activation of the audio device prior to connecting to a Call or to stop or start the audio device while you are already connected to a Call. A Call can now be connected without activating the audio device by setting `TVODefaultAudioDevice.enabled` to `NO` and can be enabled during the lifecycle of the Call by setting `TVODefaultAudioDevice.enabled` to `YES`. The default value is `YES`. This API change was made to ensure full compatibility with CallKit as well as supporting other use cases where developers may need to disable the audio device during a call.
 
 An example of managing the `TVODefaultAudioDevice` while connecting a CallKit Call:
 
@@ -385,20 +385,30 @@ func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) 
     audioDevice.isEnabled = true
 }
 
-func performVoiceCall(uuid: UUID, client: String?, completionHandler: @escaping (Bool) -> Swift.Void) {
-    let connectOptions: TVOConnectOptions = TVOConnectOptions(accessToken: accessToken) { (builder) in
-        builder.params = [twimlParamTo : self.outgoingValue.text!]
-        builder.uuid = uuid
+func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
+    audioDevice.isEnabled = false
+    audioDevice.block();
+
+    self.performAnswerVoiceCall(uuid: action.callUUID) { (success) in
+        if (success) {
+            action.fulfill()
+        } else {
+            action.fail()
+        }
     }
-    call = TwilioVoice.connect(with: connectOptions, delegate: self)
-    self.callKitCompletionCallback = completionHandler
+
+    action.fulfill()
 }
 
-func callDidConnect(_ call: TVOCall) {
-    self.callKitCompletionCallback!(true)
-    self.callKitCompletionCallback = nil
+func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
+    // Disconnect or reject the call
+
+    audioDevice.isEnabled = true
+    action.fulfill()
 }
 ```
+
+See [CallKit Example](https://github.com/twilio/voice-quickstart-swift/blob/3.x/SwiftVoiceCallKitQuickstart/ViewController.swift) for the complete implementation.
 
 #### TVOAudioDevice
 The `TVOAudioDevice` protocol gives you the ability to replace `TVODefaultAudioDevice`. By implementing the `TVOAudioDevice` protocol, you can write your own audio capturer to feed audio samples to the Voice SDK and an audio renderer to receive the remote audio samples. For example, you could integrate with `ReplayKit2` and capture application audio for broadcast or play music using `AVAssetReader`.
