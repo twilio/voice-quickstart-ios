@@ -404,6 +404,25 @@ Pass custom parameters in TwiML:
 }
 ```
 
+### Call Quality Stats
+In Voice iOS 3.X SDK you can now access quality metrics in a Call using the `[TVOCall getStatsWithBlock:]` method. 
+
+```.swift
+func callDidConnect(_ call: TVOCall) {
+    call.getStatsWith { (statsReports) in
+        for report: TVOStatsReport in statsReports {
+            let localAudioTracks: Array<TVOLocalAudioTrackStats> = report.localAudioTrackStats
+            let localAudioTrackStats = localAudioTracks[0]
+            let remoteAudioTracks: Array<TVORemoteAudioTrackStats> = report.remoteAudioTrackStats
+            let remoteAudioTrackStats = remoteAudioTracks[0]
+
+            print("Local Audio Track - audio level: \(localAudioTrackStats.audioLevel), packets sent: \(localAudioTrackStats.packetsSent)")
+            print("Remote Audio Track - audio level: \(remoteAudioTrackStats.audioLevel), packets received: \(remoteAudioTrackStats.packetsReceived)")
+        }
+    }
+}
+```
+
 ## Managing Audio Interruptions
 Different versions of iOS deal with **AVAudioSession** interruptions sightly differently. This section documents how the Programmable Voice iOS SDK manages audio interruptions and resumes call audio after the interruption ends. There are currently some cases that the SDK cannot resume call audio automatically because iOS does not provide the necessary notifications to indicate that the interruption has ended.
 
