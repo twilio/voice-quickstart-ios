@@ -335,6 +335,7 @@ let acceptOptions: TVOAcceptOptions = TVOAcceptOptions(callInvite: callInvite!) 
 ```
 
 ### Audio Device
+The Voice iOS 3.X SDK introduces audio device APIs.
 
 #### TVODefaultAudioDevide
 In Voice iOS 3.X SDK, `TVODefaultAudioDevice` is used as the default device for rendering and capturing audio.
