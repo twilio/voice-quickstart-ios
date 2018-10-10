@@ -335,14 +335,13 @@ let acceptOptions: TVOAcceptOptions = TVOAcceptOptions(callInvite: callInvite!) 
 ```
 
 ### Audio Device
-The Voice iOS 3.X SDK deprecates the `CallKitIntegration` category from `TwilioVoice` in favor of a new property called `TVODefaultAudioDevice.enabled`. This property provides developers with a mechanism to enable or disable the activation of the audio device prior to connecting to a Call or to stop or start the audio device while you are already connected to a Call. A Cal can now be connected without activating the audio device by setting `TVODefaultAudioDevice.enabled` to `NO` and can be enabled during the lifecycle of the Call by setting `TVODefaultAudioDevice.enabled` to `YES`. The default value is `YES`. This API change was made to ensure full compatibility with CallKit as well as supporting other use cases where developers may need to disable the audio device during a call.
 
-Examples #1 - Changing the audio route from receiver to the speaker in a live call:
+#### TVODefaultAudioDevide
+In Voice iOS 3.X SDK, `TVODefaultAudioDevice` is used as the default device for rendering and capturing audio.
+
+An example of using `TVODefaultAudioDevice` to change the audio route from receiver to the speaker in a live call:
 
 ```.swift
-// The Voice SDK uses TVODefaultAudioDevice by default.
-// ... connect to a Call. The `TVODefaultAudioDevice` is configured to route audio to the receiver by default.
-
 let audioDevice: TVODefaultAudioDevice = TwilioVoice.audioDevice as! TVODefaultAudioDevice
 audioDevice.block = {
     // We will execute `kDefaultAVAudioSessionConfigurationBlock` first.
@@ -358,7 +357,52 @@ audioDevice.block = {
 
 audioDevice.block();
 ```
-Example #2 - Connecting to a Call using the `AVAudioSessionCategoryPlayback` category:
+
+#### CallKit
+The Voice iOS 3.X SDK deprecates the `CallKitIntegration` category from `TwilioVoice` in favor of a new property called `TVODefaultAudioDevice.enabled`. This property provides developers with a mechanism to enable or disable the activation of the audio device prior to connecting to a Call or to stop or start the audio device while you are already connected to a Call. A Cal can now be connected without activating the audio device by setting `TVODefaultAudioDevice.enabled` to `NO` and can be enabled during the lifecycle of the Call by setting `TVODefaultAudioDevice.enabled` to `YES`. The default value is `YES`. This API change was made to ensure full compatibility with CallKit as well as supporting other use cases where developers may need to disable the audio device during a call.
+
+An example of managing the `TVODefaultAudioDevice` while connecting a CallKit Call:
+
+```.swift
+var audioDevice: TVODefaultAudioDevice = TVODefaultAudioDevice()
+
+func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
+    audioDevice.isEnabled = false
+    audioDevice.block();
+
+    self.performVoiceCall(uuid: action.callUUID, client: "") { (success) in
+        if (success) {
+            provider.reportOutgoingCall(with: action.callUUID, connectedAt: Date())
+            action.fulfill()
+        } else {
+            action.fail()
+        }
+    }
+}
+
+func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
+    audioDevice.isEnabled = true
+}
+
+func performVoiceCall(uuid: UUID, client: String?, completionHandler: @escaping (Bool) -> Swift.Void) {
+    let connectOptions: TVOConnectOptions = TVOConnectOptions(accessToken: accessToken) { (builder) in
+        builder.params = [twimlParamTo : self.outgoingValue.text!]
+        builder.uuid = uuid
+    }
+    call = TwilioVoice.connect(with: connectOptions, delegate: self)
+    self.callKitCompletionCallback = completionHandler
+}
+
+func callDidConnect(_ call: TVOCall) {
+    self.callKitCompletionCallback!(true)
+    self.callKitCompletionCallback = nil
+}
+```
+
+#### TVOAudioDevice
+The `TVOAudioDevice` protocol gives you the ability to replace `TVODefaultAudioDevice`. By implementing the `TVOAudioDevice` protocol, you can write your own audio capturer to feed audio samples to the Voice SDK and an audio renderer to receive the remote audio samples. For example, you could integrate with `ReplayKit2` and capture application audio for broadcast or play music using `AVAssetReader`.
+
+Connecting to a Call using the `AVAudioSessionCategoryPlayback` category:
 
 ```.swift
 let audioDevice: TVOAudioDevice = TVODefaultAudioDevice { (builder) in
@@ -404,21 +448,19 @@ Pass custom parameters in TwiML:
 }
 ```
 
-### Call Quality Stats
-In Voice iOS 3.X SDK you can now access quality metrics in a Call using the `[TVOCall getStatsWithBlock:]` method. 
+### Media Stats
+In Voice iOS 3.X SDK you can now access media stats in a Call using the `[TVOCall getStatsWithBlock:]` method. 
 
 ```.swift
-func callDidConnect(_ call: TVOCall) {
-    call.getStatsWith { (statsReports) in
-        for report: TVOStatsReport in statsReports {
-            let localAudioTracks: Array<TVOLocalAudioTrackStats> = report.localAudioTrackStats
-            let localAudioTrackStats = localAudioTracks[0]
-            let remoteAudioTracks: Array<TVORemoteAudioTrackStats> = report.remoteAudioTrackStats
-            let remoteAudioTrackStats = remoteAudioTracks[0]
+call.getStatsWith { (statsReports) in
+    for report: TVOStatsReport in statsReports {
+        let localAudioTracks: Array<TVOLocalAudioTrackStats> = report.localAudioTrackStats
+        let localAudioTrackStats = localAudioTracks[0]
+        let remoteAudioTracks: Array<TVORemoteAudioTrackStats> = report.remoteAudioTrackStats
+        let remoteAudioTrackStats = remoteAudioTracks[0]
 
-            print("Local Audio Track - audio level: \(localAudioTrackStats.audioLevel), packets sent: \(localAudioTrackStats.packetsSent)")
-            print("Remote Audio Track - audio level: \(remoteAudioTrackStats.audioLevel), packets received: \(remoteAudioTrackStats.packetsReceived)")
-        }
+        print("Local Audio Track - audio level: \(localAudioTrackStats.audioLevel), packets sent: \(localAudioTrackStats.packetsSent)")
+        print("Remote Audio Track - audio level: \(remoteAudioTrackStats.audioLevel), packets received: \(remoteAudioTrackStats.packetsReceived)")
     }
 }
 ```
