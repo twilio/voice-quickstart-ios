@@ -5,10 +5,11 @@
 //  Copyright © 2016-2018 Twilio, Inc. All rights reserved.
 //
 
-import UIKit
 import AVFoundation
 import PushKit
 import TwilioVoice
+import UIKit
+import UserNotifications
 
 let baseURLString = <#URL TO YOUR ACCESS TOKEN SERVER#>
 // If your token server is written in PHP, accessTokenEndpoint needs .php extension at the end. For example : /accessToken.php
@@ -262,10 +263,20 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
         // If the application is not in the foreground, post a local notification
         if (UIApplication.shared.applicationState != UIApplicationState.active) {
-            let notification = UILocalNotification()
-            notification.alertBody = "Incoming Call From \(from)"
+            let content = UNMutableNotificationContent()
+            content.title = "Incoming Call"
+            content.body = "Call Invite from \(callInvite.from)"
+            content.sound = UNNotificationSound.default()
             
-            UIApplication.shared.presentLocalNotificationNow(notification)
+            let request = UNNotificationRequest(identifier: "VoiceLocaNotification",
+                                                content: content, trigger: nil)
+            
+            let center = UNUserNotificationCenter.current()
+            center.add(request) { (error) in
+                if (error != nil) {
+                    print("Failed to add notification reqeust: \(error!.localizedDescription)")
+                }
+            }
         }
     }
     
@@ -292,7 +303,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         self.callInvite = nil
         
-        UIApplication.shared.cancelAllLocalNotifications()
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
     }
 
     // MARK: TVOCallDelegate
