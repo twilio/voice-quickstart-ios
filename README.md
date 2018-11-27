@@ -1,6 +1,6 @@
 # Twilio Voice Swift Quickstart for iOS
 
-> This is a beta release of the Programmable Voice 3.X SDK for iOS. This major version now uses WebRTC and is still under active development. APIs are subject to change and we recommend you look at known issues provided in the [changelog](https://www.twilio.com/docs/voice/voip-sdk/ios/3x-changelog).
+> This is a beta release of the Programmable Voice 3.X SDK for Android. This major version now uses WebRTC. APIs are unlikely to change. We recommend you look at known issues provided in the [changelog](https://www.twilio.com/docs/voice/voip-sdk/ios/3x-changelog).
 > To use a generally available version of the Programmable Voice SDKs for iOS please see the [master](https://github.com/twilio/video-quickstart-swift/tree/master) branch based on the 2.X APIs.
 
 ## Get started with Voice on iOS:
