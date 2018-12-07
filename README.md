@@ -513,7 +513,7 @@ func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
 See [CallKit Example](https://github.com/twilio/voice-quickstart-swift/blob/3.x/SwiftVoiceCallKitQuickstart/ViewController.swift) for the complete implementation.
 
 #### <a name="microphone-permission"></a>Microphone Permission
-Microphone permission is not optional in the Voice iOS 2.X SDK. Permission must be granted by the user in addition to the usage description being presented in the plist file. Error will be raised when making or accepting calls without microphone permission granted. In the Voice iOS 3.X SDK will continue to connect the call even when the microphone permission is denied or disabled by the user. The application needs to check record permission prior to connecting a call and provide proper experience to the users.
+Unlike Voice iOS 2.X SDKs where microphone permission is not optional in Voice 3.X SDKs, the call will connect even when the microphone permission is denied or disabled by the user, and the SDK will play the remote audio. To ensure the microphone permission is enabled prior to making or accepting a call you can add the following to request the permission beforehand:
 
 ```
     func makeCall() {
