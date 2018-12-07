@@ -114,7 +114,66 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             let uuid = UUID()
             let handle = "Voice Bot"
             
-            performStartCallAction(uuid: uuid, handle: handle)
+            self.checkRecordPermission { (permissionGranted) in
+                if (!permissionGranted) {
+                    let alertController: UIAlertController = UIAlertController(title: "Voice Quick Start",
+                                                                               message: "Microphone permission not granted",
+                                                                               preferredStyle: .alert)
+                    
+                    let continueWithMic: UIAlertAction = UIAlertAction(title: "Continue without microphone",
+                                                                       style: .default,
+                                                                       handler: { (action) in
+                        self.performStartCallAction(uuid: uuid, handle: handle)
+                    })
+                    alertController.addAction(continueWithMic)
+                    
+                    let goToSettings: UIAlertAction = UIAlertAction(title: "Settings",
+                                                                    style: .default,
+                                                                    handler: { (action) in
+                        UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!,
+                                                  options: [UIApplicationOpenURLOptionUniversalLinksOnly: false],
+                                                  completionHandler: nil)
+                    })
+                    alertController.addAction(goToSettings)
+                    
+                    let cancel: UIAlertAction = UIAlertAction(title: "Cancel",
+                                                              style: .cancel,
+                                                              handler: { (action) in
+                        self.toggleUIState(isEnabled: true, showCallControl: false)
+                        self.stopSpin()
+                    })
+                    alertController.addAction(cancel)
+                    
+                    self.present(alertController, animated: true, completion: nil)
+                } else {
+                    self.performStartCallAction(uuid: uuid, handle: handle)
+                }
+            }
+        }
+    }
+    
+    func checkRecordPermission(completion: @escaping (_ permissionGranted: Bool) -> Void) {
+        let permissionStatus: AVAudioSessionRecordPermission = AVAudioSession.sharedInstance().recordPermission()
+        
+        switch permissionStatus {
+        case AVAudioSessionRecordPermission.granted:
+            // Record permission already granted.
+            completion(true)
+            break
+        case AVAudioSessionRecordPermission.denied:
+            // Record permission denied.
+            completion(false)
+            break
+        case AVAudioSessionRecordPermission.undetermined:
+            // Requesting record permission.
+            // Optional: pop up app dialog to let the users know if they want to request.
+            AVAudioSession.sharedInstance().requestRecordPermission({ (granted) in
+                completion(granted)
+            })
+            break
+        default:
+            completion(false)
+            break
         }
     }
     

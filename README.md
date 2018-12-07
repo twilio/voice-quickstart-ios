@@ -359,6 +359,7 @@ This section describes API or behavioral changes when upgrading from Voice iOS 2
 4. [TVOConnectOptions & TVOAcceptOptions](#tvoconnectoptions-and-tvoacceptoptions)
 5. [Media Establishment & Connectivity](#media-establishment-and-connectivity)
 6. [CallKit](#callkit)
+7. [Microphone Permission](#microphone-permission)
 
 #### <a name="making-a-call"></a>Making a Call
 In Voice iOS 3.X, the API to make a call has changed from `[TwilioVoice call:params:delegate:]` to `[TwilioVoice connectWithAccessToken:delegate]` or `[TwilioVoice connectWithOptions:delegate:]`.
@@ -510,6 +511,53 @@ func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
 ```
 
 See [CallKit Example](https://github.com/twilio/voice-quickstart-swift/blob/3.x/SwiftVoiceCallKitQuickstart/ViewController.swift) for the complete implementation.
+
+#### <a name="microphone-permission"></a>Microphone Permission
+Unlike Voice iOS 2.X SDKs where microphone permission is not optional in Voice 3.X SDKs, the call will connect even when the microphone permission is denied or disabled by the user, and the SDK will play the remote audio. To ensure the microphone permission is enabled prior to making or accepting a call you can add the following to request the permission beforehand:
+
+```
+    func makeCall() {
+        // User's microphone option
+        let microphoneEnabled: Bool = true
+        
+        if (microphoneEnabled) {
+            self.checkRecordPermission { (permissionGranted) in
+                if (!permissionGranted) {
+                    // The user might want to revisit the Privacy settings.
+                } else {
+                    // Permission granted. Continue to make call.
+                }
+            }
+        } else {
+            // Continue to make call without microphone.
+        }
+    }
+    
+    func checkRecordPermission(completion: @escaping (_ permissionGranted: Bool) -> Void) {
+        let permissionStatus: AVAudioSessionRecordPermission = AVAudioSession.sharedInstance().recordPermission()
+        
+        switch permissionStatus {
+        case AVAudioSessionRecordPermission.granted:
+            // Record permission already granted.
+            completion(true)
+            break
+        case AVAudioSessionRecordPermission.denied:
+            // Record permission denied.
+            completion(false)
+            break
+        case AVAudioSessionRecordPermission.undetermined:
+            // Requesting record permission.
+            // Optional: pop up app dialog to let the users know if they want to request.
+            AVAudioSession.sharedInstance().requestRecordPermission({ (granted) in
+                completion(granted)
+            })
+            break
+        default:
+            completion(false)
+            break
+        }
+    }
+```
 
 ## Managing Audio Interruptions
 Different versions of iOS deal with **AVAudioSession** interruptions sightly differently. This section documents how the Programmable Voice iOS SDK manages audio interruptions and resumes call audio after the interruption ends. There are currently some cases that the SDK cannot resume call audio automatically because iOS does not provide the necessary notifications to indicate that the interruption has ended.
