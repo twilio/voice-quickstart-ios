@@ -26,9 +26,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     @IBOutlet weak var muteSwitch: UISwitch!
     @IBOutlet weak var speakerSwitch: UISwitch!
     
-    var deviceTokenString:String?
+    var deviceTokenString: String?
 
-    var voipRegistry:PKPushRegistry
+    var voipRegistry: PKPushRegistry
 
     var isSpinning: Bool
     var incomingAlertController: UIAlertController?
@@ -38,8 +38,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     var callKitCompletionCallback: ((Bool)->Swift.Void?)? = nil
     var audioDevice: TVODefaultAudioDevice = TVODefaultAudioDevice()
 
-    let callKitProvider:CXProvider
-    let callKitCallController:CXCallController
+    let callKitProvider: CXProvider
+    let callKitCallController: CXCallController
+    var userInitiatedDisconnect: Bool = false
 
     required init?(coder aDecoder: NSCoder) {
         isSpinning = false
@@ -108,6 +109,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     @IBAction func placeCall(_ sender: UIButton) {
         if (self.call != nil && self.call?.state == .connected) {
+            self.userInitiatedDisconnect = true
             performEndCallAction(uuid: self.call!.uuid)
             self.toggleUIState(isEnabled: false, showCallControl: false)
         } else {
@@ -337,6 +339,16 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         } else {
             NSLog("Call disconnected")
         }
+        
+        if !self.userInitiatedDisconnect {
+            var reason = CXCallEndedReason.remoteEnded
+            
+            if error != nil {
+                reason = .failed
+            }
+            
+            self.callKitProvider.reportCall(with: call.uuid, endedAt: Date(), reason: reason)
+        }
 
         callDisconnected()
     }
@@ -344,6 +356,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func callDisconnected() {
         self.call = nil
         self.callKitCompletionCallback = nil
+        self.userInitiatedDisconnect = false
         
         stopSpin()
         toggleUIState(isEnabled: true, showCallControl: false)
