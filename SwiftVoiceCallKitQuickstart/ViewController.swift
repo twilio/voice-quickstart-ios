@@ -304,6 +304,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite) {
         NSLog("cancelledCallInviteCanceled:")
         
+        self.incomingPushHandled()
+        
         if (self.callInvite == nil ||
             self.callInvite!.callSid != cancelledCallInvite.callSid) {
             NSLog("No matching pending CallInvite. Ignoring the Cancelled CallInvite")
@@ -557,7 +559,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             } else {
                 NSLog("Incoming call successfully reported.")
             }
-            self.incomingPushHandled()
         }
     }
 
@@ -572,7 +573,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             } else {
                 NSLog("EndCallAction transaction request successful")
             }
-            self.incomingPushHandled()
         }
     }
     
@@ -597,5 +597,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         call = self.callInvite?.accept(with: acceptOptions, delegate: self)
         self.callInvite = nil
         self.callKitCompletionCallback = completionHandler
+        self.incomingPushHandled()
     }
 }
