@@ -234,6 +234,7 @@ Voice iOS 3.X has a number of new features listed below:
 5. [Audio Device APIs](#audio-device-apis)
     * [Default Audio Device](#default-audio-device)
     * [Custom Audio Device](#custom-audio-device)
+6. [Preferred Audio Codec](#preferred-audio-codec)
 
 #### <a name="webrtc"></a>WebRTC
 The SDK is built using Chromium WebRTC for iOS. This ensures that over time developers will get the best real-time media streaming capabilities available for iOS. Additionally, upgrades to new versions of Chromium WebRTC will happen without changing the public API whenever possible.
@@ -348,6 +349,16 @@ let audioDevice: TVOAudioDevice = TVODefaultAudioDevice { (builder) in
 
 TwilioVoice.audioDevice = audioDevice
 call = TwilioVoice.connect(with: connectOptions, delegate: self)
+```
+
+### <a name="preferred-audio-codec"></a>Preferred Audio Codec
+In Voice iOS 3.X, you can provide your preferred audio codec in the `TVOConnectOptions` and the `TVOAcceptOptions`.
+The only audio codec supported by our mobile infrastructure is currently PCMU. Opus is not currently available on our mobile infrastructure. However it will become available in Q1 of 2019. At that point the default audio codec for all 3.X mobile clients will be Opus. To always use PCMU as the negotiated audio codec instead you can add it as the first codec in the `preferAudioCodecs` list.
+
+```.swift
+let connectOptions: TVOConnectOptions = TVOConnectOptions(accessToken: accessToken) { (builder) in
+    builder.preferredAudioCodecs = [ TVOOpusCodec(), TVOPcmuCodec() ]
+}
 ```
 
 ## Migration Guide
@@ -623,7 +634,7 @@ CXTransaction *transaction = [[CXTransaction alloc] initWithAction:setHeldCallAc
 You can find more documentation on getting started as well as our latest AppleDoc below:
 
 * [Getting Started](https://www.twilio.com/docs/api/voice-sdk/ios/getting-started)
-* [AppleDoc](https://media.twiliocdn.com/sdk/ios/voice/releases/3.0.0-beta1/docs)
+* [AppleDoc](https://media.twiliocdn.com/sdk/ios/voice/releases/3.0.0-beta2/docs)
 
 ## Twilio Helper Libraries
 To learn more about how to use TwiML and the Programmable Voice Calls API, check out our TwiML quickstarts:
