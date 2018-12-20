@@ -29,6 +29,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     var deviceTokenString: String?
 
     var voipRegistry: PKPushRegistry
+    var incomingPushCompletionCallback: (()->Swift.Void?)? = nil
 
     var isSpinning: Bool
     var incomingAlertController: UIAlertController?
@@ -265,13 +266,18 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
      */
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:completion:")
+        // Save for later when the notification is properly handled.
+        self.incomingPushCompletionCallback = completion
         
         if (type == PKPushType.voIP) {
             TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)
         }
-        
-        DispatchQueue.main.async {
+    }
+    
+    func incomingPushHandled() {
+        if let completion = self.incomingPushCompletionCallback {
             completion()
+            self.incomingPushCompletionCallback = nil
         }
     }
 
@@ -281,10 +287,12 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         if (self.callInvite != nil) {
             NSLog("A CallInvite is already in progress. Ignoring the incoming CallInvite from \(callInvite.from)")
+            self.incomingPushHandled()
             return;
         } else if (self.call != nil) {
             NSLog("Already an active call.");
             NSLog("  >> Ignoring call from %@", callInvite.from);
+            self.incomingPushHandled()
             return;
         }
         
@@ -295,6 +303,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     
     func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite) {
         NSLog("cancelledCallInviteCanceled:")
+        
+        self.incomingPushHandled()
         
         if (self.callInvite == nil ||
             self.callInvite!.callSid != cancelledCallInvite.callSid) {
@@ -546,10 +556,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         callKitProvider.reportNewIncomingCall(with: uuid, update: callUpdate) { error in
             if let error = error {
                 NSLog("Failed to report incoming call successfully: \(error.localizedDescription).")
-                return
+            } else {
+                NSLog("Incoming call successfully reported.")
             }
-
-            NSLog("Incoming call successfully reported.")
         }
     }
 
@@ -561,10 +570,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         callKitCallController.request(transaction) { error in
             if let error = error {
                 NSLog("EndCallAction transaction request failed: \(error.localizedDescription).")
-                return
+            } else {
+                NSLog("EndCallAction transaction request successful")
             }
-
-            NSLog("EndCallAction transaction request successful")
         }
     }
     
@@ -589,5 +597,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         call = self.callInvite?.accept(with: acceptOptions, delegate: self)
         self.callInvite = nil
         self.callKitCompletionCallback = completionHandler
+        self.incomingPushHandled()
     }
 }
