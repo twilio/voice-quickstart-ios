@@ -360,8 +360,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite) {
         NSLog("cancelledCallInviteCanceled:")
         
-        self.incomingPushHandled()
-        
         if (self.callInvite == nil ||
             self.callInvite!.callSid != cancelledCallInvite.callSid) {
             NSLog("No matching pending CallInvite. Ignoring the Cancelled CallInvite")
@@ -383,6 +381,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         self.callInvite = nil
         
         UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+
+        self.incomingPushHandled()
     }
 
     // MARK: TVOCallDelegate
