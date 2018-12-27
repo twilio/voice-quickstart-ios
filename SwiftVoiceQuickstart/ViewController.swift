@@ -28,6 +28,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     var deviceTokenString:String?
 
     var voipRegistry:PKPushRegistry
+    var incomingPushCompletionCallback: (()->Swift.Void?)? = nil
 
     var isSpinning: Bool
     var incomingAlertController: UIAlertController?
@@ -185,12 +186,20 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
      */
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:completion:")
+
+        // Save for later when the notification is properly handled.
+        self.incomingPushCompletionCallback = completion;
         
         if (type == PKPushType.voIP) {
             TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)
         }
-        
-        completion()
+    }
+
+    func incomingPushHandled() {
+        if let completion = self.incomingPushCompletionCallback {
+            completion()
+            self.incomingPushCompletionCallback = nil
+        }
     }
 
     // MARK: TVONotificaitonDelegate
@@ -207,9 +216,11 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         if (self.callInvite != nil && self.callInvite?.state == .pending) {
             NSLog("Already a pending call invite. Ignoring incoming call invite from \(callInvite.from)")
+            self.incomingPushHandled()
             return
         } else if (self.call != nil && self.call?.state == .connected) {
             NSLog("Already an active call. Ignoring incoming call invite from \(callInvite.from)");
+            self.incomingPushHandled()
             return;
         }
         
@@ -271,6 +282,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             
             UIApplication.shared.presentLocalNotificationNow(notification)
         }
+        
+        self.incomingPushHandled()
     }
     
     func handleCallInviteCanceled(_ callInvite: TVOCallInvite) {
@@ -296,6 +309,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         self.callInvite = nil
         
         UIApplication.shared.cancelAllLocalNotifications()
+        
+        self.incomingPushHandled()
     }
     
     func notificationError(_ error: Error) {
