@@ -290,7 +290,7 @@ Whenever a registration is performed via `TwilioVoice.registerWithAccessToken:de
 
 If you need to change or update your credentials provided by Apple you can do so by selecting the Push Credential in the [console](https://www.twilio.com/console/voice/sdks/credentials) and adding your new `certificate` and `private key` in the text box provided on the Push Credential page shown below:
 
-<kbd><img height="667px" src="Images/update_push_credential.png"/></kbd>
+<kbd><img height="667px" src="https://raw.githubusercontent.com/twilio/voice-quickstart-swift/master/Images/update_push_credential.png"/></kbd>
 
 ### Deleting a Push Credential
 
