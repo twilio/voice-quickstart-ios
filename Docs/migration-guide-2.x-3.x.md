@@ -1,5 +1,5 @@
 ## 2.x to 3.x Migration Guide
-This section describes API or behavioral changes when upgrading from Voice iOS 2.X to Voice iOS 3.X. Each section provides code snippets to assist in transitioning to the new API.
+This section describes API or behavioral changes when upgrading from Voice iOS 2.x to Voice iOS 3.x. Each section provides code snippets to assist in transitioning to the new API.
 
 1. [Making a Call](#making-a-call)
 2. [TVOCallInvite Changes](#tvocallinvite-changes)
@@ -10,14 +10,14 @@ This section describes API or behavioral changes when upgrading from Voice iOS 2
 7. [Microphone Permission](#microphone-permission)
 
 #### <a name="making-a-call"></a>Making a Call
-In Voice iOS 3.X, the API to make a call has changed from `[TwilioVoice call:params:delegate:]` to `[TwilioVoice connectWithAccessToken:delegate]` or `[TwilioVoice connectWithOptions:delegate:]`.
+In Voice iOS 3.x, the API to make a call has changed from `[TwilioVoice call:params:delegate:]` to `[TwilioVoice connectWithAccessToken:delegate]` or `[TwilioVoice connectWithOptions:delegate:]`.
 
 ```.swift
 call = TwilioVoice.connect(with: connectOptions, delegate: self)
 ```
 
 #### <a name="tvocallinvite-changes"></a>TVOCallInvite Changes
-In Voice iOS 3.X, the `notificationError:` delegate method is removed from the `TVONotificationDelegate` protocol and the `[TwilioVoice handleNotification:]` method no longer raises errors via this method if an invalid notification is provided, instead a `BOOL` value is returned when `[TwilioVoice handleNotification:]` is called. The returned value is `YES` when the provided data resulted in a `TVOCallInvite` or `TVOCancelledCallInvite` received in the `TVONotificationDelegate` methods. If `NO` is returned it means the data provided was not a Twilio Voice push notification.
+In Voice iOS 3.x, the `notificationError:` delegate method is removed from the `TVONotificationDelegate` protocol and the `[TwilioVoice handleNotification:]` method no longer raises errors via this method if an invalid notification is provided, instead a `BOOL` value is returned when `[TwilioVoice handleNotification:]` is called. The returned value is `YES` when the provided data resulted in a `TVOCallInvite` or `TVOCancelledCallInvite` received in the `TVONotificationDelegate` methods. If `NO` is returned it means the data provided was not a Twilio Voice push notification.
 
 ```.swift
 func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
@@ -38,11 +38,11 @@ func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite) 
 
 The `TVOCallInvite` has an `accept()` and `reject()` method. `TVOCallInviteState` has been removed from the `TVOCallInvite` in favor of distinguishing between call invites and call invite cancellations with discrete stateless objects. While the `TVOCancelledCallInvite` simply provides the `to`, `from`, and `callSid` fields also available in the `TVOCallInvite`. The property `callSid` can be used to associate a `TVOCallInvite` with a `TVOCancelledCallInvite`.
 
-In Voice iOS 2.X passing a `cancel` notification into `[TwilioVoice handleNotification:delegate:]` would not raise a callback in the following two cases:
+In Voice iOS 2.x passing a `cancel` notification into `[TwilioVoice handleNotification:delegate:]` would not raise a callback in the following two cases:
 - This callee accepted the call
 - This callee rejected the call
 
-However, in Voice iOS 3.X passing a `cancel` notification payload into `[TwilioVoice handleNotification:delegate:]` will always result in a callback. A callback is raised whenever a valid notification is provided to `[TwilioVoice handleNotification:delegate:]`.
+However, in Voice iOS 3.x passing a `cancel` notification payload into `[TwilioVoice handleNotification:delegate:]` will always result in a callback. A callback is raised whenever a valid notification is provided to `[TwilioVoice handleNotification:delegate:]`.
 
 Note that Twilio will send a `cancel` notification to every registered device of the identity that accepts or rejects a call, even the device that accepted or rejected the call.
 
@@ -81,7 +81,7 @@ call = callInvite.accept(with: options, delegate: self)
 ```
 
 #### <a name="media-establishment-and-connectivity"></a>Media Establishment & Connectivity
-The Voice iOS 3.X SDK uses WebRTC. The exchange of real-time media requires the use of Interactive Connectivity Establishment(ICE) to establish a media connection between the client and the media server. In some network environments where network access is restricted it may be necessary to provide ICE servers to establish a media connection. We reccomend using the [Network Traversal Service (NTS)](https://www.twilio.com/stun-turn) to obtain ICE servers. ICE servers can be provided when making or accepting a call by passing them into `TVOConnectOptions` or `TVOAcceptOptions` in the following way:
+The Voice iOS 3.x SDK uses WebRTC. The exchange of real-time media requires the use of Interactive Connectivity Establishment(ICE) to establish a media connection between the client and the media server. In some network environments where network access is restricted it may be necessary to provide ICE servers to establish a media connection. We reccomend using the [Network Traversal Service (NTS)](https://www.twilio.com/stun-turn) to obtain ICE servers. ICE servers can be provided when making or accepting a call by passing them into `TVOConnectOptions` or `TVOAcceptOptions` in the following way:
 
 ```.swift
 var iceServers: Array<TVOIceServer> = Array()
@@ -110,7 +110,7 @@ let acceptOptions: TVOAcceptOptions = TVOAcceptOptions(callInvite: callInvite!) 
 ```
 
 #### <a name="callkit"></a>CallKit
-The Voice iOS 3.X SDK deprecates the `CallKitIntegration` category from `TwilioVoice` in favor of a new property called `TVODefaultAudioDevice.enabled`. This property provides developers with a mechanism to enable or disable the activation of the audio device prior to connecting to a Call or to stop or start the audio device while you are already connected to a Call. A Call can now be connected without activating the audio device by setting `TVODefaultAudioDevice.enabled` to `NO` and can be enabled during the lifecycle of the Call by setting `TVODefaultAudioDevice.enabled` to `YES`. The default value is `YES`. This API change was made to ensure full compatibility with CallKit as well as supporting other use cases where developers may need to disable the audio device during a call.
+The Voice iOS 3.x SDK deprecates the `CallKitIntegration` category from `TwilioVoice` in favor of a new property called `TVODefaultAudioDevice.enabled`. This property provides developers with a mechanism to enable or disable the activation of the audio device prior to connecting to a Call or to stop or start the audio device while you are already connected to a Call. A Call can now be connected without activating the audio device by setting `TVODefaultAudioDevice.enabled` to `NO` and can be enabled during the lifecycle of the Call by setting `TVODefaultAudioDevice.enabled` to `YES`. The default value is `YES`. This API change was made to ensure full compatibility with CallKit as well as supporting other use cases where developers may need to disable the audio device during a call.
 
 An example of managing the `TVODefaultAudioDevice` while connecting a CallKit Call:
 
@@ -161,7 +161,7 @@ func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
 See [CallKit Example](https://github.com/twilio/voice-quickstart-swift/blob/3.x/SwiftVoiceCallKitQuickstart/ViewController.swift) for the complete implementation.
 
 #### <a name="microphone-permission"></a>Microphone Permission
-Unlike Voice iOS 2.X SDKs where microphone permission is not optional in Voice 3.X SDKs, the call will connect even when the microphone permission is denied or disabled by the user, and the SDK will play the remote audio. To ensure the microphone permission is enabled prior to making or accepting a call you can add the following to request the permission beforehand:
+Unlike Voice iOS 2.x SDKs where microphone permission is not optional in Voice 3.x SDKs, the call will connect even when the microphone permission is denied or disabled by the user, and the SDK will play the remote audio. To ensure the microphone permission is enabled prior to making or accepting a call you can add the following to request the permission beforehand:
 
 ```
     func makeCall() {
