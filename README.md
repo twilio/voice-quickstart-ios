@@ -5,7 +5,7 @@
 
 ## Get started with Voice on iOS:
 * [Quickstart](#quickstart) - Run the quickstart app
-* [New Features](Docs/new-features-3.0.md) - New features in 3.X
+* [New Features](Docs/new-features-3.0.md) - New features in 3.0
 * [Migration Guide](Docs/migration-guide-2.x-3.x.md) - Migrating from 2.X to 3.X
 * [Access Tokens](#access-tokens) - Using access tokens
 * [Managing Audio Interruptions](#managing-audio-interruptions) - Managing audio interruptions
