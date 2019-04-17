@@ -313,7 +313,7 @@ Please ensure that after deleting the Push Credential you remove or replace the 
 You can find more documentation on getting started as well as our latest AppleDoc below:
 
 * [Getting Started](https://www.twilio.com/docs/api/voice-sdk/ios/getting-started)
-* [AppleDoc](https://media.twiliocdn.com/sdk/ios/voice/releases/3.0.0-beta11/docs)
+* [AppleDoc](https://media.twiliocdn.com/sdk/ios/voice/releases/3.0.0-beta12/docs)
 
 ## Twilio Helper Libraries
 To learn more about how to use TwiML and the Programmable Voice Calls API, check out our TwiML quickstarts:
