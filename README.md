@@ -1,5 +1,7 @@
 # Twilio Voice Swift Quickstart for iOS
 
+> NOTE: These sample applications use the Twilio Voice 3.x APIs. For examples using our 2.x APIs, please see the 2.x branch.
+
 ## Get started with Voice on iOS:
 * [Quickstart](#quickstart) - Run the quickstart app
 * [New Features](Docs/new-features-3.0.md) - New features in 3.0
