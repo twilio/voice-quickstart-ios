@@ -187,7 +187,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     }
 
     // MARK: PKPushRegistryDelegate
-    func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, forType type: PKPushType) {
+    func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, for type: PKPushType) {
         NSLog("pushRegistry:didUpdatePushCredentials:forType:");
         
         if (type != .voIP) {
@@ -212,7 +212,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         self.deviceTokenString = deviceToken
     }
     
-    func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenForType type: PKPushType) {
+    func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
         NSLog("pushRegistry:didInvalidatePushTokenForType:")
         
         if (type != .voIP) {
@@ -239,7 +239,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
      * Try using the `pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:` method if
      * your application is targeting iOS 11. According to the docs, this delegate method is deprecated by Apple.
      */
-    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
+    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType) {
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:")
 
         if (type == PKPushType.voIP) {
@@ -429,7 +429,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         // The mode set by the Voice SDK is "VoiceChat" so the default audio route is the built-in receiver. Use port override to switch the route.
         let audioDevice: TVODefaultAudioDevice = TwilioVoice.audioDevice as! TVODefaultAudioDevice
         audioDevice.block = {
-            kDefaultAVAudioSessionConfigurationBlock()
+            kTVODefaultAVAudioSessionConfigurationBlock()
             do {
                 if (toSpeaker) {
                     try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
