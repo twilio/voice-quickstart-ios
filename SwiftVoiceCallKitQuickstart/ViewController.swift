@@ -268,12 +268,12 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:completion:")
         // Save for later when the notification is properly handled.
         self.incomingPushCompletionCallback = completion
-        
+
         if (type == PKPushType.voIP) {
             TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)
         }
     }
-    
+
     func incomingPushHandled() {
         if let completion = self.incomingPushCompletionCallback {
             completion()
@@ -315,6 +315,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         performEndCallAction(uuid: self.callInvite!.uuid)
 
         self.callInvite = nil
+        self.incomingPushHandled()
     }
 
     // MARK: TVOCallDelegate

@@ -260,7 +260,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)
         }
     }
-    
+
     func incomingPushHandled() {
         if let completion = self.incomingPushCompletionCallback {
             completion()
