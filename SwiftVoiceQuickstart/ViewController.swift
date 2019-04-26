@@ -5,10 +5,11 @@
 //  Copyright © 2016-2018 Twilio, Inc. All rights reserved.
 //
 
-import UIKit
 import AVFoundation
 import PushKit
 import TwilioVoice
+import UIKit
+import UserNotifications
 
 let baseURLString = <#URL TO YOUR ACCESS TOKEN SERVER#>
 // If your token server is written in PHP, accessTokenEndpoint needs .php extension at the end. For example : /accessToken.php
@@ -47,8 +48,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
         voipRegistry.delegate = self
         voipRegistry.desiredPushTypes = Set([PKPushType.voIP])
-        
-        TwilioVoice.logLevel = .verbose
     }
 
     override func viewDidLoad() {
@@ -87,17 +86,85 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             self.call?.disconnect()
             self.toggleUIState(isEnabled: false, showCallControl: false)
         } else {
-            guard let accessToken = fetchAccessToken() else {
-                return
-            }
-            
             playOutgoingRingtone(completion: { [weak self] in
                 if let strongSelf = self {
-                    strongSelf.call = TwilioVoice.call(accessToken, params: [twimlParamTo : strongSelf.outgoingValue.text!], delegate: strongSelf)
-                    strongSelf.toggleUIState(isEnabled: false, showCallControl: false)
-                    strongSelf.startSpin()
+                    strongSelf.makeCall(strongSelf.outgoingValue.text!)
                 }
             })
+            
+            self.toggleUIState(isEnabled: false, showCallControl: false)
+            self.startSpin()
+        }
+    }
+    
+    func makeCall(_ to: String) {
+        guard let accessToken = fetchAccessToken() else {
+            return
+        }
+        
+        let connectOptions: TVOConnectOptions = TVOConnectOptions(accessToken: accessToken) { (builder) in
+            builder.params = [twimlParamTo : to]
+        }
+        
+        self.checkRecordPermission { (permissionGranted) in
+            if (!permissionGranted) {
+                let alertController: UIAlertController = UIAlertController(title: "Voice Quick Start",
+                                                                           message: "Microphone permission not granted",
+                                                                           preferredStyle: .alert)
+                
+                let continueWithMic: UIAlertAction = UIAlertAction(title: "Continue without microphone",
+                                                                   style: .default,
+                                                                   handler: { (action) in
+                    self.call = TwilioVoice.connect(with: connectOptions, delegate: self)
+                })
+                alertController.addAction(continueWithMic)
+                
+                let goToSettings: UIAlertAction = UIAlertAction(title: "Settings",
+                                                                style: .default,
+                                                                handler: { (action) in
+                    UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!,
+                                              options: [UIApplicationOpenURLOptionUniversalLinksOnly: false],
+                                              completionHandler: nil)
+                })
+                alertController.addAction(goToSettings)
+                
+                let cancel: UIAlertAction = UIAlertAction(title: "Cancel",
+                                                          style: .cancel,
+                                                          handler: { (action) in
+                    self.toggleUIState(isEnabled: true, showCallControl: false)
+                    self.stopSpin()
+                })
+                alertController.addAction(cancel)
+                
+                self.present(alertController, animated: true, completion: nil)
+            } else {
+                self.call = TwilioVoice.connect(with: connectOptions, delegate: self)
+            }
+        }
+    }
+    
+    func checkRecordPermission(completion: @escaping (_ permissionGranted: Bool) -> Void) {
+        let permissionStatus: AVAudioSessionRecordPermission = AVAudioSession.sharedInstance().recordPermission()
+        
+        switch permissionStatus {
+        case AVAudioSessionRecordPermission.granted:
+            // Record permission already granted.
+            completion(true)
+            break
+        case AVAudioSessionRecordPermission.denied:
+            // Record permission denied.
+            completion(false)
+            break
+        case AVAudioSessionRecordPermission.undetermined:
+            // Requesting record permission.
+            // Optional: pop up app dialog to let the users know if they want to request.
+            AVAudioSession.sharedInstance().requestRecordPermission({ (granted) in
+                completion(granted)
+            })
+            break
+        default:
+            completion(false)
+            break
         }
     }
 
@@ -120,7 +187,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     }
 
     // MARK: PKPushRegistryDelegate
-    func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, forType type: PKPushType) {
+    func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, for type: PKPushType) {
         NSLog("pushRegistry:didUpdatePushCredentials:forType:");
         
         if (type != .voIP) {
@@ -145,7 +212,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         self.deviceTokenString = deviceToken
     }
     
-    func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenForType type: PKPushType) {
+    func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
         NSLog("pushRegistry:didInvalidatePushTokenForType:")
         
         if (type != .voIP) {
@@ -172,7 +239,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
      * Try using the `pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:` method if
      * your application is targeting iOS 11. According to the docs, this delegate method is deprecated by Apple.
      */
-    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
+    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType) {
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:")
 
         if (type == PKPushType.voIP) {
@@ -186,9 +253,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
      */
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:completion:")
-
         // Save for later when the notification is properly handled.
-        self.incomingPushCompletionCallback = completion;
+        self.incomingPushCompletionCallback = completion
         
         if (type == PKPushType.voIP) {
             TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)
@@ -204,22 +270,14 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     // MARK: TVONotificaitonDelegate
     func callInviteReceived(_ callInvite: TVOCallInvite) {
-        if (callInvite.state == .pending) {
-            handleCallInviteReceived(callInvite)
-        } else if (callInvite.state == .canceled) {
-            handleCallInviteCanceled(callInvite)
-        }
-    }
-    
-    func handleCallInviteReceived(_ callInvite: TVOCallInvite) {
         NSLog("callInviteReceived:")
         
-        if (self.callInvite != nil && self.callInvite?.state == .pending) {
-            NSLog("Already a pending call invite. Ignoring incoming call invite from \(callInvite.from)")
+        if (self.callInvite != nil) {
+            NSLog("A CallInvite is already in progress. Ignoring the incoming CallInvite from \(callInvite.from)")
             self.incomingPushHandled()
             return
         } else if (self.call != nil && self.call?.state == .connected) {
-            NSLog("Already an active call. Ignoring incoming call invite from \(callInvite.from)");
+            NSLog("Already an active call. Ignoring incoming CallInvite from \(callInvite.from)");
             self.incomingPushHandled()
             return;
         }
@@ -249,7 +307,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         let ignoreAction = UIAlertAction(title: "Ignore", style: .default) { [weak self] (action) in
             if let strongSelf = self {
-                /* To ignore the call invite, you don't have to do anything but just literally ignore it */
+                /* To ignore the CallInvite, you don't have to do anything but just literally ignore it */
                 
                 strongSelf.callInvite = nil
                 strongSelf.stopIncomingRingtone()
@@ -262,7 +320,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         let acceptAction = UIAlertAction(title: "Accept", style: .default) { [weak self] (action) in
             if let strongSelf = self {
                 strongSelf.stopIncomingRingtone()
-                strongSelf.call = callInvite.accept(with: strongSelf)
+                let acceptOptions: TVOAcceptOptions = TVOAcceptOptions(callInvite: callInvite) { (builder) in
+                    builder.uuid = strongSelf.callInvite?.uuid
+                }
+                strongSelf.call = callInvite.accept(with: acceptOptions, delegate: strongSelf)
                 strongSelf.callInvite = nil
                 
                 strongSelf.incomingAlertController = nil
@@ -277,21 +338,32 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
         // If the application is not in the foreground, post a local notification
         if (UIApplication.shared.applicationState != UIApplicationState.active) {
-            let notification = UILocalNotification()
-            notification.alertBody = "Incoming Call From \(from)"
+            let content = UNMutableNotificationContent()
+            content.title = "Incoming Call"
+            content.body = "Call Invite from \(callInvite.from)"
+            content.sound = UNNotificationSound.default()
             
-            UIApplication.shared.presentLocalNotificationNow(notification)
+            let request = UNNotificationRequest(identifier: "VoiceLocaNotification",
+                                                content: content, trigger: nil)
+            
+            let center = UNUserNotificationCenter.current()
+            center.add(request) { (error) in
+                if (error != nil) {
+                    print("Failed to add notification reqeust: \(error!.localizedDescription)")
+                }
+            }
         }
         
         self.incomingPushHandled()
     }
     
-    func handleCallInviteCanceled(_ callInvite: TVOCallInvite) {
-        NSLog("callInviteCanceled:")
+    func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite) {
+        NSLog("cancelledCallInviteCanceled:")
         
-        if (callInvite.callSid != self.callInvite?.callSid) {
-            NSLog("Incoming (but not current) call invite from \(callInvite.from) canceled. Just ignore it.");
-            return;
+        if (self.callInvite == nil ||
+            self.callInvite!.callSid != cancelledCallInvite.callSid) {
+            NSLog("No matching pending CallInvite. Ignoring the Cancelled CallInvite")
+            return
         }
         
         self.stopIncomingRingtone()
@@ -308,16 +380,11 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         self.callInvite = nil
         
-        UIApplication.shared.cancelAllLocalNotifications()
-        
+        UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+
         self.incomingPushHandled()
     }
-    
-    func notificationError(_ error: Error) {
-        NSLog("notificationError: \(error.localizedDescription)")
-    }
-    
-    
+
     // MARK: TVOCallDelegate
     func callDidConnect(_ call: TVOCall) {
         NSLog("callDidConnect:")
@@ -360,15 +427,20 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     // MARK: AVAudioSession
     func toggleAudioRoute(toSpeaker: Bool) {
         // The mode set by the Voice SDK is "VoiceChat" so the default audio route is the built-in receiver. Use port override to switch the route.
-        do {
-            if (toSpeaker) {
-                try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
-            } else {
-                try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+        let audioDevice: TVODefaultAudioDevice = TwilioVoice.audioDevice as! TVODefaultAudioDevice
+        audioDevice.block = {
+            kTVODefaultAVAudioSessionConfigurationBlock()
+            do {
+                if (toSpeaker) {
+                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+                } else {
+                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+                }
+            } catch {
+                NSLog(error.localizedDescription)
             }
-        } catch {
-            NSLog(error.localizedDescription)
         }
+        audioDevice.block()
     }
     
     

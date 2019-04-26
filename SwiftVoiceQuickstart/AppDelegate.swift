@@ -5,8 +5,9 @@
 //  Copyright © 2016-2017 Twilio, Inc. All rights reserved.
 //
 
-import UIKit
 import TwilioVoice
+import UIKit
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -14,8 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        NSLog("Twilio Voice Version: %@", TwilioVoice.version())
-        self.configureUserNotifications()
+        NSLog("Twilio Voice Version: %@", TwilioVoice.sdkVersion())
+        self.requestNotificationPermission()
 
         return true
     }
@@ -41,28 +42,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-    func configureUserNotifications() {
-        let rejectAction = UIMutableUserNotificationAction()
-        rejectAction.activationMode = .background
-        rejectAction.title = "Reject"
-        rejectAction.identifier = "reject"
-        rejectAction.isDestructive = true
-        rejectAction.isAuthenticationRequired = false
-
-        let acceptAction = UIMutableUserNotificationAction()
-        acceptAction.activationMode = .background
-        acceptAction.title = "Accept"
-        acceptAction.identifier = "accept"
-        acceptAction.isDestructive = false
-        acceptAction.isAuthenticationRequired = false
-
-        let actionCategory = UIMutableUserNotificationCategory()
-        actionCategory.identifier = "ACTIONABLE"
-        actionCategory.setActions([rejectAction, acceptAction], for: .default)
-
-        let settings = UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: [actionCategory])
-        UIApplication.shared.registerUserNotificationSettings(settings)
+    
+    func requestNotificationPermission() {
+        let center = UNUserNotificationCenter.current()
+        center.getNotificationSettings { (settings) in
+            if (settings.authorizationStatus == .denied) {
+                print("User notification permission denied. Go to system settings to allow user notifications.")
+            } else if (settings.authorizationStatus == .authorized) {
+                print("User notificaiton already authorized.")
+            } else if (settings.authorizationStatus == .notDetermined) {
+                let options: UNAuthorizationOptions = [.alert, .sound]
+                center.requestAuthorization(options: options, completionHandler: { (granted, error) in
+                    if (error != nil) {
+                        print("Failed to request for user notification permission: \(error!.localizedDescription)")
+                    }
+                    
+                    if (granted) {
+                        print("User notification permission granted.")
+                    } else {
+                        print("User notification permission denied.")
+                    }
+                })
+            }
+        }
     }
 }
 
