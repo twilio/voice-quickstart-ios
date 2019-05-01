@@ -126,12 +126,13 @@ call = TwilioVoice.connect(with: connectOptions, delegate: self)
 ```
 
 ### <a name="preferred-audio-codec"></a>Preferred Audio Codec
-In Voice iOS 3.0, you can provide your preferred audio codec in the `TVOConnectOptions` and the `TVOAcceptOptions`.
-The only audio codec supported by our mobile infrastructure is currently PCMU. Opus is not currently available on our mobile infrastructure. However it will become available in Q1 of 2019. At that point the default audio codec for all 3.0 mobile clients will be Opus. To always use PCMU as the negotiated audio codec instead you can add it as the first codec in the `preferAudioCodecs` list.
+You can provide your preferred audio codecs in the `TVOConnectOptions` and the `TVOAcceptOptions`. Opus is the default codec used by the mobile infrastructure. To use PCMU as the negotiated audio codec instead of Opus you can add it as the first codec in the `preferredAudioCodecs` list.
 
 ```.swift
 let connectOptions: TVOConnectOptions = TVOConnectOptions(accessToken: accessToken) { (builder) in
-    builder.preferredAudioCodecs = [ TVOOpusCodec(), TVOPcmuCodec() ]
+    builder.preferredAudioCodecs = [ TVOPcmuCodec(), TVOOpusCodec() ]
 }
+
+call = TwilioVoice.connect(with: connectOptions, delegate: self)
 ```
 
