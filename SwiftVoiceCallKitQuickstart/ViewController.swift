@@ -319,6 +319,12 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     }
 
     // MARK: TVOCallDelegate
+    func callDidStartRinging(_ call: TVOCall) {
+        NSLog("callDidStartRinging:")
+        
+        self.placeCallButton.setTitle("Ringing", for: .normal)
+    }
+    
     func callDidConnect(_ call: TVOCall) {
         NSLog("callDidConnect:")
         
@@ -331,6 +337,22 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         toggleUIState(isEnabled: true, showCallControl: true)
         stopSpin()
         toggleAudioRoute(toSpeaker: true)
+    }
+    
+    func call(_ call: TVOCall, isReconnectingWithError error: Error) {
+        NSLog("call:isReconnectingWithError:")
+        
+        self.placeCallButton.setTitle("Reconnecting", for: .normal)
+        
+        toggleUIState(isEnabled: false, showCallControl: false)
+    }
+    
+    func callDidReconnect(_ call: TVOCall) {
+        NSLog("callDidReconnect:")
+        
+        self.placeCallButton.setTitle("Hang Up", for: .normal)
+        
+        toggleUIState(isEnabled: true, showCallControl: true)
     }
     
     func call(_ call: TVOCall, didFailToConnectWithError error: Error) {
