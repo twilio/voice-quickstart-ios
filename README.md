@@ -1,10 +1,11 @@
 # Twilio Voice Swift Quickstart for iOS
 
-> NOTE: These sample applications use the Twilio Voice 3.x APIs. For examples using our 2.x APIs, please see the [2.x](https://github.com/twilio/voice-quickstart-swift/tree/2.x) branch. If you are using SDK 2.x, we highly recommend planning your migration to 3.0 as soon as possible. Support for 2.x will cease 1/1/2020. Until then, SDK 2.x will only receive fixes for critical or security related issues.
+> NOTE: These sample applications use the Twilio Voice 4.x APIs. For examples using our 2.x APIs, please see the [2.x](https://github.com/twilio/voice-quickstart-swift/tree/2.x) branch. If you are using SDK 2.x, we highly recommend planning your migration to 4.0 as soon as possible. Support for 2.x will cease 1/1/2020. Until then, SDK 2.x will only receive fixes for critical or security related issues.
 
 ## Get started with Voice on iOS:
 * [Quickstart](#quickstart) - Run the quickstart app
-* [New Features](Docs/new-features-3.0.md) - New features in 3.0
+* [4.0 New Features](Docs/new-features-4.0.md) - New features in 4.0
+* [3.0 New Features](Docs/new-features-3.0.md) - New features in 3.0
 * [Migration Guide](Docs/migration-guide-2.x-3.x.md) - Migrating from 2.x to 3.x
 * [Access Tokens](#access-tokens) - Using access tokens
 * [Managing Audio Interruptions](#managing-audio-interruptions) - Managing audio interruptions
