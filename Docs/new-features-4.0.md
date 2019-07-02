@@ -1,23 +1,27 @@
 ## 4.0 New Features
-Voice iOS SDK 4.0 introduced a new call state: `TVOCallStateReconnecting`. You will need to update any logic you have implemented that relies on the call state. The simplest approach is to treat a `TVOCallStateReconnecting` just like a `TVOCallStateConnected` and keep the current behavior.
 
-For more advanced behaviour, you can make use of TVOCallDelegate’s new protocol methods `call:isReconnectingWithError:` and `callDidReconnect:` to update the UI for example and indicate the ongoing disruption.
+#### Reconnecting State and Callbacks
 
-For example:
+`TVOCallStateReconnecting` is provided as a new Call state. A callback `call:isReconnectingWithError:` corresponding to this state transition is triggered when a network change is detected when Call is already in the `TVOCallStateConnected` state. If the Call is in `TVOCallStateConnecting`or in `TVOCallStateRinging` state when network change happened, the SDK will receive the `call:didFailToConnectWithError:` callback with the `TVOErrorConnectionError` error (31005). If a Call is reconnected after reconnection attempts, the application will receive the `callDidReconnect:` callback and the Call state transitions to `TVOCallStateConnected`.
+
+Updates:
 
 ```
-func call(_ call: TVOCall, isReconnectingWithError error: Error) {
-    NSLog(@"Call is reconnecting");
+typedef NS_ENUM(NSUInteger, TVOCallState) {
+    TVOCallStateConnecting = 0, ///< The Call is connecting.
+    TVOCallStateRinging,        ///< The Call is ringing.
+    TVOCallStateConnected,      ///< The Call is connected.
+    TVOCallStateReconnecting,   ///< The Call is reconnecting.
+    TVOCallStateDisconnected    ///< The Call is disconnected.
+};
+```
 
-    // Update UI
-    // Check the error: It could be either
-    // TVOErrorSignalingConnectionDisconnectedError (53001) or
-    // TVOErrorMediaConnectionError (53405).
-}
+```
+@protocol TVOCallDelegate <NSObject>
 
-func callDidReconnect(_ call: TVOCall) {
-    NSLog(@"Call reconnected");
+@optional
+- (void)callDidStartRinging:(nonnull TVOCall *)call;
+- (void)call:(nonnull TVOCall *)call isReconnectingWithError:(nonnull NSError *)error;
 
-    // Update UI
-}
+@end
 ```
