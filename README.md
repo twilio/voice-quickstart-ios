@@ -4,10 +4,10 @@
 
 ## Get started with Voice on iOS:
 * [Quickstart](#quickstart) - Run the quickstart app
-* [4.0 New Features](Docs/new-features-4.0.md) - New features in 4.0
-* [Migration Guide from 3.x to 4.x](Docs/migration-guide-3.x-4.x.md) - Migrating from 3.x to 4.x
-* [3.0 New Features](Docs/new-features-3.0.md) - New features in 3.0
-* [Migration Guide from 2.x to 3.x](Docs/migration-guide-2.x-3.x.md) - Migrating from 2.x to 3.x
+* [4.0 New Features](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/new-features-4.0.md) - New features in 4.0
+* [Migration Guide from 3.x to 4.x](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/migration-guide-3.x-4.x.md) - Migrating from 3.x to 4.x
+* [3.0 New Features](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/new-features-3.0.md) - New features in 3.0
+* [Migration Guide from 2.x to 3.x](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/migration-guide-2.x-3.x.md) - Migrating from 2.x to 3.x
 * [Access Tokens](#access-tokens) - Using access tokens
 * [Managing Audio Interruptions](#managing-audio-interruptions) - Managing audio interruptions
 * [Managing Push Credentials](#managing-push-credentials) - Managing push credentials
@@ -296,7 +296,7 @@ Whenever a registration is performed via `TwilioVoice.registerWithAccessToken:de
 
 If you need to change or update your credentials provided by Apple you can do so by selecting the Push Credential in the [console](https://www.twilio.com/console/voice/sdks/credentials) and adding your new `certificate` and `private key` in the text box provided on the Push Credential page shown below:
 
-<kbd><img height="667px" src="Images/update_push_credential.png"/></kbd>
+<kbd><img height="667px" src="https://github.com/twilio/voice-quickstart-swift/blob/master/Images/update_push_credential.png"/></kbd>
 
 ### Deleting a Push Credential
 
