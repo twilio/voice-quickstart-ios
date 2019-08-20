@@ -198,7 +198,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             return
         }
         
-        let deviceToken = (credentials.token as NSData).description
+        let deviceToken = credentials.token.map { String(format: "%02x", $0) }.joined()
 
         TwilioVoice.register(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
             if let error = error {
