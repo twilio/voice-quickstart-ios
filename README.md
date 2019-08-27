@@ -1,8 +1,12 @@
 # Twilio Voice Swift Quickstart for iOS
 
-> NOTE: These sample applications use the Twilio Voice 4.x APIs. For examples using our 2.x APIs, please see the [2.x](https://github.com/twilio/voice-quickstart-swift/tree/2.x) branch. If you are using SDK 2.x, we highly recommend planning your migration to 4.0 as soon as possible. Support for 2.x will cease 1/1/2020. Until then, SDK 2.x will only receive fixes for critical or security related issues.
+> Note: Our Voice iOS SDKs versions up to 4.3.0 are not compatible with Apps built using Xcode 11 and deployed on an iOS 13 device. We are working on providing support for Xcode 11 and iOS 13 in an upcoming release. Please refer to this [advisory](https://support.twilio.com/hc/en-us/articles/360035005593-iOS-13-Xcode-11-Breaking-Changes) and this [GitHub issue](https://github.com/twilio/voice-quickstart-swift/issues/251) for more information.
+
+
 
 ## Get started with Voice on iOS:
+> NOTE: These sample applications use the Twilio Voice 4.x APIs. For examples using our 2.x APIs, please see the [2.x](https://github.com/twilio/voice-quickstart-swift/tree/2.x) branch. If you are using SDK 2.x, we highly recommend planning your migration to 4.0 as soon as possible. Support for 2.x will cease 1/1/2020. Until then, SDK 2.x will only receive fixes for critical or security related issues.
+
 * [Quickstart](#quickstart) - Run the quickstart app
 * [4.0 New Features](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/new-features-4.0.md) - New features in 4.0
 * [Migration Guide from 3.x to 4.x](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/migration-guide-3.x-4.x.md) - Migrating from 3.x to 4.x
