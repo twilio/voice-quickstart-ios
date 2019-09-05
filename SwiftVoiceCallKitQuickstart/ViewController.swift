@@ -255,10 +255,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     
     func notificationError(_ error: Error) {
         NSLog("notificationError: \(error.localizedDescription)")
-        
-        if (self.callInvite != nil) {
-            performEndCallAction(uuid: self.callInvite!.uuid)
-        }
     }
     
     
