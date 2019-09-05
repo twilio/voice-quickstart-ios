@@ -2,6 +2,64 @@
 
 > Note: If you plan to build your apps using Xcode 11 and deploy on iOS 13 devices, please use the `SwiftVoiceCallKitQuickstart` sample app. Reporting new incoming calls to CallKit upon receiving VoIP push notifications is mandated by Apple's new [PushKit push notification policy](https://developer.apple.com/documentation/pushkit/pkpushregistrydelegate/2875784-pushregistry). Failure to integrate the CallKit framework will result in runtime exceptions.
 
+## Migrating to Voice iOS 2.1.0 for iOS 13 Compatibility
+
+The Voice iOS 2.1.0 release adds support for the new [PushKit push notification policy](https://developer.apple.com/documentation/pushkit/pkpushregistrydelegate/2875784-pushregistry) that iOS 13 and Xcode 11 introduced.
+
+This new policy mandates that Apps built with Xcode 11 and running on iOS 13, which receive VoIP push notifications, must now report all PushKit push notifications to CallKit. Failure to do so will result in iOS 13 terminating the App and barring any further PushKit push notifications. You can read more about this policy and breaking changes [here](https://support.twilio.com/hc/en-us/articles/360035005593-iOS-13-Xcode-11-Breaking-Changes).
+
+The SDK now handles incoming call cancellations internally. The “cancel” push notification is no longer required or supported by this release of the SDK.
+
+If your App supports incoming calls, you **MUST** perform the following steps to comply with the new policy:
+
+- Upgrade to Twilio Voice iOS SDK to 2.1.0
+- Report the call to CallKit. Refer to this [example](https://github.com/twilio/voice-quickstart-swift/tree/2.x) for how to report the call to CallKit.
+- Update how you decode the PushKit token
+
+Swift
+
+```.swift
+func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, for type: PKPushType) {
+    ...
+    let deviceToken = credentials.token.map { String(format: "%02x", $0) }.joined()
+    ...
+}
+```
+
+Objective-C
+
+```.objc
+- (void)pushRegistry:(PKPushRegistry *)registry didUpdatePushCredentials:(PKPushCredentials *)credentials forType:(NSString *)type {
+    ...
+    const unsigned *tokenBytes = [credentials.token bytes];
+    self.deviceTokenString = [NSString stringWithFormat:@"<%08x %08x %08x %08x %08x %08x %08x %08x>", 
+                                                        ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
+                                                        ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
+                                                        ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
+    ...
+}
+```
+
+- Register your device token when your App starts. This ensures that your app no longer receives “cancel” push notifications. Once you have performed this registration, you will only need to register when the device token changes.
+
+Swift
+
+```.swift
+TwilioVoice.register(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
+    ...
+}
+```
+
+Objective-C
+
+```
+[TwilioVoice registerWithAccessToken:accessToken
+                         deviceToken:self.deviceTokenString
+                          completion:^(NSError *error) {
+    ...
+}
+```
+
 ## Get started with Voice on iOS:
 > NOTE: These sample applications use the Twilio Voice 2.x APIs. If you are using SDK 2.x, we highly recommend planning your migration to 4.0 as soon as possible. Support for 2.x will cease 1/1/2020. Until then, SDK 2.x will only receive fixes for critical or security related issues. For examples using our 3.x APIs, please see the [master](https://github.com/twilio/voice-quickstart-swift/tree/master) branch.
 
