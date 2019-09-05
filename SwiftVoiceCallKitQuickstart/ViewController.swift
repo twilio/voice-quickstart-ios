@@ -211,8 +211,18 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     // MARK: TVONotificaitonDelegate
     func callInviteReceived(_ callInvite: TVOCallInvite) {
         if (callInvite.state == .pending) {
+            /**
+             * Calling `[TwilioVoice handleNotification:]` will synchronously process your notification payload and
+             * provide you a `TVOCallInvite` object with `TVOCallInviteStatePending` state.
+             * Report the incoming call to CallKit upon receiving this callback.
+             */
             handleCallInviteReceived(callInvite)
         } else if (callInvite.state == .canceled) {
+            /**
+             * The SDK may call `[TVONotificationDelegate callInviteReceived:]` asynchronously on the main dispatch queue
+             * with a `TVOCallInvite` state of `TVOCallInviteStateCanceled` if the caller hangs up or the client
+             * encounters any other error before the called party could answer or reject the call.
+             */
             handleCallInviteCanceled(callInvite)
         }
     }
@@ -245,6 +255,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     
     func notificationError(_ error: Error) {
         NSLog("notificationError: \(error.localizedDescription)")
+        
+        if (self.callInvite != nil) {
+            performEndCallAction(uuid: self.callInvite!.uuid)
+        }
     }
     
     
