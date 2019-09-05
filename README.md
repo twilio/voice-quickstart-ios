@@ -1,8 +1,10 @@
 # Twilio Voice Swift Quickstart for iOS
 
-> NOTE: These sample applications use the Twilio Voice 2.x APIs. If you are using SDK 2.x, we highly recommend planning your migration to 3.0 as soon as possible. Support for 2.x will cease 1/1/2020. Until then, SDK 2.x will only receive fixes for critical or security related issues. For examples using our 3.x APIs, please see the [master](https://github.com/twilio/voice-quickstart-swift/tree/master) branch.
+> Note: If you plan to build your apps using Xcode 11 and deploy on iOS 13 devices, please use the `SwiftVoiceCallKitQuickstart` sample app. Reporting new incoming calls to CallKit upon receiving VoIP push notifications is mandated by Apple's new [PushKit push notification policy](https://developer.apple.com/documentation/pushkit/pkpushregistrydelegate/2875784-pushregistry). Failure to integrate the CallKit framework will result in runtime exceptions.
 
 ## Get started with Voice on iOS:
+> NOTE: These sample applications use the Twilio Voice 2.x APIs. If you are using SDK 2.x, we highly recommend planning your migration to 4.0 as soon as possible. Support for 2.x will cease 1/1/2020. Until then, SDK 2.x will only receive fixes for critical or security related issues. For examples using our 3.x APIs, please see the [master](https://github.com/twilio/voice-quickstart-swift/tree/master) branch.
+
 * [Quickstart](#quickstart) - Run the quickstart app
 * [Access Tokens](#access-tokens) - Using access tokens
 * [Managing Audio Interruptions](#managing-audio-interruptions) - Managing audio interruptions
