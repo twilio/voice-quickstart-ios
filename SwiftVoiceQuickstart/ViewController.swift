@@ -28,7 +28,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     var deviceTokenString:String?
 
     var voipRegistry:PKPushRegistry
-    var incomingPushCompletionCallback: (()->Swift.Void?)? = nil
 
     var isSpinning: Bool
     var incomingAlertController: UIAlertController?
@@ -46,7 +45,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         super.init(coder: aDecoder)
 
         voipRegistry.delegate = self
-        voipRegistry.desiredPushTypes = Set([PKPushType.voIP])
+        if #available(iOS 9.0, *) {
+            voipRegistry.desiredPushTypes = Set([PKPushType.voIP])
+        }
         
         TwilioVoice.logLevel = .verbose
     }
@@ -120,18 +121,14 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     }
 
     // MARK: PKPushRegistryDelegate
-    func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, forType type: PKPushType) {
+    func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, for type: PKPushType) {
         NSLog("pushRegistry:didUpdatePushCredentials:forType:");
-        
-        if (type != .voIP) {
-            return
-        }
 
         guard let accessToken = fetchAccessToken() else {
             return
         }
         
-        let deviceToken = (credentials.token as NSData).description
+        let deviceToken = credentials.token.map { String(format: "%02x", $0) }.joined()
 
         TwilioVoice.register(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
             if let error = error {
@@ -145,12 +142,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         self.deviceTokenString = deviceToken
     }
     
-    func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenForType type: PKPushType) {
+    func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
         NSLog("pushRegistry:didInvalidatePushTokenForType:")
-        
-        if (type != .voIP) {
-            return
-        }
         
         guard let deviceToken = deviceTokenString, let accessToken = fetchAccessToken() else {
             return
@@ -172,12 +165,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
      * Try using the `pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:` method if
      * your application is targeting iOS 11. According to the docs, this delegate method is deprecated by Apple.
      */
-    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
+    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType) {
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:")
 
-        if (type == PKPushType.voIP) {
-            TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)
-        }
+        TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)
     }
     
     /**
@@ -186,20 +177,14 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
      */
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:completion:")
-
-        // Save for later when the notification is properly handled.
-        self.incomingPushCompletionCallback = completion;
         
-        if (type == PKPushType.voIP) {
-            TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)
-        }
-    }
-
-    func incomingPushHandled() {
-        if let completion = self.incomingPushCompletionCallback {
-            completion()
-            self.incomingPushCompletionCallback = nil
-        }
+        TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)
+        
+        /**
+        * The Voice SDK processes the call notification and returns the call invite synchronously. Report the incoming call to
+        * CallKit and fulfill the completion before exiting this callback method.
+        */
+        completion()
     }
 
     // MARK: TVONotificaitonDelegate
@@ -216,11 +201,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         if (self.callInvite != nil && self.callInvite?.state == .pending) {
             NSLog("Already a pending call invite. Ignoring incoming call invite from \(callInvite.from)")
-            self.incomingPushHandled()
             return
         } else if (self.call != nil && self.call?.state == .connected) {
             NSLog("Already an active call. Ignoring incoming call invite from \(callInvite.from)");
-            self.incomingPushHandled()
             return;
         }
         
@@ -282,8 +265,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             
             UIApplication.shared.presentLocalNotificationNow(notification)
         }
-        
-        self.incomingPushHandled()
     }
     
     func handleCallInviteCanceled(_ callInvite: TVOCallInvite) {
@@ -309,8 +290,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         self.callInvite = nil
         
         UIApplication.shared.cancelAllLocalNotifications()
-        
-        self.incomingPushHandled()
     }
     
     func notificationError(_ error: Error) {

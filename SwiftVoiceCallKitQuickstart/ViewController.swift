@@ -29,7 +29,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     var deviceTokenString: String?
 
     var voipRegistry: PKPushRegistry
-    var incomingPushCompletionCallback: (()->Swift.Void?)? = nil
 
     var isSpinning: Bool
     var incomingAlertController: UIAlertController?
@@ -135,18 +134,14 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
 
     // MARK: PKPushRegistryDelegate
-    func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, forType type: PKPushType) {
+    func pushRegistry(_ registry: PKPushRegistry, didUpdate credentials: PKPushCredentials, for type: PKPushType) {
         NSLog("pushRegistry:didUpdatePushCredentials:forType:")
-        
-        if (type != .voIP) {
-            return
-        }
 
         guard let accessToken = fetchAccessToken() else {
             return
         }
         
-        let deviceToken = (credentials.token as NSData).description
+        let deviceToken = credentials.token.map { String(format: "%02x", $0) }.joined()
 
         TwilioVoice.register(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
             if let error = error {
@@ -160,7 +155,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         self.deviceTokenString = deviceToken
     }
     
-    func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenForType type: PKPushType) {
+    func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
         NSLog("pushRegistry:didInvalidatePushTokenForType:")
         
         if (type != .voIP) {
@@ -187,7 +182,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
      * Try using the `pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:` method if
      * your application is targeting iOS 11. According to the docs, this delegate method is deprecated by Apple.
      */
-    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
+    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType) {
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:")
 
         if (type == PKPushType.voIP) {
@@ -201,26 +196,33 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
      */
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:completion:")
-        // Save for later when the notification is properly handled.
-        self.incomingPushCompletionCallback = completion
 
         if (type == PKPushType.voIP) {
             TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)
         }
-    }
-
-    func incomingPushHandled() {
-        if let completion = self.incomingPushCompletionCallback {
-            completion()
-            self.incomingPushCompletionCallback = nil
-        }
+        
+        /**
+         * The Voice SDK processes the call notification and returns the call invite synchronously. Report the incoming call to
+         * CallKit and fulfill the completion before exiting this callback method.
+         */
+        completion()
     }
 
     // MARK: TVONotificaitonDelegate
     func callInviteReceived(_ callInvite: TVOCallInvite) {
         if (callInvite.state == .pending) {
+            /**
+             * Calling `[TwilioVoice handleNotification:]` will synchronously process your notification payload and
+             * provide you a `TVOCallInvite` object with `TVOCallInviteStatePending` state.
+             * Report the incoming call to CallKit upon receiving this callback.
+             */
             handleCallInviteReceived(callInvite)
         } else if (callInvite.state == .canceled) {
+            /**
+             * The SDK may call `[TVONotificationDelegate callInviteReceived:]` asynchronously on the main dispatch queue
+             * with a `TVOCallInvite` state of `TVOCallInviteStateCanceled` if the caller hangs up or the client
+             * encounters any other error before the called party could answer or reject the call.
+             */
             handleCallInviteCanceled(callInvite)
         }
     }
@@ -231,12 +233,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         if (self.callInvite != nil && self.callInvite?.state == .pending) {
             NSLog("Already a pending incoming call invite.");
             NSLog("  >> Ignoring call from %@", callInvite.from);
-            self.incomingPushHandled()
             return;
         } else if (self.call != nil) {
             NSLog("Already an active call.");
             NSLog("  >> Ignoring call from %@", callInvite.from);
-            self.incomingPushHandled()
             return;
         }
         
@@ -251,7 +251,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         performEndCallAction(uuid: callInvite.uuid)
 
         self.callInvite = nil
-        self.incomingPushHandled()
     }
     
     func notificationError(_ error: Error) {
@@ -536,6 +535,5 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         call = self.callInvite?.accept(with: self)
         self.callInvite = nil
         self.callKitCompletionCallback = completionHandler
-        self.incomingPushHandled()
     }
 }
