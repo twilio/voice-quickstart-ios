@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  Twilio Voice with CallKit Quickstart - Swift
+//  Twilio Voice Quickstart - Swift
 //
 //  Copyright © 2016 Twilio, Inc. All rights reserved.
 //
