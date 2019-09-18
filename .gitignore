@@ -1,6 +1,8 @@
 Pods/
 Podfile.lock
 SwiftVoiceQuickstart.xcworkspace
+Carthage
+Cartfile.resolved
 
 xcuserdata/
 *.xcuserstate
