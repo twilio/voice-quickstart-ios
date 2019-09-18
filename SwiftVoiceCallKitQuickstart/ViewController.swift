@@ -256,7 +256,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:")
 
         if (type == PKPushType.voIP) {
-            TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)
+            TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
         }
     }
 
@@ -266,11 +266,20 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
      */
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:completion:")
-        // Save for later when the notification is properly handled.
-        self.incomingPushCompletionCallback = completion
 
         if (type == PKPushType.voIP) {
-            TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)
+            TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
+        }
+        
+        if let version = Float(UIDevice.current.systemVersion), version < 13.0 {
+            // Save for later when the notification is properly handled.
+            self.incomingPushCompletionCallback = completion
+        } else {
+            /**
+            * The Voice SDK processes the call notification and returns the call invite synchronously. Report the incoming call to
+            * CallKit and fulfill the completion before exiting this callback method.
+            */
+            completion()
         }
     }
 
@@ -287,12 +296,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         if (self.callInvite != nil) {
             NSLog("A CallInvite is already in progress. Ignoring the incoming CallInvite from \(callInvite.from)")
-            self.incomingPushHandled()
             return;
         } else if (self.call != nil) {
             NSLog("Already an active call.");
             NSLog("  >> Ignoring call from \(callInvite.from)");
-            self.incomingPushHandled()
             return;
         }
         
@@ -301,10 +308,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         reportIncomingCall(from: "Voice Bot", uuid: callInvite.uuid)
     }
     
-    func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite) {
-        NSLog("cancelledCallInviteCanceled:")
-        
-        self.incomingPushHandled()
+    func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite, error: Error) {
+        NSLog("cancelledCallInviteCanceled:error:, error: \(error.localizedDescription)")
         
         if (self.callInvite == nil ||
             self.callInvite!.callSid != cancelledCallInvite.callSid) {
@@ -315,7 +320,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         performEndCallAction(uuid: self.callInvite!.uuid)
 
         self.callInvite = nil
-        self.incomingPushHandled()
     }
 
     // MARK: TVOCallDelegate
