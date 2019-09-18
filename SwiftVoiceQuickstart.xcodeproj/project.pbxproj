@@ -16,7 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		24BA34331D874AC800B0B4F7 /* SwiftVoiceCallKitQuickstart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftVoiceCallKitQuickstart.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		24BA34331D874AC800B0B4F7 /* SwiftVoiceQuickstart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftVoiceQuickstart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24BA34361D874AC800B0B4F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		24BA34381D874AC800B0B4F7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		24BA343B1D874AC800B0B4F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -24,7 +24,7 @@
 		24BA34401D874AC800B0B4F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		24BA34421D874AC800B0B4F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TwilioLogo.png; sourceTree = "<group>"; };
-		24BA344A1D874D2B00B0B4F7 /* SwiftVoiceCallKitQuickstart.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftVoiceCallKitQuickstart.entitlements; sourceTree = "<group>"; };
+		8FAD20B72332DC3900E5B42F /* SwiftVoiceQuickstart.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftVoiceQuickstart.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,7 +41,7 @@
 		24BA342A1D874AC800B0B4F7 = {
 			isa = PBXGroup;
 			children = (
-				24BA34351D874AC800B0B4F7 /* SwiftVoiceCallKitQuickstart */,
+				24BA34351D874AC800B0B4F7 /* SwiftVoiceQuickstart */,
 				24BA34341D874AC800B0B4F7 /* Products */,
 				55E4DD2B129E858377D08E95 /* Pods */,
 				45B8A87752EE385BD0514D8C /* Frameworks */,
@@ -51,15 +51,15 @@
 		24BA34341D874AC800B0B4F7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				24BA34331D874AC800B0B4F7 /* SwiftVoiceCallKitQuickstart.app */,
+				24BA34331D874AC800B0B4F7 /* SwiftVoiceQuickstart.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		24BA34351D874AC800B0B4F7 /* SwiftVoiceCallKitQuickstart */ = {
+		24BA34351D874AC800B0B4F7 /* SwiftVoiceQuickstart */ = {
 			isa = PBXGroup;
 			children = (
-				24BA344A1D874D2B00B0B4F7 /* SwiftVoiceCallKitQuickstart.entitlements */,
+				8FAD20B72332DC3900E5B42F /* SwiftVoiceQuickstart.entitlements */,
 				24BA34361D874AC800B0B4F7 /* AppDelegate.swift */,
 				24BA34381D874AC800B0B4F7 /* ViewController.swift */,
 				24BA343A1D874AC800B0B4F7 /* Main.storyboard */,
@@ -68,7 +68,7 @@
 				24BA34421D874AC800B0B4F7 /* Info.plist */,
 				24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */,
 			);
-			path = SwiftVoiceCallKitQuickstart;
+			path = SwiftVoiceQuickstart;
 			sourceTree = "<group>";
 		};
 		45B8A87752EE385BD0514D8C /* Frameworks */ = {
@@ -88,9 +88,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		24BA34321D874AC800B0B4F7 /* SwiftVoiceCallKitQuickstart */ = {
+		24BA34321D874AC800B0B4F7 /* SwiftVoiceQuickstart */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 24BA34451D874AC800B0B4F7 /* Build configuration list for PBXNativeTarget "SwiftVoiceCallKitQuickstart" */;
+			buildConfigurationList = 24BA34451D874AC800B0B4F7 /* Build configuration list for PBXNativeTarget "SwiftVoiceQuickstart" */;
 			buildPhases = (
 				24BA342F1D874AC800B0B4F7 /* Sources */,
 				24BA34301D874AC800B0B4F7 /* Frameworks */,
@@ -100,9 +100,9 @@
 			);
 			dependencies = (
 			);
-			name = SwiftVoiceCallKitQuickstart;
+			name = SwiftVoiceQuickstart;
 			productName = SwiftVoiceCallKitQuickstart;
-			productReference = 24BA34331D874AC800B0B4F7 /* SwiftVoiceCallKitQuickstart.app */;
+			productReference = 24BA34331D874AC800B0B4F7 /* SwiftVoiceQuickstart.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -129,11 +129,12 @@
 					};
 				};
 			};
-			buildConfigurationList = 24BA342E1D874AC800B0B4F7 /* Build configuration list for PBXProject "SwiftVoiceCallKitQuickstart" */;
+			buildConfigurationList = 24BA342E1D874AC800B0B4F7 /* Build configuration list for PBXProject "SwiftVoiceQuickstart" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -142,7 +143,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				24BA34321D874AC800B0B4F7 /* SwiftVoiceCallKitQuickstart */,
+				24BA34321D874AC800B0B4F7 /* SwiftVoiceQuickstart */,
 			);
 		};
 /* End PBXProject section */
@@ -290,12 +291,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = SwiftVoiceCallKitQuickstart/SwiftVoiceCallKitQuickstart.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SwiftVoiceQuickstart/SwiftVoiceQuickstart.entitlements;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = SwiftVoiceCallKitQuickstart/Info.plist;
+				INFOPLIST_FILE = SwiftVoiceQuickstart/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.SwiftVoiceCallKitQuickstart;
+				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.SwiftVoiceQuickstart;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 			};
@@ -305,12 +306,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = SwiftVoiceCallKitQuickstart/SwiftVoiceCallKitQuickstart.entitlements;
+				CODE_SIGN_ENTITLEMENTS = SwiftVoiceQuickstart/SwiftVoiceQuickstart.entitlements;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = SwiftVoiceCallKitQuickstart/Info.plist;
+				INFOPLIST_FILE = SwiftVoiceQuickstart/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.SwiftVoiceCallKitQuickstart;
+				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.SwiftVoiceQuickstart;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 			};
@@ -319,7 +320,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		24BA342E1D874AC800B0B4F7 /* Build configuration list for PBXProject "SwiftVoiceCallKitQuickstart" */ = {
+		24BA342E1D874AC800B0B4F7 /* Build configuration list for PBXProject "SwiftVoiceQuickstart" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				24BA34431D874AC800B0B4F7 /* Debug */,
@@ -328,7 +329,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		24BA34451D874AC800B0B4F7 /* Build configuration list for PBXNativeTarget "SwiftVoiceCallKitQuickstart" */ = {
+		24BA34451D874AC800B0B4F7 /* Build configuration list for PBXNativeTarget "SwiftVoiceQuickstart" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				24BA34461D874AC800B0B4F7 /* Debug */,
