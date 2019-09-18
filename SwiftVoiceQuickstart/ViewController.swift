@@ -627,6 +627,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         call = self.callInvite?.accept(with: acceptOptions, delegate: self)
         self.callInvite = nil
         self.callKitCompletionCallback = completionHandler
-        self.incomingPushHandled()
+        if let version = Float(UIDevice.current.systemVersion), version < 13.0 {
+            self.incomingPushHandled()
+        }
     }
 }
