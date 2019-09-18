@@ -1,7 +1,5 @@
 # Twilio Voice Swift Quickstart for iOS
 
-> Note: Our Voice iOS SDKs versions up to 4.3.0 are not compatible with Apps built using Xcode 11 and deployed on an iOS 13 device. We are working on providing support for Xcode 11 and iOS 13 in an upcoming release. Please refer to this [advisory](https://support.twilio.com/hc/en-us/articles/360035005593-iOS-13-Xcode-11-Breaking-Changes) and this [GitHub issue](https://github.com/twilio/voice-quickstart-swift/issues/251) for more information.
-
 > Please see our [iOS 13 Migration Guide](https://github.com/twilio/twilio-voice-ios/blob/Releases/iOS-13-Migration-Guide.md) for the latest information on iOS 13.
 
 ## Get started with Voice on iOS:
