@@ -47,7 +47,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         isSpinning = false
         voipRegistry = PKPushRegistry.init(queue: DispatchQueue.main)
 
-        let configuration = CXProviderConfiguration(localizedName: "CallKit Quickstart")
+        let configuration = CXProviderConfiguration(localizedName: "Quickstart")
         configuration.maximumCallGroups = 1
         configuration.maximumCallsPerCallGroup = 1
         if let callKitIcon = UIImage(named: "iconMask80") {
@@ -294,18 +294,21 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func callInviteReceived(_ callInvite: TVOCallInvite) {
         NSLog("callInviteReceived:")
         
+        var from:String = callInvite.from ?? "Voice Bot"
+        from = from.replacingOccurrences(of: "client:", with: "")
+        
         if (self.callInvite != nil) {
-            NSLog("A CallInvite is already in progress. Ignoring the incoming CallInvite from \(callInvite.from)")
+            NSLog("A CallInvite is already in progress. Ignoring the incoming CallInvite from \(from)")
             return;
         } else if (self.call != nil) {
             NSLog("Already an active call.");
-            NSLog("  >> Ignoring call from \(callInvite.from)");
+            NSLog("  >> Ignoring call from \(from)");
             return;
         }
         
         self.callInvite = callInvite
 
-        reportIncomingCall(from: "Voice Bot", uuid: callInvite.uuid)
+        reportIncomingCall(from: from, uuid: callInvite.uuid)
     }
     
     func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite, error: Error) {
