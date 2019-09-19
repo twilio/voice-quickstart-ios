@@ -299,10 +299,16 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         if (self.callInvite != nil) {
             NSLog("A CallInvite is already in progress. Ignoring the incoming CallInvite from \(from)")
+            if let version = Float(UIDevice.current.systemVersion), version < 13.0 {
+                self.incomingPushHandled()
+            }
             return;
         } else if (self.call != nil) {
             NSLog("Already an active call.");
             NSLog("  >> Ignoring call from \(from)");
+            if let version = Float(UIDevice.current.systemVersion), version < 13.0 {
+                self.incomingPushHandled()
+            }
             return;
         }
         
