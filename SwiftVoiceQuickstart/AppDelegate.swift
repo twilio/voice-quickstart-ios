@@ -2,12 +2,11 @@
 //  AppDelegate.swift
 //  Twilio Voice Quickstart - Swift
 //
-//  Copyright © 2016-2017 Twilio, Inc. All rights reserved.
+//  Copyright © 2016 Twilio, Inc. All rights reserved.
 //
 
-import TwilioVoice
 import UIKit
-import UserNotifications
+import TwilioVoice
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,7 +15,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         NSLog("Twilio Voice Version: %@", TwilioVoice.sdkVersion())
-        self.requestNotificationPermission()
 
         return true
     }
@@ -41,30 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    }
-    
-    func requestNotificationPermission() {
-        let center = UNUserNotificationCenter.current()
-        center.getNotificationSettings { (settings) in
-            if (settings.authorizationStatus == .denied) {
-                print("User notification permission denied. Go to system settings to allow user notifications.")
-            } else if (settings.authorizationStatus == .authorized) {
-                print("User notificaiton already authorized.")
-            } else if (settings.authorizationStatus == .notDetermined) {
-                let options: UNAuthorizationOptions = [.alert, .sound]
-                center.requestAuthorization(options: options, completionHandler: { (granted, error) in
-                    if (error != nil) {
-                        print("Failed to request for user notification permission: \(error!.localizedDescription)")
-                    }
-                    
-                    if (granted) {
-                        print("User notification permission granted.")
-                    } else {
-                        print("User notification permission denied.")
-                    }
-                })
-            }
-        }
     }
 }
 
