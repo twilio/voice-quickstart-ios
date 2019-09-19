@@ -256,6 +256,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:")
 
         if (type == PKPushType.voIP) {
+            // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error:` when delegate queue is not passed
             TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
         }
     }
@@ -268,6 +269,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:completion:")
 
         if (type == PKPushType.voIP) {
+            // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error:` when delegate queue is not passed
             TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
         }
         
