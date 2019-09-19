@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:SwiftVoiceCallKitQuickstart.xcodeproj">
+      location = "self:SwiftVoiceQuickstart.xcodeproj">
    </FileRef>
 </Workspace>

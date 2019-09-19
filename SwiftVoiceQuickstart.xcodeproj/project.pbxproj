@@ -101,7 +101,7 @@
 			dependencies = (
 			);
 			name = SwiftVoiceQuickstart;
-			productName = SwiftVoiceCallKitQuickstart;
+			productName = SwiftVoiceQuickstart;
 			productReference = 24BA34331D874AC800B0B4F7 /* SwiftVoiceQuickstart.app */;
 			productType = "com.apple.product-type.application";
 		};
