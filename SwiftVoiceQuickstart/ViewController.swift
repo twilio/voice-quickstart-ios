@@ -624,7 +624,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             builder.params = [twimlParamTo : self.outgoingValue.text!]
             builder.uuid = uuid
         }
-        call = TwilioVoice.connect(with: connectOptions, delegate: self)
+        self.call = TwilioVoice.connect(with: connectOptions, delegate: self)
         self.callKitCompletionCallback = completionHandler
     }
     
@@ -632,7 +632,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         let acceptOptions: TVOAcceptOptions = TVOAcceptOptions(callInvite: self.callInvite!) { (builder) in
             builder.uuid = self.callInvite?.uuid
         }
-        call = self.callInvite?.accept(with: acceptOptions, delegate: self)
+        self.call = self.callInvite?.accept(with: acceptOptions, delegate: self)
         self.callInvite = nil
         self.callKitCompletionCallback = completionHandler
         if let version = Float(UIDevice.current.systemVersion), version < 13.0 {
