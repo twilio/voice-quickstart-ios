@@ -203,7 +203,7 @@ Use the text field to specify the identity of the call receiver, then tap the �
 ### <a name="bullet12"></a>12. Make client to PSTN call
 A verified phone number is one that you can use as your Caller ID when making outbound calls with Twilio. This number has not been ported into Twilio and you do not pay Twilio for this phone number.
 
-To make client to number calls, first get a valid Twilio number to your account via https://www.twilio.com/console/phone-numbers/verified. Update your server code and replace `CALLER_NUMBER` with the verified number. Restart the server so it uses the new value. Voice Request URL of your TwiML application should point to the public URL of your application server’s `/makeCall` endpoint.
+To make client to number calls, first get a valid Twilio number to your account via https://www.twilio.com/console/phone-numbers/verified. Update your server code and replace the caller number variable  (`CALLER_NUMBER` or `callerNumber` depending on which server you chose) with the verified number. Restart the server so it uses the new value. Voice Request URL of your TwiML application should point to the public URL of your application server’s `/makeCall` endpoint.
 
 <kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/client-to-pstn.png"/></kbd>
 
