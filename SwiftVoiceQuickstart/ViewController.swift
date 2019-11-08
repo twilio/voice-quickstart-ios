@@ -34,10 +34,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     var isSpinning: Bool
     var incomingAlertController: UIAlertController?
 
-    var callInvite: TVOCallInvite?
-    var call: TVOCall?
     var callKitCompletionCallback: ((Bool)->Swift.Void?)? = nil
     var audioDevice: TVODefaultAudioDevice = TVODefaultAudioDevice()
+    var activeCallInvites: [TVOCallInvite]? = []
+    var activeCalls: [TVOCall]? = []
 
     let callKitProvider: CXProvider
     let callKitCallController: CXCallController
@@ -109,10 +109,13 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     }
 
     @IBAction func placeCall(_ sender: UIButton) {
-        if (self.call != nil && self.call?.state == .connected) {
-            self.userInitiatedDisconnect = true
-            performEndCallAction(uuid: self.call!.uuid)
-            self.toggleUIState(isEnabled: false, showCallControl: false)
+        if (!self.activeCalls!.isEmpty) {
+            let call = self.activeCalls![0]
+            if (call.state == .connected) {
+                self.userInitiatedDisconnect = true
+                performEndCallAction(uuid: call.uuid)
+                self.toggleUIState(isEnabled: false, showCallControl: false)
+            }
         } else {
             let uuid = UUID()
             let handle = "Voice Bot"
@@ -181,10 +184,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     }
     
     @IBAction func muteSwitchToggled(_ sender: UISwitch) {
-        if let call = call {
+        if (!self.activeCalls!.isEmpty) {
+            let call = self.activeCalls![0]
             call.isMuted = sender.isOn
-        } else {
-            NSLog("No active call to be muted")
         }
     }
     
@@ -298,39 +300,31 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         var from:String = callInvite.from ?? "Voice Bot"
         from = from.replacingOccurrences(of: "client:", with: "")
-        
-        if (self.callInvite != nil) {
-            NSLog("A CallInvite is already in progress. Ignoring the incoming CallInvite from \(from)")
-            if let version = Float(UIDevice.current.systemVersion), version < 13.0 {
-                self.incomingPushHandled()
-            }
-            return;
-        } else if (self.call != nil) {
-            NSLog("Already an active call.");
-            NSLog("  >> Ignoring call from \(from)");
-            if let version = Float(UIDevice.current.systemVersion), version < 13.0 {
-                self.incomingPushHandled()
-            }
-            return;
-        }
-        
-        self.callInvite = callInvite
 
+        // Always report to CallKit
         reportIncomingCall(from: from, uuid: callInvite.uuid)
+        self.activeCallInvites?.append(callInvite)
     }
     
     func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite, error: Error) {
         NSLog("cancelledCallInviteCanceled:error:, error: \(error.localizedDescription)")
         
-        if (self.callInvite == nil ||
-            self.callInvite!.callSid != cancelledCallInvite.callSid) {
-            NSLog("No matching pending CallInvite. Ignoring the Cancelled CallInvite")
+        if (self.activeCallInvites!.isEmpty) {
+            NSLog("No pending call invite")
             return
         }
         
-        performEndCallAction(uuid: self.callInvite!.uuid)
-
-        self.callInvite = nil
+        var callInvite: TVOCallInvite?
+        for invite in self.activeCallInvites! {
+            if (invite.callSid == cancelledCallInvite.callSid) {
+                callInvite = invite
+                break
+            }
+        }
+        
+        if let callInvite = callInvite {
+            performEndCallAction(uuid: callInvite.uuid)
+        }
     }
 
     // MARK: TVOCallDelegate
@@ -343,9 +337,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     func callDidConnect(_ call: TVOCall) {
         NSLog("callDidConnect:")
         
-        self.call = call
         self.callKitCompletionCallback!(true)
-        self.callKitCompletionCallback = nil
         
         self.placeCallButton.setTitle("Hang Up", for: .normal)
         
@@ -378,7 +370,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
 
         performEndCallAction(uuid: call.uuid)
-        callDisconnected()
+        callDisconnected(call)
     }
     
     func call(_ call: TVOCall, didDisconnectWithError error: Error?) {
@@ -398,12 +390,14 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             self.callKitProvider.reportCall(with: call.uuid, endedAt: Date(), reason: reason)
         }
 
-        callDisconnected()
+        callDisconnected(call)
     }
     
-    func callDisconnected() {
-        self.call = nil
-        self.callKitCompletionCallback = nil
+    func callDisconnected(_ call: TVOCall) {
+        if let index = self.activeCalls?.index(of: call) {
+            self.activeCalls?.remove(at: index)
+        }
+        
         self.userInitiatedDisconnect = false
         
         stopSpin()
@@ -513,8 +507,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         NSLog("provider:performAnswerCallAction:")
-
-        assert(action.callUUID == self.callInvite?.uuid)
         
         audioDevice.isEnabled = false
         audioDevice.block();
@@ -532,12 +524,16 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
         NSLog("provider:performEndCallAction:")
-
-        if (self.callInvite != nil) {
-            self.callInvite!.reject()
-            self.callInvite = nil
-        } else if (self.call != nil) {
-            self.call?.disconnect()
+        
+        if let invite = self.callInvite(uuid: action.callUUID) {
+            invite.reject()
+            if let index = self.activeCallInvites?.index(of: invite) {
+                self.activeCallInvites?.remove(at: index)
+            }
+        } else if let call = self.call(uuid: action.callUUID) {
+            call.disconnect()
+        } else {
+            NSLog("Unknown UUID to perform end-call action with")
         }
 
         audioDevice.isEnabled = true
@@ -546,8 +542,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     
     func provider(_ provider: CXProvider, perform action: CXSetHeldCallAction) {
         NSLog("provider:performSetHeldAction:")
-        if (self.call?.state == .connected) {
-            self.call?.isOnHold = action.isOnHold
+        
+        if let call = self.call(uuid: action.callUUID) {
+            call.isOnHold = action.isOnHold
             action.fulfill()
         } else {
             action.fail()
@@ -624,19 +621,49 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             builder.params = [twimlParamTo : self.outgoingValue.text!]
             builder.uuid = uuid
         }
-        self.call = TwilioVoice.connect(with: connectOptions, delegate: self)
+        let call = TwilioVoice.connect(with: connectOptions, delegate: self)
+        self.activeCalls?.append(call)
         self.callKitCompletionCallback = completionHandler
     }
     
     func performAnswerVoiceCall(uuid: UUID, completionHandler: @escaping (Bool) -> Swift.Void) {
-        let acceptOptions: TVOAcceptOptions = TVOAcceptOptions(callInvite: self.callInvite!) { (builder) in
-            builder.uuid = self.callInvite?.uuid
+        if let callInvite = self.callInvite(uuid: uuid) {
+            let acceptOptions: TVOAcceptOptions = TVOAcceptOptions(callInvite: callInvite) { (builder) in
+                builder.uuid = callInvite.uuid
+            }
+            let call = callInvite.accept(with: acceptOptions, delegate: self)
+            self.activeCalls?.append(call)
+            self.callKitCompletionCallback = completionHandler
+            
+            if let version = Float(UIDevice.current.systemVersion), version < 13.0 {
+                self.incomingPushHandled()
+            }
+            
+            if let index = self.activeCallInvites?.index(of: callInvite) {
+                self.activeCallInvites?.remove(at: index)
+            }
+        } else {
+            NSLog("No CallInvite matches the UUID")
         }
-        self.call = self.callInvite?.accept(with: acceptOptions, delegate: self)
-        self.callInvite = nil
-        self.callKitCompletionCallback = completionHandler
-        if let version = Float(UIDevice.current.systemVersion), version < 13.0 {
-            self.incomingPushHandled()
+    }
+    
+    func callInvite(uuid: UUID) -> TVOCallInvite? {
+        for invite in self.activeCallInvites! {
+            if invite.uuid == uuid {
+                return invite
+            }
         }
+        
+        return nil
+    }
+    
+    func call(uuid: UUID) -> TVOCall? {
+        for call in self.activeCalls! {
+            if call.uuid == uuid {
+                return call
+            }
+        }
+        
+        return nil
     }
 }
