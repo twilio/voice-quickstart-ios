@@ -88,7 +88,7 @@ Follow the instructions in the server's README to get the application server up 
 
 ### <a name="bullet4"></a>4. Create a TwiML application
 Next, we need to create a TwiML application. A TwiML application identifies a public URL for retrieving [TwiML call control instructions](https://www.twilio.com/docs/api/twiml). When your iOS app makes a call to the Twilio cloud, Twilio will make a webhook request to this URL, your application server will respond with generated TwiML, and Twilio will execute the instructions you’ve provided.
-To create a TwiML application, go to the [TwiML app page](https://www.twilio.com/console/voice/dev-tools/twiml-apps). Create a new TwiML application, and use the public URL of your application server’s `/makeCall` endpoint as the Voice Request URL (If your app server is written in PHP, then you need `.php` extension at the end).
+To create a TwiML application, go to the [TwiML app page](https://www.twilio.com/console/voice/twiml/apps). Create a new TwiML application, and use the public URL of your application server’s `/makeCall` endpoint as the Voice Request URL (If your app server is written in PHP, then you need `.php` extension at the end).
 
 <kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/create-twiml-app.png"/></kbd>
 
