@@ -36,8 +36,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
     var callKitCompletionCallback: ((Bool)->Swift.Void?)? = nil
     var audioDevice: TVODefaultAudioDevice = TVODefaultAudioDevice()
-    var activeCallInvites: [TVOCallInvite]? = []
-    var activeCalls: [TVOCall]? = []
+    var activeCallInvites: [TVOCallInvite]! = []
+    var activeCalls: [TVOCall]! = []
 
     let callKitProvider: CXProvider
     let callKitCallController: CXCallController
@@ -108,14 +108,11 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
     }
 
-    @IBAction func placeCall(_ sender: UIButton) {
-        if (!self.activeCalls!.isEmpty) {
-            let call = self.activeCalls![0]
-            if (call.state == .connected) {
-                self.userInitiatedDisconnect = true
-                performEndCallAction(uuid: call.uuid)
-                self.toggleUIState(isEnabled: false, showCallControl: false)
-            }
+    @IBAction func mainButtonPressed(_ sender: Any) {
+        if let call = self.activeCalls.first {
+            self.userInitiatedDisconnect = true
+            performEndCallAction(uuid: call.uuid)
+            self.toggleUIState(isEnabled: false, showCallControl: false)
         } else {
             let uuid = UUID()
             let handle = "Voice Bot"
@@ -635,12 +632,11 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             self.activeCalls?.append(call)
             self.callKitCompletionCallback = completionHandler
             
-            if let version = Float(UIDevice.current.systemVersion), version < 13.0 {
-                self.incomingPushHandled()
-            }
+            self.activeCallInvites = self.activeCallInvites.filter { $0 != callInvite }
             
-            if let index = self.activeCallInvites?.index(of: callInvite) {
-                self.activeCallInvites?.remove(at: index)
+            guard #available(iOS 13, *) else {
+                self.incomingPushHandled()
+                return
             }
         } else {
             NSLog("No CallInvite matches the UUID")
