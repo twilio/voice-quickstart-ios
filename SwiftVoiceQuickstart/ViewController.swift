@@ -38,6 +38,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     var audioDevice: TVODefaultAudioDevice = TVODefaultAudioDevice()
     var activeCallInvites: [String: TVOCallInvite]! = [:]
     var activeCalls: [String: TVOCall]! = [:]
+    
+    // activeCall represents the last connected call
     var activeCall: TVOCall? = nil
 
     let callKitProvider: CXProvider
@@ -182,6 +184,7 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     }
     
     @IBAction func muteSwitchToggled(_ sender: UISwitch) {
+        // The sample app supports toggling mute from app UI only on the last connected call.
         if let call = self.activeCall {
             call.isMuted = sender.isOn
         }
@@ -391,7 +394,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     }
     
     func callDisconnected(_ call: TVOCall) {
-        self.activeCall = nil
+        if (call == self.activeCall) {
+            self.activeCall = nil
+        }
         self.activeCalls.removeValue(forKey: call.uuid.uuidString)
         
         self.userInitiatedDisconnect = false
