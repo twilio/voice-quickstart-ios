@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="SwiftVoiceCallKitQuickstart" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="SwiftVoiceQuickstart" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -24,30 +20,29 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TwilioLogo.png" translatesAutoresizingMaskIntoConstraints="NO" id="wqn-ZD-zTx">
-                                <rect key="frame" x="67" y="116" width="240" height="240"/>
+                                <rect key="frame" x="67.5" y="116" width="240" height="240"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="wqn-ZD-zTx" secondAttribute="height" multiplier="1:1" id="Ixe-Ao-E58"/>
                                     <constraint firstAttribute="width" constant="240" id="eQS-aZ-GXk"/>
                                 </constraints>
                             </imageView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rhQ-vm-Q9J">
-                                <rect key="frame" x="67" y="379" width="240" height="30"/>
+                                <rect key="frame" x="67.5" y="377" width="240" height="34"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="7F4-BI-EYe"/>
                                 </constraints>
-                                <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Uic-jJ-PVN">
-                                <rect key="frame" x="172.5" y="462" width="30" height="30"/>
+                                <rect key="frame" x="172.5" y="464" width="30" height="30"/>
                                 <state key="normal" title="Call"/>
                                 <connections>
-                                    <action selector="placeCall:" destination="BYZ-38-t0r" eventType="touchUpInside" id="VPR-2L-Qq8"/>
+                                    <action selector="mainButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oz8-Qi-Loz"/>
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ruy-Jc-pNi">
-                                <rect key="frame" x="67" y="500" width="240" height="88"/>
+                                <rect key="frame" x="67.5" y="502" width="240" height="88"/>
                                 <subviews>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="3ee-Gh-QDM">
                                         <rect key="frame" x="52" y="8" width="49" height="31"/>
@@ -85,7 +80,7 @@
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Dial a client name or phone number. Leaving the field empty results in an automated response." textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zwV-cd-S0l">
-                                <rect key="frame" x="59" y="417" width="256" height="40"/>
+                                <rect key="frame" x="59.5" y="419" width="256" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="hZt-6Q-bpz"/>
                                     <constraint firstAttribute="width" constant="256" id="qsn-tN-Cej"/>
