@@ -17,7 +17,7 @@ let accessTokenEndpoint = "/accessToken"
 let identity = "alice"
 let twimlParamTo = "to"
 
-class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOCallDelegate, CXProviderDelegate, UITextFieldDelegate {
+class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOCallDelegate, CXProviderDelegate, UITextFieldDelegate, AVAudioPlayerDelegate {
 
     @IBOutlet weak var placeCallButton: UIButton!
     @IBOutlet weak var iconView: UIImageView!
@@ -45,6 +45,13 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     let callKitProvider: CXProvider
     let callKitCallController: CXCallController
     var userInitiatedDisconnect: Bool = false
+    
+    /*
+     Configure this flag based on the TwiML application. Custom ringtone will be played when this
+     flag is enabled.
+    */
+    var answerOnBridgeEnabled: Bool = false
+    var ringtonePlayer: AVAudioPlayer? = nil
 
     required init?(coder aDecoder: NSCoder) {
         isSpinning = false
@@ -332,10 +339,20 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         NSLog("callDidStartRinging:")
         
         self.placeCallButton.setTitle("Ringing", for: .normal)
+        
+        /*
+         When [answerOnBridge](https://www.twilio.com/docs/voice/twiml/dial#answeronbridge) is enabled in the
+         <Dial> TwiML verb, the caller will not hear the ringtone while the call is ringing and awaiting to be
+         accepted on the callee's side. The application can use the `AVAudioPlayer` to play custom audio files
+         between the `[TVOCallDelegate callDidStartRinging:]` and the `[TVOCallDelegate callDidConnect:]` callbacks.
+        */
+        self.playRingtone()
     }
     
     func callDidConnect(_ call: TVOCall) {
         NSLog("callDidConnect:")
+        
+        self.stopRingtone()
         
         self.callKitCompletionCallback!(true)
         
@@ -400,6 +417,8 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         self.activeCalls.removeValue(forKey: call.uuid.uuidString)
         
         self.userInitiatedDisconnect = false
+        
+        self.stopRingtone()
         
         stopSpin()
         toggleUIState(isEnabled: true, showCallControl: false)
@@ -644,6 +663,47 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             }
         } else {
             NSLog("No CallInvite matches the UUID")
+        }
+    }
+    
+    // MARK: Ringtone
+    func playRingtone() {
+        let ringtonePath = URL(fileURLWithPath: Bundle.main.path(forResource: "ringtone", ofType: "wav")!)
+        do {
+            self.ringtonePlayer = try AVAudioPlayer(contentsOf: ringtonePath)
+            self.ringtonePlayer?.delegate = self
+            self.ringtonePlayer?.numberOfLoops = -1
+            
+            play()
+        } catch {
+            NSLog("Failed to initialize audio player")
+        }
+    }
+    
+    func stopRingtone() {
+        if (self.ringtonePlayer?.isPlaying == false) {
+            return
+        }
+        
+        self.ringtonePlayer?.stop()
+        
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord)
+        } catch {
+            NSLog(error.localizedDescription)
+        }
+    }
+    
+    func play() {
+        self.ringtonePlayer?.volume = 1.0
+        self.ringtonePlayer?.play()
+    }
+    
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        do {
+            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord)
+        } catch {
+            NSLog(error.localizedDescription)
         }
     }
 }
