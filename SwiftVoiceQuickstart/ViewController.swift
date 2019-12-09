@@ -47,10 +47,12 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     var userInitiatedDisconnect: Bool = false
     
     /*
-     Configure this flag based on the TwiML application. Custom ringtone will be played when this
-     flag is enabled.
+     Custom ringback will be played when this flag is enabled.
+     When [answerOnBridge](https://www.twilio.com/docs/voice/twiml/dial#answeronbridge) is enabled in
+     the <Dial> TwiML verb, the caller will not hear the ringback while the call is ringing and awaiting
+     to be accepted on the callee's side. Configure this flag based on the TwiML application.
     */
-    var answerOnBridgeEnabled: Bool = false
+    var playCustomRingback: Bool = false
     var ringtonePlayer: AVAudioPlayer? = nil
 
     required init?(coder aDecoder: NSCoder) {
@@ -342,17 +344,21 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         /*
          When [answerOnBridge](https://www.twilio.com/docs/voice/twiml/dial#answeronbridge) is enabled in the
-         <Dial> TwiML verb, the caller will not hear the ringtone while the call is ringing and awaiting to be
+         <Dial> TwiML verb, the caller will not hear the ringback while the call is ringing and awaiting to be
          accepted on the callee's side. The application can use the `AVAudioPlayer` to play custom audio files
          between the `[TVOCallDelegate callDidStartRinging:]` and the `[TVOCallDelegate callDidConnect:]` callbacks.
         */
-        self.playRingtone()
+        if (self.playCustomRingback) {
+            self.playRingback()
+        }
     }
     
     func callDidConnect(_ call: TVOCall) {
         NSLog("callDidConnect:")
         
-        self.stopRingtone()
+        if (self.playCustomRingback) {
+            self.stopRingback()
+        }
         
         self.callKitCompletionCallback!(true)
         
@@ -418,7 +424,9 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         
         self.userInitiatedDisconnect = false
         
-        self.stopRingtone()
+        if (self.playCustomRingback) {
+            self.stopRingback()
+        }
         
         stopSpin()
         toggleUIState(isEnabled: true, showCallControl: false)
@@ -667,43 +675,37 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     }
     
     // MARK: Ringtone
-    func playRingtone() {
+    func playRingback() {
         let ringtonePath = URL(fileURLWithPath: Bundle.main.path(forResource: "ringtone", ofType: "wav")!)
         do {
             self.ringtonePlayer = try AVAudioPlayer(contentsOf: ringtonePath)
             self.ringtonePlayer?.delegate = self
             self.ringtonePlayer?.numberOfLoops = -1
             
-            play()
+            self.ringtonePlayer?.volume = 1.0
+            self.ringtonePlayer?.play()
         } catch {
             NSLog("Failed to initialize audio player")
         }
     }
     
-    func stopRingtone() {
+    func stopRingback() {
         if (self.ringtonePlayer?.isPlaying == false) {
             return
         }
         
         self.ringtonePlayer?.stop()
-        
-        do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord)
-        } catch {
-            NSLog(error.localizedDescription)
-        }
-    }
-    
-    func play() {
-        self.ringtonePlayer?.volume = 1.0
-        self.ringtonePlayer?.play()
     }
     
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
-        do {
-            try AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord)
-        } catch {
-            NSLog(error.localizedDescription)
+        if (flag) {
+            NSLog("Audio player finished playing successfully");
+        } else {
+            NSLog("Audio player finished playing with some error");
         }
+    }
+    
+    func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
+        NSLog("Decode error occurred: \(error?.localizedDescription)");
     }
 }
