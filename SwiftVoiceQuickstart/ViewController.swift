@@ -17,7 +17,7 @@ let accessTokenEndpoint = "/accessToken"
 let identity = "alice"
 let twimlParamTo = "to"
 
-class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOCallDelegate, CXProviderDelegate, UITextFieldDelegate {
+class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOCallDelegate, CXProviderDelegate, UITextFieldDelegate, AVAudioPlayerDelegate {
 
     @IBOutlet weak var placeCallButton: UIButton!
     @IBOutlet weak var iconView: UIImageView!
@@ -45,6 +45,15 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
     let callKitProvider: CXProvider
     let callKitCallController: CXCallController
     var userInitiatedDisconnect: Bool = false
+    
+    /*
+     Custom ringback will be played when this flag is enabled.
+     When [answerOnBridge](https://www.twilio.com/docs/voice/twiml/dial#answeronbridge) is enabled in
+     the <Dial> TwiML verb, the caller will not hear the ringback while the call is ringing and awaiting
+     to be accepted on the callee's side. Configure this flag based on the TwiML application.
+    */
+    var playCustomRingback: Bool = false
+    var ringtonePlayer: AVAudioPlayer? = nil
 
     required init?(coder aDecoder: NSCoder) {
         isSpinning = false
@@ -332,10 +341,24 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         NSLog("callDidStartRinging:")
         
         self.placeCallButton.setTitle("Ringing", for: .normal)
+        
+        /*
+         When [answerOnBridge](https://www.twilio.com/docs/voice/twiml/dial#answeronbridge) is enabled in the
+         <Dial> TwiML verb, the caller will not hear the ringback while the call is ringing and awaiting to be
+         accepted on the callee's side. The application can use the `AVAudioPlayer` to play custom audio files
+         between the `[TVOCallDelegate callDidStartRinging:]` and the `[TVOCallDelegate callDidConnect:]` callbacks.
+        */
+        if (self.playCustomRingback) {
+            self.playRingback()
+        }
     }
     
     func callDidConnect(_ call: TVOCall) {
         NSLog("callDidConnect:")
+        
+        if (self.playCustomRingback) {
+            self.stopRingback()
+        }
         
         self.callKitCompletionCallback!(true)
         
@@ -400,6 +423,10 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         self.activeCalls.removeValue(forKey: call.uuid.uuidString)
         
         self.userInitiatedDisconnect = false
+        
+        if (self.playCustomRingback) {
+            self.stopRingback()
+        }
         
         stopSpin()
         toggleUIState(isEnabled: true, showCallControl: false)
@@ -645,5 +672,40 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         } else {
             NSLog("No CallInvite matches the UUID")
         }
+    }
+    
+    // MARK: Ringtone
+    func playRingback() {
+        let ringtonePath = URL(fileURLWithPath: Bundle.main.path(forResource: "ringtone", ofType: "wav")!)
+        do {
+            self.ringtonePlayer = try AVAudioPlayer(contentsOf: ringtonePath)
+            self.ringtonePlayer?.delegate = self
+            self.ringtonePlayer?.numberOfLoops = -1
+            
+            self.ringtonePlayer?.volume = 1.0
+            self.ringtonePlayer?.play()
+        } catch {
+            NSLog("Failed to initialize audio player")
+        }
+    }
+    
+    func stopRingback() {
+        if (self.ringtonePlayer?.isPlaying == false) {
+            return
+        }
+        
+        self.ringtonePlayer?.stop()
+    }
+    
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        if (flag) {
+            NSLog("Audio player finished playing successfully");
+        } else {
+            NSLog("Audio player finished playing with some error");
+        }
+    }
+    
+    func audioPlayerDecodeErrorDidOccur(_ player: AVAudioPlayer, error: Error?) {
+        NSLog("Decode error occurred: \(error?.localizedDescription)");
     }
 }

@@ -13,6 +13,7 @@
 		24BA343E1D874AC800B0B4F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343D1D874AC800B0B4F7 /* Assets.xcassets */; };
 		24BA34411D874AC800B0B4F7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343F1D874AC800B0B4F7 /* LaunchScreen.storyboard */; };
 		24BA34491D874BBD00B0B4F7 /* TwilioLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */; };
+		8F6BABF92399B2F00030BE4F /* ringtone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8F6BABF82399B2F00030BE4F /* ringtone.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +25,7 @@
 		24BA34401D874AC800B0B4F7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		24BA34421D874AC800B0B4F7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TwilioLogo.png; sourceTree = "<group>"; };
+		8F6BABF82399B2F00030BE4F /* ringtone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringtone.wav; sourceTree = "<group>"; };
 		8FAD20B72332DC3900E5B42F /* SwiftVoiceQuickstart.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftVoiceQuickstart.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -42,6 +44,7 @@
 			isa = PBXGroup;
 			children = (
 				24BA34351D874AC800B0B4F7 /* SwiftVoiceQuickstart */,
+				8F6BABF72399B2F00030BE4F /* ringtone */,
 				24BA34341D874AC800B0B4F7 /* Products */,
 				55E4DD2B129E858377D08E95 /* Pods */,
 				45B8A87752EE385BD0514D8C /* Frameworks */,
@@ -83,6 +86,14 @@
 			children = (
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		8F6BABF72399B2F00030BE4F /* ringtone */ = {
+			isa = PBXGroup;
+			children = (
+				8F6BABF82399B2F00030BE4F /* ringtone.wav */,
+			);
+			path = ringtone;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -156,6 +167,7 @@
 				24BA34411D874AC800B0B4F7 /* LaunchScreen.storyboard in Resources */,
 				24BA343E1D874AC800B0B4F7 /* Assets.xcassets in Resources */,
 				24BA34491D874BBD00B0B4F7 /* TwilioLogo.png in Resources */,
+				8F6BABF92399B2F00030BE4F /* ringtone.wav in Resources */,
 				24BA343C1D874AC800B0B4F7 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
