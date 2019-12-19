@@ -576,6 +576,17 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             action.fail()
         }
     }
+    
+    func provider(_ provider: CXProvider, perform action: CXSetMutedCallAction) {
+        NSLog("provider:performSetMutedAction:")
+
+        if let call = self.activeCalls[action.callUUID.uuidString] {
+            call.isMuted = action.isMuted
+            action.fulfill()
+        } else {
+            action.fail()
+        }
+    }
 
     // MARK: Call Kit Actions
     func performStartCallAction(uuid: UUID, handle: String) {
