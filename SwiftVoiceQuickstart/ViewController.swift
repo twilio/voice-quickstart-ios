@@ -562,7 +562,6 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
             NSLog("Unknown UUID to perform end-call action with")
         }
 
-        audioDevice.isEnabled = true
         action.fulfill()
     }
     
