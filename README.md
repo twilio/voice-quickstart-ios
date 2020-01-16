@@ -5,7 +5,7 @@
 > Please see our [iOS 13 Migration Guide](https://github.com/twilio/twilio-voice-ios/blob/Releases/iOS-13-Migration-Guide.md) for the latest information on iOS 13.
 
 ## Get started with Voice on iOS:
-* [Quickstart](#quickstart) - Run the quickstart app
+* [Quickstart](#quickstart) - Run the swift quickstart app
 * [Migration Guide from 4.x to 5.x](https://github.com/twilio/twilio-voice-ios/blob/Releases/iOS-13-Migration-Guide.md) - Migrating from 4.x to 5.x
 * [4.0 New Features](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/new-features-4.0.md) - New features in 4.0
 * [Migration Guide from 3.x to 4.x](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/migration-guide-3.x-4.x.md) - Migrating from 3.x to 4.x
@@ -107,7 +107,7 @@ Once you’ve done that, restart the server so it uses the new configuration inf
 
 Open up a browser and visit the URL for your application server's **Access Token endpoint**: `https://{YOUR_SERVER_URL}/accessToken` (If your app server is written in PHP, then you need `.php` extension at the end). If everything is configured correctly, you should see a long string of letters and numbers, which is a Twilio Access Token. Your iOS app will use a token like this to connect to Twilio.
 
-### <a name="bullet6"></a>6. Run the app
+### <a name="bullet6"></a>6. Run the Swift Quickstart app
 Now let’s go back to the `SwiftVoiceQuickstart.xcworkspace`. Update the placeholder of `baseURLString` with your ngrok public URL
 
 ```swift
