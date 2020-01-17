@@ -595,7 +595,6 @@ withCompletionHandler:(void (^)(void))completion {
         NSLog(@"Unknown UUID to perform end-call action with");
     }
 
-    self.audioDevice.enabled = YES;
     [action fulfill];
 }
 
