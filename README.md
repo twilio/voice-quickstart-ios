@@ -60,7 +60,7 @@ $(SRCROOT)/Carthage/Build/iOS/TwilioVoice.framework
 **Cocoapods**
 
 Under the quickstart path, run `pod install` and let the Cocoapods library create the workspace for you. Also please make sure to use **Cocoapods v1.0 and later**.
-Once Cocoapods finishes installing, open the `SwiftVoiceQuickstart.xcworkspace` and you will find a basic Swift quickstart project and a CallKit quickstart project.
+Once Cocoapods finishes installing, open the `VoiceQuickstart.xcworkspace` and you will find a basic Swift quickstart project and a CallKit quickstart project.
 
 Note: You may need to update the [CocoaPods Master Spec Repo](https://github.com/CocoaPods/Specs) by running `pod repo update master` in order to fetch the latest specs for TwilioVoice.
 
@@ -108,7 +108,7 @@ Once you’ve done that, restart the server so it uses the new configuration inf
 Open up a browser and visit the URL for your application server's **Access Token endpoint**: `https://{YOUR_SERVER_URL}/accessToken` (If your app server is written in PHP, then you need `.php` extension at the end). If everything is configured correctly, you should see a long string of letters and numbers, which is a Twilio Access Token. Your iOS app will use a token like this to connect to Twilio.
 
 ### <a name="bullet6"></a>6. Run the Swift Quickstart app
-Now let’s go back to the `SwiftVoiceQuickstart.xcworkspace`. Update the placeholder of `baseURLString` with your ngrok public URL
+Now let’s go back to the `VoiceQuickstart.xcworkspace`. Update the placeholder of `baseURLString` with your ngrok public URL
 
 ```swift
 import UIKit
