@@ -1,4 +1,4 @@
-## Twilio Voice Swift Quickstart for iOS
+## Twilio Voice Quickstart for iOS
 
 > NOTE: These sample applications use the Twilio Voice 5.x APIs. For examples using our 2.x APIs, please see the [2.x](https://github.com/twilio/voice-quickstart-swift/tree/2.x) branch. If you are using SDK 2.x, we highly recommend planning your migration to 5.0 as soon as possible. Support for 2.x will cease 1/1/2020. Until then, SDK 2.x will only receive fixes for critical or security related issues.
 
@@ -25,7 +25,7 @@ To get started with the quickstart application follow these steps. Steps 1-6 wil
 3. [Configure a server to generate an access token to be used in the app](#bullet3)
 4. [Create a TwiML application](#bullet4)
 5. [Configure your application server](#bullet5)
-6. [Run the app](#bullet6)
+6. [Run the Swift Quickstart app](#bullet6)
 7. [Create a VoIP Service Certificate](#bullet7)
 8. [Create a Push Credential with your VoIP Service Certificate](#bullet8)
 9. [Configure Xcode project settings for VoIP push notifications](#bullet9)
