@@ -1,6 +1,6 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
-workspace 'SwiftVoiceQuickstart'
+workspace 'VoiceQuickstart'
 
 abstract_target 'TwilioVoice' do
   pod 'TwilioVoice', '~> 5.1.1'
