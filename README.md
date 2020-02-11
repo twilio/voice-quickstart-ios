@@ -150,7 +150,7 @@ Export your VoIP Service Certificate as a .p12 file from Keychain Access.
 
 <kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/export_voip_cert.png"/></kbd>
 
-Extract the certificate and private key from the .p12 file using the `openssl` command. If .p12 is not an option for exporting, type `voip` into the search bar of Keychain Access and make sure you select both items when exporting the certificate.
+Extract the certificate and private key from the .p12 file using the `openssl` command. 
 
     $> openssl pkcs12 -in PATH_TO_YOUR_P12 -nocerts -out key.pem
     $> openssl rsa -in key.pem -out key.pem
