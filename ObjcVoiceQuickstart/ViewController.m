@@ -239,28 +239,28 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
         NSString *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
         if (![cachedDeviceToken isEqualToString:self.deviceTokenString]) {
             cachedDeviceToken = self.deviceTokenString;
+            
+            /*
+             * Perform registration if a new device token is detected.
+             */
+            [TwilioVoice registerWithAccessToken:accessToken
+                                     deviceToken:cachedDeviceToken
+                                      completion:^(NSError *error) {
+                 if (error) {
+                     NSLog(@"An error occurred while registering: %@", [error localizedDescription]);
+                 }
+                 else {
+                     NSLog(@"Successfully registered for VoIP push notifications.");
+                     
+                     /*
+                      * Save the device token after successfully registered for future registration requests
+                      * in case the token format is changed in future iOS releases, which could potentially
+                      * break the registration process and the incoming capability.
+                      */
+                     [[NSUserDefaults standardUserDefaults] setObject:cachedDeviceToken forKey:kCachedDeviceToken];
+                 }
+             }];
         }
-
-        /*
-         * Use the device token that was previously used in a successful registration.
-         */
-        [TwilioVoice registerWithAccessToken:accessToken
-                                 deviceToken:cachedDeviceToken
-                                  completion:^(NSError *error) {
-             if (error) {
-                 NSLog(@"An error occurred while registering: %@", [error localizedDescription]);
-             }
-             else {
-                 NSLog(@"Successfully registered for VoIP push notifications.");
-                 
-                 /*
-                  * Save the device token after successfully registered in case the token format
-                  * is changed in future iOS releases, which could potentially break the registration
-                  * process and the incoming capability.
-                  */
-                 [[NSUserDefaults standardUserDefaults] setObject:cachedDeviceToken forKey:kCachedDeviceToken];
-             }
-         }];
     }
 }
 

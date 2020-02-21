@@ -230,24 +230,24 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         var cachedDeviceToken = userDefaults.string(forKey: kCachedDeviceToken)
         if (cachedDeviceToken == nil || cachedDeviceToken != deviceToken) {
             cachedDeviceToken = deviceToken
-        }
-
-        /*
-         * Use the device token that was previously used in a successful registration.
-         */
-        TwilioVoice.register(withAccessToken: accessToken, deviceToken: cachedDeviceToken!) { (error) in
-            if let error = error {
-                NSLog("An error occurred while registering: \(error.localizedDescription)")
-            }
-            else {
-                NSLog("Successfully registered for VoIP push notifications.")
-                
-                /*
-                 * Save the device token after successfully registered in case the token format
-                 * is changed in future iOS releases, which could potentially break the registration
-                 * process and the incoming capability.
-                 */
-                userDefaults.set(cachedDeviceToken, forKey: kCachedDeviceToken)
+            
+            /*
+             * Perform registration if a new device token is detected.
+             */
+            TwilioVoice.register(withAccessToken: accessToken, deviceToken: cachedDeviceToken!) { (error) in
+                if let error = error {
+                    NSLog("An error occurred while registering: \(error.localizedDescription)")
+                }
+                else {
+                    NSLog("Successfully registered for VoIP push notifications.")
+                    
+                    /*
+                     * Save the device token after successfully registered for future registration requests
+                     * in case the token format is changed in future iOS releases, which could potentially
+                     * break the registration process and the incoming capability.
+                     */
+                    userDefaults.set(cachedDeviceToken, forKey: kCachedDeviceToken)
+                }
             }
         }
 
