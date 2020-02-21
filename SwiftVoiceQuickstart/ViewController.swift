@@ -17,6 +17,8 @@ let accessTokenEndpoint = "/accessToken"
 let identity = "alice"
 let twimlParamTo = "to"
 
+let kCachedDeviceToken = "CachedDeviceToken"
+
 class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOCallDelegate, CXProviderDelegate, UITextFieldDelegate, AVAudioPlayerDelegate {
 
     @IBOutlet weak var placeCallButton: UIButton!
@@ -223,13 +225,29 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
         }
         
         let deviceToken = credentials.token.map { String(format: "%02x", $0) }.joined()
+        
+        let userDefaults = UserDefaults.standard
+        var cachedDeviceToken = userDefaults.string(forKey: kCachedDeviceToken)
+        if (cachedDeviceToken == nil || cachedDeviceToken != deviceToken) {
+            cachedDeviceToken = deviceToken
+        }
 
-        TwilioVoice.register(withAccessToken: accessToken, deviceToken: deviceToken) { (error) in
+        /*
+         * Use the device token that was previously used in a successful registration.
+         */
+        TwilioVoice.register(withAccessToken: accessToken, deviceToken: cachedDeviceToken!) { (error) in
             if let error = error {
                 NSLog("An error occurred while registering: \(error.localizedDescription)")
             }
             else {
                 NSLog("Successfully registered for VoIP push notifications.")
+                
+                /*
+                 * Save the device token after successfully registered in case the token format
+                 * is changed in future iOS releases, which could potentially break the registration
+                 * process and the incoming capability.
+                 */
+                userDefaults.set(cachedDeviceToken, forKey: kCachedDeviceToken)
             }
         }
 

@@ -18,6 +18,8 @@ static NSString *const kAccessTokenEndpoint = @"/accessToken";
 static NSString *const kIdentity = @"alice";
 static NSString *const kTwimlParamTo = @"to";
 
+NSString * const kCachedDeviceToken = @"CachedDeviceToken";
+
 @interface ViewController () <PKPushRegistryDelegate, TVONotificationDelegate, TVOCallDelegate, CXProviderDelegate, UITextFieldDelegate, AVAudioPlayerDelegate>
 
 @property (nonatomic, strong) NSString *deviceTokenString;
@@ -233,15 +235,30 @@ static NSString *const kTwimlParamTo = @"to";
                                   ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
                                   ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
         NSString *accessToken = [self fetchAccessToken];
+        
+        NSString *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
+        if (![cachedDeviceToken isEqualToString:self.deviceTokenString]) {
+            cachedDeviceToken = self.deviceTokenString;
+        }
 
+        /*
+         * Use the device token that was previously used in a successful registration.
+         */
         [TwilioVoice registerWithAccessToken:accessToken
-                                 deviceToken:self.deviceTokenString
+                                 deviceToken:cachedDeviceToken
                                   completion:^(NSError *error) {
              if (error) {
                  NSLog(@"An error occurred while registering: %@", [error localizedDescription]);
              }
              else {
                  NSLog(@"Successfully registered for VoIP push notifications.");
+                 
+                 /*
+                  * Save the device token after successfully registered in case the token format
+                  * is changed in future iOS releases, which could potentially break the registration
+                  * process and the incoming capability.
+                  */
+                 [[NSUserDefaults standardUserDefaults] setObject:cachedDeviceToken forKey:kCachedDeviceToken];
              }
          }];
     }
