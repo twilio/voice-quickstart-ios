@@ -5,6 +5,7 @@
 //  Copyright © 2016-2018 Twilio, Inc. All rights reserved.
 //
 
+#import "AppDelegate.h"
 #import "ViewController.h"
 
 @import AVFoundation;
@@ -20,11 +21,10 @@ static NSString *const kTwimlParamTo = @"to";
 
 NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 
-@interface ViewController () <PKPushRegistryDelegate, TVONotificationDelegate, TVOCallDelegate, CXProviderDelegate, UITextFieldDelegate, AVAudioPlayerDelegate>
+@interface ViewController () <TVONotificationDelegate, TVOCallDelegate, CXProviderDelegate, UITextFieldDelegate, AVAudioPlayerDelegate>
 
 @property (nonatomic, strong) NSString *deviceTokenString;
 
-@property (nonatomic, strong) PKPushRegistry *voipRegistry;
 @property (nonatomic, strong) void(^incomingPushCompletionCallback)(void);
 @property (nonatomic, strong) void(^callKitCompletionCallback)(BOOL);
 @property (nonatomic, strong) TVODefaultAudioDevice *audioDevice;
@@ -56,10 +56,6 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    self.voipRegistry = [[PKPushRegistry alloc] initWithQueue:dispatch_get_main_queue()];
-    self.voipRegistry.delegate = self;
-    self.voipRegistry.desiredPushTypes = [NSSet setWithObject:PKPushTypeVoIP];
 
     [self toggleUIState:YES showCallControl:NO];
     self.outgoingValue.delegate = self;
@@ -224,111 +220,77 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     return YES;
 }
 
-#pragma mark - PKPushRegistryDelegate
-- (void)pushRegistry:(PKPushRegistry *)registry didUpdatePushCredentials:(PKPushCredentials *)credentials forType:(NSString *)type {
-    NSLog(@"pushRegistry:didUpdatePushCredentials:forType:");
-
-    if ([type isEqualToString:PKPushTypeVoIP]) {
-        const unsigned *tokenBytes = [credentials.token bytes];
-        self.deviceTokenString = [NSString stringWithFormat:@"<%08x %08x %08x %08x %08x %08x %08x %08x>",
-                                  ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
-                                  ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
-                                  ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
-        NSString *accessToken = [self fetchAccessToken];
-        
-        NSString *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
-        if (![cachedDeviceToken isEqualToString:self.deviceTokenString]) {
-            cachedDeviceToken = self.deviceTokenString;
-            
-            /*
-             * Perform registration if a new device token is detected.
-             */
-            [TwilioVoice registerWithAccessToken:accessToken
-                                     deviceToken:cachedDeviceToken
-                                      completion:^(NSError *error) {
-                 if (error) {
-                     NSLog(@"An error occurred while registering: %@", [error localizedDescription]);
-                 }
-                 else {
-                     NSLog(@"Successfully registered for VoIP push notifications.");
-                     
-                     /*
-                      * Save the device token after successfully registered for future registration requests
-                      * in case the token format is changed in future iOS releases, which could potentially
-                      * break the registration process and the incoming capability.
-                      */
-                     [[NSUserDefaults standardUserDefaults] setObject:cachedDeviceToken forKey:kCachedDeviceToken];
-                 }
-             }];
-        }
-    }
-}
-
-- (void)pushRegistry:(PKPushRegistry *)registry didInvalidatePushTokenForType:(PKPushType)type {
-    NSLog(@"pushRegistry:didInvalidatePushTokenForType:");
-
-    if ([type isEqualToString:PKPushTypeVoIP]) {
-        NSString *accessToken = [self fetchAccessToken];
-
-        [TwilioVoice unregisterWithAccessToken:accessToken
-                                   deviceToken:self.deviceTokenString
-                                    completion:^(NSError * _Nullable error) {
-            if (error) {
-                NSLog(@"An error occurred while unregistering: %@", [error localizedDescription]);
-            }
-            else {
-                NSLog(@"Successfully unregistered for VoIP push notifications.");
-            }
-        }];
-
-        self.deviceTokenString = nil;
-    }
-}
-
-/**
- * Try using the `pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:` method if
- * your application is targeting iOS 11. According to the docs, this delegate method is deprecated by Apple.
- */
-- (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(NSString *)type {
-    NSLog(@"pushRegistry:didReceiveIncomingPushWithPayload:forType:");
-    if ([type isEqualToString:PKPushTypeVoIP]) {
-        
-        // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error` when delegate queue is not passed
-        if (![TwilioVoice handleNotification:payload.dictionaryPayload delegate:self delegateQueue:nil]) {
-            NSLog(@"This is not a valid Twilio Voice notification.");
-        }
-    }
-}
-
-/**
- * This delegate method is available on iOS 11 and above. Call the completion handler once the
- * notification payload is passed to the `TwilioVoice.handleNotification()` method.
- */
-- (void)pushRegistry:(PKPushRegistry *)registry
-didReceiveIncomingPushWithPayload:(PKPushPayload *)payload
-             forType:(PKPushType)type
-withCompletionHandler:(void (^)(void))completion {
-    NSLog(@"pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:");
-
-    // Save for later when the notification is properly handled.
-    self.incomingPushCompletionCallback = completion;
-
+#pragma mark - PushKitUpdateDelegate
+- (void)credentialsUpdated:(PKPushCredentials *)credentials {
+    const unsigned *tokenBytes = [credentials.token bytes];
+    self.deviceTokenString = [NSString stringWithFormat:@"<%08x %08x %08x %08x %08x %08x %08x %08x>",
+                              ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
+                              ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
+                              ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
+    NSString *accessToken = [self fetchAccessToken];
     
-    if ([type isEqualToString:PKPushTypeVoIP]) {
-        // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error` when delegate queue is not passed
-        if (![TwilioVoice handleNotification:payload.dictionaryPayload delegate:self delegateQueue:nil]) {
-            NSLog(@"This is not a valid Twilio Voice notification.");
-        }
+    NSString *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
+    if (![cachedDeviceToken isEqualToString:self.deviceTokenString]) {
+        cachedDeviceToken = self.deviceTokenString;
+        
+        /*
+         * Perform registration if a new device token is detected.
+         */
+        [TwilioVoice registerWithAccessToken:accessToken
+                                 deviceToken:cachedDeviceToken
+                                  completion:^(NSError *error) {
+             if (error) {
+                 NSLog(@"An error occurred while registering: %@", [error localizedDescription]);
+             }
+             else {
+                 NSLog(@"Successfully registered for VoIP push notifications.");
+                 
+                 /*
+                  * Save the device token after successfully registered for future registration requests
+                  * in case the token format is changed in future iOS releases, which could potentially
+                  * break the registration process and the incoming capability.
+                  */
+                 [[NSUserDefaults standardUserDefaults] setObject:cachedDeviceToken forKey:kCachedDeviceToken];
+             }
+         }];
     }
-    if ([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion < 13) {
-        // Save for later when the notification is properly handled.
-        self.incomingPushCompletionCallback = completion;
-    } else {
-        /**
-        * The Voice SDK processes the call notification and returns the call invite synchronously. Report the incoming call to
-        * CallKit and fulfill the completion before exiting this callback method.
-        */
-        completion();
+}
+
+- (void)credentialsInvalidated {
+    NSString *accessToken = [self fetchAccessToken];
+
+    [TwilioVoice unregisterWithAccessToken:accessToken
+                               deviceToken:self.deviceTokenString
+                                completion:^(NSError *error) {
+        if (error) {
+            NSLog(@"An error occurred while unregistering: %@", [error localizedDescription]);
+        }
+        else {
+            NSLog(@"Successfully unregistered for VoIP push notifications.");
+        }
+    }];
+
+    self.deviceTokenString = nil;
+    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:kCachedDeviceToken];
+}
+
+- (void)incomingPushReceived:(PKPushPayload *)payload withCompletionHandler:(void (^)(void))completion {
+    // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error` when delegate queue is not passed
+    if (![TwilioVoice handleNotification:payload.dictionaryPayload delegate:self delegateQueue:nil]) {
+        NSLog(@"This is not a valid Twilio Voice notification.");
+    }
+    
+    if (completion) {
+        if ([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion < 13) {
+            // Save for later when the notification is properly handled.
+            self.incomingPushCompletionCallback = completion;
+        } else {
+            /*
+             * The Voice SDK processes the call notification and returns the call invite synchronously.
+             * Report the incoming call to CallKit and fulfill the completion before exiting this callback method.
+             */
+            completion();
+        }
     }
 }
 
