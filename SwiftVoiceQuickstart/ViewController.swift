@@ -229,9 +229,7 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
                     NSLog("Successfully registered for VoIP push notifications.")
                     
                     /*
-                     * Save the device token after successfully registered for future registration requests
-                     * in case the token format is changed in future iOS releases, which could potentially
-                     * break the registration process and the incoming capability.
+                     * Save the device token after successfully registered.
                      */
                     userDefaults.set(cachedDeviceToken, forKey: kCachedDeviceToken)
                 }
