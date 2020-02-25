@@ -7,7 +7,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController <PushKitUpdateDelegate>
+@interface ViewController : UIViewController <PushKitEventDelegate>
 
 @end
 

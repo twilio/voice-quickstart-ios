@@ -9,7 +9,7 @@
 
 @import PushKit;
 
-@protocol PushKitUpdateDelegate <NSObject>
+@protocol PushKitEventDelegate <NSObject>
 
 - (void)credentialsUpdated:(PKPushCredentials *)credentials;
 - (void)credentialsInvalidated;

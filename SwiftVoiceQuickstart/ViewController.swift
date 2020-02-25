@@ -19,7 +19,7 @@ let twimlParamTo = "to"
 
 let kCachedDeviceToken = "CachedDeviceToken"
 
-class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate, CXProviderDelegate, UITextFieldDelegate, AVAudioPlayerDelegate, PushKitUpdateDelegate {
+class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate, CXProviderDelegate, UITextFieldDelegate, AVAudioPlayerDelegate, PushKitEventDelegate {
 
     @IBOutlet weak var placeCallButton: UIButton!
     @IBOutlet weak var iconView: UIImageView!
@@ -206,7 +206,7 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
         return true
     }
     
-    // MARK: PushKitUpdateDelegate
+    // MARK: PushKitEventDelegate
     func credentialsUpdated(credentials: PKPushCredentials) {
         guard let accessToken = fetchAccessToken() else {
             return
@@ -253,7 +253,7 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
         }
         
         self.deviceTokenString = nil
-        UserDefaults.standard.set(nil, forKey: kCachedDeviceToken)
+        UserDefaults.standard.removeObject(forKey: kCachedDeviceToken)
     }
     
     func incomingPushReceived(payload: PKPushPayload) {
@@ -270,7 +270,7 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
             self.incomingPushCompletionCallback = completion
         }
     }
-    
+
     func incomingPushHandled() {
         if let completion = self.incomingPushCompletionCallback {
             completion()

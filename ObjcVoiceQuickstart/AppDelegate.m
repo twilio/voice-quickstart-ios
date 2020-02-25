@@ -12,7 +12,7 @@
 
 @interface AppDelegate () <PKPushRegistryDelegate>
 
-@property (nonatomic, weak) id<PushKitUpdateDelegate> pushKitUpdateDelegate;
+@property (nonatomic, weak) id<PushKitEventDelegate> pushKitEventDelegate;
 @property (nonatomic, strong) PKPushRegistry *voipRegistry;
 
 @end
@@ -23,7 +23,7 @@
     NSLog(@"Twilio Voice Version: %@", [TwilioVoice sdkVersion]);
     
     ViewController* viewController = (ViewController*)self.window.rootViewController;
-    self.pushKitUpdateDelegate = viewController;
+    self.pushKitEventDelegate = viewController;
     [self initializePushKit];
     
     return YES;
@@ -62,8 +62,8 @@
     NSLog(@"pushRegistry:didUpdatePushCredentials:forType:");
 
     if ([type isEqualToString:PKPushTypeVoIP]) {
-        if (self.pushKitUpdateDelegate && [self.pushKitUpdateDelegate respondsToSelector:@selector(credentialsUpdated:)]) {
-            [self.pushKitUpdateDelegate credentialsUpdated:credentials];
+        if (self.pushKitEventDelegate && [self.pushKitEventDelegate respondsToSelector:@selector(credentialsUpdated:)]) {
+            [self.pushKitEventDelegate credentialsUpdated:credentials];
         }
     }
 }
@@ -72,8 +72,8 @@
     NSLog(@"pushRegistry:didInvalidatePushTokenForType:");
 
     if ([type isEqualToString:PKPushTypeVoIP]) {
-        if (self.pushKitUpdateDelegate && [self.pushKitUpdateDelegate respondsToSelector:@selector(credentialsInvalidated)]) {
-            [self.pushKitUpdateDelegate credentialsInvalidated];
+        if (self.pushKitEventDelegate && [self.pushKitEventDelegate respondsToSelector:@selector(credentialsInvalidated)]) {
+            [self.pushKitEventDelegate credentialsInvalidated];
         }
     }
 }
@@ -83,9 +83,9 @@ didReceiveIncomingPushWithPayload:(PKPushPayload *)payload
              forType:(NSString *)type {
     NSLog(@"pushRegistry:didReceiveIncomingPushWithPayload:forType:");
     
-    if (self.pushKitUpdateDelegate &&
-        [self.pushKitUpdateDelegate respondsToSelector:@selector(incomingPushReceived:withCompletionHandler:)]) {
-        [self.pushKitUpdateDelegate incomingPushReceived:payload withCompletionHandler:nil];
+    if (self.pushKitEventDelegate &&
+        [self.pushKitEventDelegate respondsToSelector:@selector(incomingPushReceived:withCompletionHandler:)]) {
+        [self.pushKitEventDelegate incomingPushReceived:payload withCompletionHandler:nil];
     }
 }
 
@@ -99,9 +99,9 @@ didReceiveIncomingPushWithPayload:(PKPushPayload *)payload
 withCompletionHandler:(void (^)(void))completion {
     NSLog(@"pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:");
     
-    if (self.pushKitUpdateDelegate &&
-        [self.pushKitUpdateDelegate respondsToSelector:@selector(incomingPushReceived:withCompletionHandler:)]) {
-        [self.pushKitUpdateDelegate incomingPushReceived:payload withCompletionHandler:completion];
+    if (self.pushKitEventDelegate &&
+        [self.pushKitEventDelegate respondsToSelector:@selector(incomingPushReceived:withCompletionHandler:)]) {
+        [self.pushKitEventDelegate incomingPushReceived:payload withCompletionHandler:completion];
     }
 
     if ([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 13) {

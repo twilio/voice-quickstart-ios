@@ -220,7 +220,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     return YES;
 }
 
-#pragma mark - PushKitUpdateDelegate
+#pragma mark - PushKitEventDelegate
 - (void)credentialsUpdated:(PKPushCredentials *)credentials {
     const unsigned *tokenBytes = [credentials.token bytes];
     self.deviceTokenString = [NSString stringWithFormat:@"<%08x %08x %08x %08x %08x %08x %08x %08x>",
@@ -269,7 +269,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     }];
 
     self.deviceTokenString = nil;
-    [[NSUserDefaults standardUserDefaults] setObject:nil forKey:kCachedDeviceToken];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kCachedDeviceToken];
 }
 
 - (void)incomingPushReceived:(PKPushPayload *)payload withCompletionHandler:(void (^)(void))completion {
