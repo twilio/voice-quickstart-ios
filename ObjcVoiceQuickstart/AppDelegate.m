@@ -6,17 +6,33 @@
 //
 
 #import "AppDelegate.h"
+#import "ViewController.h"
 
 @import TwilioVoice;
 
-@interface AppDelegate ()
+@interface AppDelegate () <PKPushRegistryDelegate>
+
+@property (nonatomic, weak) id<PushKitEventDelegate> pushKitEventDelegate;
+@property (nonatomic, strong) PKPushRegistry *voipRegistry;
+
 @end
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"Twilio Voice Version: %@", [TwilioVoice sdkVersion]);
+    
+    ViewController* viewController = (ViewController*)self.window.rootViewController;
+    self.pushKitEventDelegate = viewController;
+    [self initializePushKit];
+    
     return YES;
+}
+
+- (void)initializePushKit {
+    self.voipRegistry = [[PKPushRegistry alloc] initWithQueue:dispatch_get_main_queue()];
+    self.voipRegistry.delegate = self;
+    self.voipRegistry.desiredPushTypes = [NSSet setWithObject:PKPushTypeVoIP];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application {
@@ -39,6 +55,62 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+#pragma mark - PKPushRegistryDelegate
+- (void)pushRegistry:(PKPushRegistry *)registry didUpdatePushCredentials:(PKPushCredentials *)credentials forType:(NSString *)type {
+    NSLog(@"pushRegistry:didUpdatePushCredentials:forType:");
+
+    if ([type isEqualToString:PKPushTypeVoIP]) {
+        if (self.pushKitEventDelegate && [self.pushKitEventDelegate respondsToSelector:@selector(credentialsUpdated:)]) {
+            [self.pushKitEventDelegate credentialsUpdated:credentials];
+        }
+    }
+}
+
+- (void)pushRegistry:(PKPushRegistry *)registry didInvalidatePushTokenForType:(PKPushType)type {
+    NSLog(@"pushRegistry:didInvalidatePushTokenForType:");
+
+    if ([type isEqualToString:PKPushTypeVoIP]) {
+        if (self.pushKitEventDelegate && [self.pushKitEventDelegate respondsToSelector:@selector(credentialsInvalidated)]) {
+            [self.pushKitEventDelegate credentialsInvalidated];
+        }
+    }
+}
+
+- (void)pushRegistry:(PKPushRegistry *)registry
+didReceiveIncomingPushWithPayload:(PKPushPayload *)payload
+             forType:(NSString *)type {
+    NSLog(@"pushRegistry:didReceiveIncomingPushWithPayload:forType:");
+    
+    if (self.pushKitEventDelegate &&
+        [self.pushKitEventDelegate respondsToSelector:@selector(incomingPushReceived:withCompletionHandler:)]) {
+        [self.pushKitEventDelegate incomingPushReceived:payload withCompletionHandler:nil];
+    }
+}
+
+/**
+ * This delegate method is available on iOS 11 and above. Call the completion handler once the
+ * notification payload is passed to the `TwilioVoice.handleNotification()` method.
+ */
+- (void)pushRegistry:(PKPushRegistry *)registry
+didReceiveIncomingPushWithPayload:(PKPushPayload *)payload
+             forType:(PKPushType)type
+withCompletionHandler:(void (^)(void))completion {
+    NSLog(@"pushRegistry:didReceiveIncomingPushWithPayload:forType:withCompletionHandler:");
+    
+    if (self.pushKitEventDelegate &&
+        [self.pushKitEventDelegate respondsToSelector:@selector(incomingPushReceived:withCompletionHandler:)]) {
+        [self.pushKitEventDelegate incomingPushReceived:payload withCompletionHandler:completion];
+    }
+
+    if ([[NSProcessInfo processInfo] operatingSystemVersion].majorVersion >= 13) {
+        /*
+         * The Voice SDK processes the call notification and returns the call invite synchronously. Report the incoming call to
+         * CallKit and fulfill the completion before exiting this callback method.
+         */
+        completion();
+    }
 }
 
 @end
