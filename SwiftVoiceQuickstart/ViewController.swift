@@ -27,8 +27,6 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
     @IBOutlet weak var callControlView: UIView!
     @IBOutlet weak var muteSwitch: UISwitch!
     @IBOutlet weak var speakerSwitch: UISwitch!
-    
-    var deviceTokenString: String?
 
     var incomingPushCompletionCallback: (()->Swift.Void?)? = nil
 
@@ -235,12 +233,10 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
                 }
             }
         }
-
-        self.deviceTokenString = deviceToken
     }
     
     func credentialsInvalidated() {
-        guard let deviceToken = deviceTokenString, let accessToken = fetchAccessToken() else {
+        guard let deviceToken = UserDefaults.standard.string(forKey: kCachedDeviceToken), let accessToken = fetchAccessToken() else {
             return
         }
         
@@ -252,7 +248,6 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
             }
         }
         
-        self.deviceTokenString = nil
         UserDefaults.standard.removeObject(forKey: kCachedDeviceToken)
     }
     
