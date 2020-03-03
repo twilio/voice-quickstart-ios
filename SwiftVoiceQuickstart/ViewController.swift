@@ -337,8 +337,8 @@ extension ViewController: TVONotificationDelegate {
         NSLog("cancelledCallInviteCanceled:error:, error: \(error.localizedDescription)")
         
         guard let activeCallInvites = activeCallInvites, !activeCallInvites.isEmpty else {
-                NSLog("No pending call invite")
-                return
+            NSLog("No pending call invite")
+            return
         }
         
         let callInvite = activeCallInvites.values.first { invite in invite.callSid == cancelledCallInvite.callSid }
