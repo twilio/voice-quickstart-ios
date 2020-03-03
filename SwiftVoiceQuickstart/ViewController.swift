@@ -112,49 +112,45 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
     }
 
     @IBAction func mainButtonPressed(_ sender: Any) {
-        if let call = self.activeCall {
-            self.userInitiatedDisconnect = true
-            performEndCallAction(uuid: call.uuid)
-            self.toggleUIState(isEnabled: false, showCallControl: false)
-        } else {
-            let uuid = UUID()
-            let handle = "Voice Bot"
+        guard activeCall == nil else {
+            userInitiatedDisconnect = true
+            performEndCallAction(uuid: activeCall!.uuid)
+            toggleUIState(isEnabled: false, showCallControl: false)
             
-            self.checkRecordPermission { (permissionGranted) in
-                if (!permissionGranted) {
-                    let alertController: UIAlertController = UIAlertController(title: "Voice Quick Start",
-                                                                               message: "Microphone permission not granted",
-                                                                               preferredStyle: .alert)
-                    
-                    let continueWithMic: UIAlertAction = UIAlertAction(title: "Continue without microphone",
-                                                                       style: .default,
-                                                                       handler: { (action) in
-                        self.performStartCallAction(uuid: uuid, handle: handle)
-                    })
-                    alertController.addAction(continueWithMic)
-                    
-                    let goToSettings: UIAlertAction = UIAlertAction(title: "Settings",
-                                                                    style: .default,
-                                                                    handler: { (action) in
-                        UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!,
-                                                  options: [UIApplicationOpenURLOptionUniversalLinksOnly: false],
-                                                  completionHandler: nil)
-                    })
-                    alertController.addAction(goToSettings)
-                    
-                    let cancel: UIAlertAction = UIAlertAction(title: "Cancel",
-                                                              style: .cancel,
-                                                              handler: { (action) in
-                        self.toggleUIState(isEnabled: true, showCallControl: false)
-                        self.stopSpin()
-                    })
-                    alertController.addAction(cancel)
-                    
-                    self.present(alertController, animated: true, completion: nil)
-                } else {
-                    self.performStartCallAction(uuid: uuid, handle: handle)
-                }
+            return
+        }
+        
+        let uuid = UUID()
+        let handle = "Voice Bot"
+        
+        checkRecordPermission { permissionGranted in
+            guard !permissionGranted else {
+                self.performStartCallAction(uuid: uuid, handle: handle)
+                return
             }
+        
+            let alertController = UIAlertController(title: "Voice Quick Start",
+                                                    message: "Microphone permission not granted",
+                                                    preferredStyle: .alert)
+            
+            let continueWithMic = UIAlertAction(title: "Continue without microphone", style: .default) { action in
+                self.performStartCallAction(uuid: uuid, handle: handle)
+            }
+            
+            let goToSettings = UIAlertAction(title: "Settings", style: .default) { action in
+                UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!,
+                                          options: [UIApplicationOpenURLOptionUniversalLinksOnly: false],
+                                          completionHandler: nil)
+            }
+            
+            let cancel = UIAlertAction(title: "Cancel", style: .cancel) { _ in
+                self.toggleUIState(isEnabled: true, showCallControl: false)
+                self.stopSpin()
+            }
+            
+            [continueWithMic, goToSettings, cancel].forEach { alertController.addAction($0) }
+            
+            self.present(alertController, animated: true, completion: nil)
         }
     }
     
@@ -179,9 +175,9 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
     
     @IBAction func muteSwitchToggled(_ sender: UISwitch) {
         // The sample app supports toggling mute from app UI only on the last connected call.
-        if let call = self.activeCall {
-            call.isMuted = sender.isOn
-        }
+        guard let call = activeCall else { return }
+        
+        call.isMuted = sender.isOn
     }
     
     @IBAction func speakerSwitchToggled(_ sender: UISwitch) {
@@ -253,10 +249,10 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
     }
 
     func incomingPushHandled() {
-        if let completion = self.incomingPushCompletionCallback {
-            completion()
-            self.incomingPushCompletionCallback = nil
-        }
+        guard let completion = incomingPushCompletionCallback else { return }
+        
+        completion()
+        incomingPushCompletionCallback = nil
     }
 
     // MARK: TVONotificaitonDelegate
@@ -273,9 +269,9 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
     func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite, error: Error) {
         NSLog("cancelledCallInviteCanceled:error:, error: \(error.localizedDescription)")
         
-        if (self.activeCallInvites!.isEmpty) {
-            NSLog("No pending call invite")
-            return
+        guard let activeCallInvites = activeCallInvites, !activeCallInvites.isEmpty else {
+                NSLog("No pending call invite")
+                return
         }
         
         let callInvite = activeCallInvites.values.first { invite in invite.callSid == cancelledCallInvite.callSid }
