@@ -19,7 +19,7 @@ let twimlParamTo = "to"
 
 let kCachedDeviceToken = "CachedDeviceToken"
 
-class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate, CXProviderDelegate, UITextFieldDelegate, AVAudioPlayerDelegate, PushKitEventDelegate {
+class ViewController: UIViewController {
 
     @IBOutlet weak var placeCallButton: UIButton!
     @IBOutlet weak var iconView: UIImageView!
@@ -60,6 +60,7 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
         let configuration = CXProviderConfiguration(localizedName: "Quickstart")
         configuration.maximumCallGroups = 1
         configuration.maximumCallsPerCallGroup = 1
+       
         if let callKitIcon = UIImage(named: "iconMask80") {
             configuration.iconTemplateImageData = UIImagePNGRepresentation(callKitIcon)
         }
@@ -184,13 +185,75 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
         toggleAudioRoute(toSpeaker: sender.isOn)
     }
     
-    // MARK: UITextFieldDelegate
+    
+    // MARK: AVAudioSession
+    
+    func toggleAudioRoute(toSpeaker: Bool) {
+        // The mode set by the Voice SDK is "VoiceChat" so the default audio route is the built-in receiver. Use port override to switch the route.
+        audioDevice.block = {
+            kTVODefaultAVAudioSessionConfigurationBlock()
+            
+            do {
+                if toSpeaker {
+                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+                } else {
+                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+                }
+            } catch {
+                NSLog(error.localizedDescription)
+            }
+        }
+        
+        audioDevice.block()
+    }
+    
+    
+    // MARK: Icon spinning
+    
+    func startSpin() {
+        if !isSpinning {
+            isSpinning = true
+            spin(options: UIViewAnimationOptions.curveEaseIn)
+        }
+    }
+    
+    func stopSpin() {
+        isSpinning = false
+    }
+    
+    func spin(options: UIViewAnimationOptions) {
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: options, animations: { [weak iconView] in
+            if let iconView = iconView {
+                iconView.transform = iconView.transform.rotated(by: CGFloat(Double.pi/2))
+            }
+        }) { [weak self] finished in
+            guard let strongSelf = self else { return }
+
+            if finished {
+                if strongSelf.isSpinning {
+                    strongSelf.spin(options: UIViewAnimationOptions.curveLinear)
+                } else if options != UIViewAnimationOptions.curveEaseOut {
+                    strongSelf.spin(options: UIViewAnimationOptions.curveEaseOut)
+                }
+            }
+        }
+    }
+}
+    
+    
+// MARK: - UITextFieldDelegate
+
+extension ViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         outgoingValue.resignFirstResponder()
         return true
     }
+}
     
-    // MARK: PushKitEventDelegate
+    
+// MARK: - PushKitEventDelegate
+
+extension ViewController: PushKitEventDelegate {
     func credentialsUpdated(credentials: PKPushCredentials) {
         guard let accessToken = fetchAccessToken() else { return }
         
@@ -254,8 +317,12 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
         completion()
         incomingPushCompletionCallback = nil
     }
+}
 
-    // MARK: TVONotificaitonDelegate
+
+// MARK: - TVONotificaitonDelegate
+
+extension ViewController: TVONotificationDelegate {
     func callInviteReceived(_ callInvite: TVOCallInvite) {
         NSLog("callInviteReceived:")
         
@@ -280,8 +347,12 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
             performEndCallAction(uuid: callInvite.uuid)
         }
     }
+}
 
-    // MARK: TVOCallDelegate
+
+// MARK: - TVOCallDelegate
+
+extension ViewController: TVOCallDelegate {
     func callDidStartRinging(_ call: TVOCall) {
         NSLog("callDidStartRinging:")
         
@@ -382,62 +453,34 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
     }
     
     
-    // MARK: AVAudioSession
-    func toggleAudioRoute(toSpeaker: Bool) {
-        // The mode set by the Voice SDK is "VoiceChat" so the default audio route is the built-in receiver. Use port override to switch the route.
-        audioDevice.block = {
-            kTVODefaultAVAudioSessionConfigurationBlock()
-            do {
-                if (toSpeaker) {
-                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
-                } else {
-                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
-                }
-            } catch {
-                NSLog(error.localizedDescription)
-            }
-        }
-        audioDevice.block()
-    }
-
-
-    // MARK: Icon spinning
-    func startSpin() {
-        if (isSpinning != true) {
-            isSpinning = true
-            spin(options: UIViewAnimationOptions.curveEaseIn)
+    // MARK: Ringtone
+    
+    func playRingback() {
+        let ringtonePath = URL(fileURLWithPath: Bundle.main.path(forResource: "ringtone", ofType: "wav")!)
+        
+        do {
+            ringtonePlayer = try AVAudioPlayer(contentsOf: ringtonePath)
+            ringtonePlayer?.delegate = self
+            ringtonePlayer?.numberOfLoops = -1
+            
+            ringtonePlayer?.volume = 1.0
+            ringtonePlayer?.play()
+        } catch {
+            NSLog("Failed to initialize audio player")
         }
     }
     
-    func stopSpin() {
-        isSpinning = false
+    func stopRingback() {
+        guard let ringtonePlayer = ringtonePlayer, ringtonePlayer.isPlaying else { return }
+        
+        ringtonePlayer.stop()
     }
-    
-    func spin(options: UIViewAnimationOptions) {
-        UIView.animate(withDuration: 0.5,
-                       delay: 0.0,
-                       options: options,
-                       animations: { [weak iconView] in
-            if let iconView = iconView {
-                iconView.transform = iconView.transform.rotated(by: CGFloat(Double.pi/2))
-            }
-        }) { [weak self] (finished: Bool) in
-            guard let strongSelf = self else {
-                return
-            }
+}
 
-            if (finished) {
-                if (strongSelf.isSpinning) {
-                    strongSelf.spin(options: UIViewAnimationOptions.curveLinear)
-                } else if (options != UIViewAnimationOptions.curveEaseOut) {
-                    strongSelf.spin(options: UIViewAnimationOptions.curveEaseOut)
-                }
-            }
-        }
-    }
+ 
+// MARK: - CXProviderDelegate
 
-
-    // MARK: CXProviderDelegate
+extension ViewController: CXProviderDelegate {
     func providerDidReset(_ provider: CXProvider) {
         NSLog("providerDidReset:")
         audioDevice.isEnabled = true
@@ -535,6 +578,7 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
         }
     }
 
+    
     // MARK: Call Kit Actions
     func performStartCallAction(uuid: UUID, handle: String) {
         let callHandle = CXHandle(type: .generic, value: handle)
@@ -550,6 +594,7 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
             NSLog("StartCallAction transaction request successful")
 
             let callUpdate = CXCallUpdate()
+            
             callUpdate.remoteHandle = callHandle
             callUpdate.supportsDTMF = true
             callUpdate.supportsHolding = true
@@ -565,6 +610,7 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
         let callHandle = CXHandle(type: .generic, value: from)
 
         let callUpdate = CXCallUpdate()
+        
         callUpdate.remoteHandle = callHandle
         callUpdate.supportsDTMF = true
         callUpdate.supportsHolding = true
@@ -605,56 +651,41 @@ class ViewController: UIViewController, TVONotificationDelegate, TVOCallDelegate
             builder.params = [twimlParamTo: self.outgoingValue.text ?? ""]
             builder.uuid = uuid
         }
+        
         let call = TwilioVoice.connect(with: connectOptions, delegate: self)
         activeCall = call
         activeCalls[call.uuid.uuidString] = call
         callKitCompletionCallback = completionHandler
     }
     
-    func performAnswerVoiceCall(uuid: UUID, completionHandler: @escaping (Bool) -> Swift.Void) {
-        if let callInvite = self.activeCallInvites[uuid.uuidString] {
-            let acceptOptions: TVOAcceptOptions = TVOAcceptOptions(callInvite: callInvite) { (builder) in
-                builder.uuid = callInvite.uuid
-            }
-            let call = callInvite.accept(with: acceptOptions, delegate: self)
-            self.activeCall = call
-            self.activeCalls[call.uuid.uuidString] = call
-            self.callKitCompletionCallback = completionHandler
-            
-            self.activeCallInvites.removeValue(forKey: uuid.uuidString)
-            
-            guard #available(iOS 13, *) else {
-                self.incomingPushHandled()
-                return
-            }
-        } else {
+    func performAnswerVoiceCall(uuid: UUID, completionHandler: @escaping (Bool) -> Void) {
+        guard let callInvite = activeCallInvites[uuid.uuidString] else {
             NSLog("No CallInvite matches the UUID")
-        }
-    }
-    
-    // MARK: Ringtone
-    func playRingback() {
-        let ringtonePath = URL(fileURLWithPath: Bundle.main.path(forResource: "ringtone", ofType: "wav")!)
-        do {
-            self.ringtonePlayer = try AVAudioPlayer(contentsOf: ringtonePath)
-            self.ringtonePlayer?.delegate = self
-            self.ringtonePlayer?.numberOfLoops = -1
-            
-            self.ringtonePlayer?.volume = 1.0
-            self.ringtonePlayer?.play()
-        } catch {
-            NSLog("Failed to initialize audio player")
-        }
-    }
-    
-    func stopRingback() {
-        if (self.ringtonePlayer?.isPlaying == false) {
             return
         }
         
-        self.ringtonePlayer?.stop()
+        let acceptOptions = TVOAcceptOptions(callInvite: callInvite) { builder in
+            builder.uuid = callInvite.uuid
+        }
+        
+        let call = callInvite.accept(with: acceptOptions, delegate: self)
+        activeCall = call
+        activeCalls[call.uuid.uuidString] = call
+        callKitCompletionCallback = completionHandler
+        
+        activeCallInvites.removeValue(forKey: uuid.uuidString)
+        
+        guard #available(iOS 13, *) else {
+            incomingPushHandled()
+            return
+        }
     }
-    
+}
+
+
+// MARK: - AVAudioPlayerDelegate
+
+extension ViewController: AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         if flag {
             NSLog("Audio player finished playing successfully");
