@@ -28,7 +28,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var muteSwitch: UISwitch!
     @IBOutlet weak var speakerSwitch: UISwitch!
 
-    var incomingPushCompletionCallback: (() -> Void)? = nil
+    var incomingPushCompletionCallback: (() -> Void)?
 
     var isSpinning: Bool
     var incomingAlertController: UIAlertController?
@@ -112,6 +112,31 @@ class ViewController: UIViewController {
         }
     }
 
+    func showMicrophoneAccessRequest(_ uuid: UUID, _ handle: String) {
+        let alertController = UIAlertController(title: "Voice Quick Start",
+                                                message: "Microphone permission not granted",
+                                                preferredStyle: .alert)
+        
+        let continueWithoutMic = UIAlertAction(title: "Continue without microphone", style: .default) { [weak self] _ in
+            self?.performStartCallAction(uuid: uuid, handle: handle)
+        }
+        
+        let goToSettings = UIAlertAction(title: "Settings", style: .default) { _ in
+            UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!,
+                                      options: [UIApplicationOpenURLOptionUniversalLinksOnly: false],
+                                      completionHandler: nil)
+        }
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
+            self?.toggleUIState(isEnabled: true, showCallControl: false)
+            self?.stopSpin()
+        }
+        
+        [continueWithoutMic, goToSettings, cancel].forEach { alertController.addAction($0) }
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
     @IBAction func mainButtonPressed(_ sender: Any) {
         guard activeCall == nil else {
             userInitiatedDisconnect = true
@@ -121,37 +146,16 @@ class ViewController: UIViewController {
             return
         }
         
-        let uuid = UUID()
-        let handle = "Voice Bot"
-        
-        checkRecordPermission { permissionGranted in
+        checkRecordPermission { [weak self] permissionGranted in
+            let uuid = UUID()
+            let handle = "Voice Bot"
+            
             guard !permissionGranted else {
-                self.performStartCallAction(uuid: uuid, handle: handle)
+                self?.performStartCallAction(uuid: uuid, handle: handle)
                 return
             }
         
-            let alertController = UIAlertController(title: "Voice Quick Start",
-                                                    message: "Microphone permission not granted",
-                                                    preferredStyle: .alert)
-            
-            let continueWithMic = UIAlertAction(title: "Continue without microphone", style: .default) { action in
-                self.performStartCallAction(uuid: uuid, handle: handle)
-            }
-            
-            let goToSettings = UIAlertAction(title: "Settings", style: .default) { action in
-                UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!,
-                                          options: [UIApplicationOpenURLOptionUniversalLinksOnly: false],
-                                          completionHandler: nil)
-            }
-            
-            let cancel = UIAlertAction(title: "Cancel", style: .cancel) { _ in
-                self.toggleUIState(isEnabled: true, showCallControl: false)
-                self.stopSpin()
-            }
-            
-            [continueWithMic, goToSettings, cancel].forEach { alertController.addAction($0) }
-            
-            self.present(alertController, animated: true, completion: nil)
+            self?.showMicrophoneAccessRequest(uuid, handle)
         }
     }
     
@@ -176,9 +180,9 @@ class ViewController: UIViewController {
     
     @IBAction func muteSwitchToggled(_ sender: UISwitch) {
         // The sample app supports toggling mute from app UI only on the last connected call.
-        guard let call = activeCall else { return }
+        guard let activeCall = activeCall else { return }
         
-        call.isMuted = sender.isOn
+        activeCall.isMuted = sender.isOn
     }
     
     @IBAction func speakerSwitchToggled(_ sender: UISwitch) {
@@ -211,10 +215,10 @@ class ViewController: UIViewController {
     // MARK: Icon spinning
     
     func startSpin() {
-        if !isSpinning {
-            isSpinning = true
-            spin(options: UIViewAnimationOptions.curveEaseIn)
-        }
+        guard !isSpinning else { return }
+        
+        isSpinning = true
+        spin(options: UIViewAnimationOptions.curveEaseIn)
     }
     
     func stopSpin() {
@@ -314,8 +318,8 @@ extension ViewController: PushKitEventDelegate {
     func incomingPushHandled() {
         guard let completion = incomingPushCompletionCallback else { return }
         
-        completion()
         incomingPushCompletionCallback = nil
+        completion()
     }
 }
 
