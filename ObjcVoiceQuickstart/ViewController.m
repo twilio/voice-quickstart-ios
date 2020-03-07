@@ -220,11 +220,12 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 
 #pragma mark - PushKitEventDelegate
 - (void)credentialsUpdated:(PKPushCredentials *)credentials {
-    const unsigned *tokenBytes = [credentials.token bytes];
-    NSString *deviceTokenString = [NSString stringWithFormat:@"<%08x %08x %08x %08x %08x %08x %08x %08x>",
-                                   ntohl(tokenBytes[0]), ntohl(tokenBytes[1]), ntohl(tokenBytes[2]),
-                                   ntohl(tokenBytes[3]), ntohl(tokenBytes[4]), ntohl(tokenBytes[5]),
-                                   ntohl(tokenBytes[6]), ntohl(tokenBytes[7])];
+    const char *tokenBytes = [credentials.token bytes];
+    NSMutableString *deviceTokenString = [NSMutableString string];
+    for (NSUInteger i = 0; i < [credentials.token length]; ++i) {
+        [deviceTokenString appendFormat:@"%02.2hhx", tokenBytes[i]];
+    }
+
     NSString *accessToken = [self fetchAccessToken];
     
     NSString *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
