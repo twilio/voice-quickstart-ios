@@ -220,23 +220,17 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 
 #pragma mark - PushKitEventDelegate
 - (void)credentialsUpdated:(PKPushCredentials *)credentials {
-    const char *tokenBytes = [credentials.token bytes];
-    NSMutableString *deviceTokenString = [NSMutableString string];
-    for (NSUInteger i = 0; i < [credentials.token length]; ++i) {
-        [deviceTokenString appendFormat:@"%02.2hhx", tokenBytes[i]];
-    }
-
     NSString *accessToken = [self fetchAccessToken];
-    
-    NSString *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
-    if (![cachedDeviceToken isEqualToString:deviceTokenString]) {
-        cachedDeviceToken = deviceTokenString;
+
+    NSData *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
+    if (![cachedDeviceToken isEqualToData:credentials.token]) {
+        cachedDeviceToken = credentials.token;
         
         /*
          * Perform registration if a new device token is detected.
          */
         [TwilioVoice registerWithAccessToken:accessToken
-                                 deviceToken:cachedDeviceToken
+                             deviceTokenData:cachedDeviceToken
                                   completion:^(NSError *error) {
              if (error) {
                  NSLog(@"An error occurred while registering: %@", [error localizedDescription]);
@@ -255,10 +249,10 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 - (void)credentialsInvalidated {
     NSString *accessToken = [self fetchAccessToken];
 
-    NSString *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
+    NSData *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
     if ([cachedDeviceToken length] > 0) {
         [TwilioVoice unregisterWithAccessToken:accessToken
-                                   deviceToken:cachedDeviceToken
+                               deviceTokenData:cachedDeviceToken
                                     completion:^(NSError *error) {
             if (error) {
                 NSLog(@"An error occurred while unregistering: %@", [error localizedDescription]);
