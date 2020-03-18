@@ -259,11 +259,10 @@ extension ViewController: UITextFieldDelegate {
 
 extension ViewController: PushKitEventDelegate {
     func credentialsUpdated(credentials: PKPushCredentials) {
-        guard let accessToken = fetchAccessToken() else { return }
-        
-        if let cachedDeviceToken = UserDefaults.standard.data(forKey: kCachedDeviceToken), cachedDeviceToken == credentials.token {
-            return
-        }
+        guard
+            let accessToken = fetchAccessToken(),
+            UserDefaults.standard.data(forKey: kCachedDeviceToken) != credentials.token
+        else { return }
 
         let cachedDeviceToken = credentials.token
         /*
