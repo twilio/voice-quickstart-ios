@@ -19,7 +19,7 @@ static NSString *const kAccessTokenEndpoint = @"/accessToken";
 static NSString *const kIdentity = @"alice";
 static NSString *const kTwimlParamTo = @"to";
 
-NSString * const kCachedDeviceToken = @"CachedDeviceToken";
+NSString * const kCachedDeviceTokenData = @"CachedDeviceTokenData";
 
 @interface ViewController () <TVONotificationDelegate, TVOCallDelegate, CXProviderDelegate, UITextFieldDelegate, AVAudioPlayerDelegate>
 
@@ -220,23 +220,17 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 
 #pragma mark - PushKitEventDelegate
 - (void)credentialsUpdated:(PKPushCredentials *)credentials {
-    const char *tokenBytes = [credentials.token bytes];
-    NSMutableString *deviceTokenString = [NSMutableString string];
-    for (NSUInteger i = 0; i < [credentials.token length]; ++i) {
-        [deviceTokenString appendFormat:@"%02.2hhx", tokenBytes[i]];
-    }
-
     NSString *accessToken = [self fetchAccessToken];
-    
-    NSString *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
-    if (![cachedDeviceToken isEqualToString:deviceTokenString]) {
-        cachedDeviceToken = deviceTokenString;
+
+    NSData *cachedDeviceTokenData = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceTokenData];
+    if (![cachedDeviceTokenData isEqualToData:credentials.token]) {
+        cachedDeviceTokenData = credentials.token;
         
         /*
          * Perform registration if a new device token is detected.
          */
         [TwilioVoice registerWithAccessToken:accessToken
-                                 deviceToken:cachedDeviceToken
+                             deviceTokenData:cachedDeviceTokenData
                                   completion:^(NSError *error) {
              if (error) {
                  NSLog(@"An error occurred while registering: %@", [error localizedDescription]);
@@ -246,7 +240,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
                  /*
                   * Save the device token after successfully registered.
                   */
-                 [[NSUserDefaults standardUserDefaults] setObject:cachedDeviceToken forKey:kCachedDeviceToken];
+                 [[NSUserDefaults standardUserDefaults] setObject:cachedDeviceTokenData forKey:kCachedDeviceTokenData];
              }
          }];
     }
@@ -255,10 +249,10 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 - (void)credentialsInvalidated {
     NSString *accessToken = [self fetchAccessToken];
 
-    NSString *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
-    if ([cachedDeviceToken length] > 0) {
+    NSData *cachedDeviceTokenData = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceTokenData];
+    if ([cachedDeviceTokenData length] > 0) {
         [TwilioVoice unregisterWithAccessToken:accessToken
-                                   deviceToken:cachedDeviceToken
+                               deviceTokenData:cachedDeviceTokenData
                                     completion:^(NSError *error) {
             if (error) {
                 NSLog(@"An error occurred while unregistering: %@", [error localizedDescription]);
@@ -268,7 +262,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
         }];
     }
 
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kCachedDeviceToken];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kCachedDeviceTokenData];
 }
 
 - (void)incomingPushReceived:(PKPushPayload *)payload withCompletionHandler:(void (^)(void))completion {

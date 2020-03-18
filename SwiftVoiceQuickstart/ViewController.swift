@@ -17,7 +17,7 @@ let accessTokenEndpoint = "/accessToken"
 let identity = "alice"
 let twimlParamTo = "to"
 
-let kCachedDeviceToken = "CachedDeviceToken"
+let kCachedDeviceTokenData = "CachedDeviceTokenData"
 
 class ViewController: UIViewController {
 
@@ -260,36 +260,33 @@ extension ViewController: UITextFieldDelegate {
 extension ViewController: PushKitEventDelegate {
     func credentialsUpdated(credentials: PKPushCredentials) {
         guard let accessToken = fetchAccessToken() else { return }
-        
-        let deviceToken = credentials.token.map { String(format: "%02x", $0) }.joined()
-        
-        let userDefaults = UserDefaults.standard
-        let cachedDeviceToken = userDefaults.string(forKey: kCachedDeviceToken) ?? deviceToken
-        
-        if cachedDeviceToken != deviceToken {
+
+        var cachedDeviceTokenData = UserDefaults.standard.data(forKey: kCachedDeviceTokenData)
+        if cachedDeviceTokenData != credentials.token {
+            cachedDeviceTokenData = credentials.token
             /*
              * Perform registration if a new device token is detected.
              */
-            TwilioVoice.register(withAccessToken: accessToken, deviceToken: cachedDeviceToken) { error in
+            TwilioVoice.register(withAccessToken: accessToken, deviceToken: cachedDeviceTokenData!) { error in
                 if let error = error {
                     NSLog("An error occurred while registering: \(error.localizedDescription)")
                 } else {
                     NSLog("Successfully registered for VoIP push notifications.")
-                    
+
                     /*
                      * Save the device token after successfully registered.
                      */
-                    userDefaults.set(cachedDeviceToken, forKey: kCachedDeviceToken)
+                    UserDefaults.standard.set(cachedDeviceTokenData, forKey: kCachedDeviceTokenData)
                 }
             }
         }
     }
     
     func credentialsInvalidated() {
-        guard let deviceToken = UserDefaults.standard.string(forKey: kCachedDeviceToken),
+        guard let deviceTokenData = UserDefaults.standard.data(forKey: kCachedDeviceTokenData),
             let accessToken = fetchAccessToken() else { return }
         
-        TwilioVoice.unregister(withAccessToken: accessToken, deviceToken: deviceToken) { error in
+        TwilioVoice.unregister(withAccessToken: accessToken, deviceToken: deviceTokenData) { error in
             if let error = error {
                 NSLog("An error occurred while unregistering: \(error.localizedDescription)")
             } else {
@@ -297,7 +294,7 @@ extension ViewController: PushKitEventDelegate {
             }
         }
         
-        UserDefaults.standard.removeObject(forKey: kCachedDeviceToken)
+        UserDefaults.standard.removeObject(forKey: kCachedDeviceTokenData)
     }
     
     func incomingPushReceived(payload: PKPushPayload) {

@@ -297,7 +297,7 @@ CXTransaction *transaction = [[CXTransaction alloc] initWithAction:setHeldCallAc
 
 A push credential is a record for a push notification channel, for iOS this push credential is a push notification channel record for APNS VoIP. Push credentials are managed in the console under [Mobile Push Credentials](https://www.twilio.com/console/voice/sdks/credentials).
 
-Whenever a registration is performed via `TwilioVoice.registerWithAccessToken:deviceToken:completion` in the iOS SDK the `identity` and the `Push Credential SID` provided in the JWT based access token, along with the `device token` are used as a unique address to send APNS VoIP push notifications to this application instance whenever a call is made to reach that `identity`. Using `TwilioVoice.unregisterWithAccessToken:deviceToken:completion` removes the association for that `identity`.
+Whenever a registration is performed via `TwilioVoice.registerWithAccessToken:deviceTokenData:completion` in the iOS SDK the `identity` and the `Push Credential SID` provided in the JWT based access token, along with the `device token` are used as a unique address to send APNS VoIP push notifications to this application instance whenever a call is made to reach that `identity`. Using `TwilioVoice.unregisterWithAccessToken:deviceTokenData:completion` removes the association for that `identity`.
 
 ### Updating a Push Credential
 
