@@ -152,9 +152,9 @@ Export your VoIP Service Certificate as a .p12 file from Keychain Access.
 
 Extract the certificate and private key from the .p12 file using the `openssl` command. 
 
-    $> openssl pkcs12 -in PATH_TO_YOUR_P12 -nocerts -out key.pem
+    $> openssl pkcs12 -in PATH_TO_YOUR_P12 -nokeys -out cert.pem -nodes
+    $> openssl pkcs12 -in PATH_TO_YOUR_P12 -nocerts -out key.pem -nodes
     $> openssl rsa -in key.pem -out key.pem
-    $> openssl pkcs12 -in PATH_TO_YOUR_P12 -clcerts -nokeys -out cert.pem
 
 Go to the [Push Credentials page](https://www.twilio.com/console/voice/sdks/credentials) and create a new Push Credential. Paste the certificate and private key extracted from your certificate. You must paste the keys in as plaintext:
 
