@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -89,15 +89,38 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fGI-oc-RSg">
+                                <rect key="frame" x="67.5" y="507" width="240" height="88"/>
+                                <subviews>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="heP-mv-0mL" userLabel="Custom Audio Device Switch">
+                                        <rect key="frame" x="97" y="8" width="49" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </switch>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Custom Audio Device" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5sq-sT-Hxu">
+                                        <rect key="frame" x="59" y="47" width="122" height="15"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="88" id="KHr-kM-Z7d"/>
+                                    <constraint firstAttribute="width" constant="240" id="cGN-pJ-7Sf"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Yv2-Ab-jqI" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-98.5" id="0Zb-hN-aPE"/>
+                            <constraint firstItem="fGI-oc-RSg" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="6or-Qv-FGU"/>
                             <constraint firstItem="r25-bA-TjD" firstAttribute="top" secondItem="KbF-3Z-6Zb" secondAttribute="bottom" constant="8" id="Bqm-V0-5BO"/>
                             <constraint firstItem="V5R-Ky-YRW" firstAttribute="top" secondItem="r25-bA-TjD" secondAttribute="bottom" constant="8" id="Cf6-jr-cUl"/>
                             <constraint firstItem="LCr-Ji-S0e" firstAttribute="top" secondItem="V5R-Ky-YRW" secondAttribute="bottom" constant="8" id="JLB-FW-qyu"/>
                             <constraint firstItem="V5R-Ky-YRW" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Sje-sA-ye7"/>
                             <constraint firstItem="KbF-3Z-6Zb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="VeB-Km-SPV"/>
+                            <constraint firstItem="fGI-oc-RSg" firstAttribute="top" secondItem="V5R-Ky-YRW" secondAttribute="bottom" constant="8" id="XcC-Vd-s4x"/>
                             <constraint firstItem="KbF-3Z-6Zb" firstAttribute="top" secondItem="Yv2-Ab-jqI" secondAttribute="bottom" constant="24" id="evG-yH-jC4"/>
                             <constraint firstItem="Yv2-Ab-jqI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="o83-xB-gqy"/>
                             <constraint firstItem="LCr-Ji-S0e" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xTc-1X-DGJ"/>
@@ -106,6 +129,8 @@
                     </view>
                     <connections>
                         <outlet property="callControlView" destination="LCr-Ji-S0e" id="hqQ-44-SIW"/>
+                        <outlet property="callOptionsView" destination="fGI-oc-RSg" id="ICJ-3T-ar8"/>
+                        <outlet property="customAudioDeviceSwitch" destination="heP-mv-0mL" id="FeX-zc-X94"/>
                         <outlet property="iconView" destination="Yv2-Ab-jqI" id="ZlU-AK-WTh"/>
                         <outlet property="muteSwitch" destination="viR-NY-T2b" id="fZy-Mo-G3K"/>
                         <outlet property="outgoingValue" destination="KbF-3Z-6Zb" id="Rqf-W7-jY1"/>

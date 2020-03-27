@@ -44,6 +44,8 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 @property (weak, nonatomic) IBOutlet UIView *callControlView;
 @property (weak, nonatomic) IBOutlet UISwitch *muteSwitch;
 @property (weak, nonatomic) IBOutlet UISwitch *speakerSwitch;
+@property (weak, nonatomic) IBOutlet UIView *callOptionsView;
+@property (weak, nonatomic) IBOutlet UISwitch *customAudioDeviceSwitch;
 
 @property (nonatomic, assign) BOOL playCustomRingback;
 @property (nonatomic, strong) AVAudioPlayer *ringtonePlayer;
@@ -192,13 +194,11 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 
 - (void)toggleUIState:(BOOL)isEnabled showCallControl:(BOOL)showCallControl {
     self.placeCallButton.enabled = isEnabled;
-    if (showCallControl) {
-        self.callControlView.hidden = NO;
-        self.muteSwitch.on = NO;
-        self.speakerSwitch.on = YES;
-    } else {
-        self.callControlView.hidden = YES;
-    }
+    self.customAudioDeviceSwitch.enabled = isEnabled;
+    self.callControlView.hidden = !showCallControl;
+    self.muteSwitch.on = !showCallControl;
+    self.speakerSwitch.on = showCallControl;
+    self.callOptionsView.hidden = showCallControl;
 }
 
 - (IBAction)muteSwitchToggled:(UISwitch *)sender {
