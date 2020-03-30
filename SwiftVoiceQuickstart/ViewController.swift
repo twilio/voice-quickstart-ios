@@ -27,7 +27,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var callControlView: UIView!
     @IBOutlet weak var muteSwitch: UISwitch!
     @IBOutlet weak var speakerSwitch: UISwitch!
-
+    @IBOutlet weak var callOptionsView: UIView!
+    @IBOutlet weak var customAudioDeviceSwitch: UISwitch!
+    
     var incomingPushCompletionCallback: (() -> Void)?
 
     var isSpinning: Bool
@@ -102,14 +104,11 @@ class ViewController: UIViewController {
 
     func toggleUIState(isEnabled: Bool, showCallControl: Bool) {
         placeCallButton.isEnabled = isEnabled
-        
-        if showCallControl {
-            callControlView.isHidden = false
-            muteSwitch.isOn = false
-            speakerSwitch.isOn = true
-        } else {
-            callControlView.isHidden = true
-        }
+        customAudioDeviceSwitch.isEnabled = isEnabled
+        callControlView.isHidden = !showCallControl;
+        muteSwitch.isOn = !showCallControl;
+        speakerSwitch.isOn = showCallControl;
+        callOptionsView.isHidden = showCallControl;
     }
 
     func showMicrophoneAccessRequest(_ uuid: UUID, _ handle: String) {

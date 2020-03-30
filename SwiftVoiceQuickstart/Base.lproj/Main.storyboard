@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -89,17 +89,40 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bT8-EQ-b6r" userLabel="Call Options View">
+                                <rect key="frame" x="67.5" y="502" width="240" height="88"/>
+                                <subviews>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dXC-8e-wfE" userLabel="Custom Audio Device Switch">
+                                        <rect key="frame" x="96" y="8" width="49" height="31"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </switch>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Custom Audio Device" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ygx-LD-bzV">
+                                        <rect key="frame" x="59" y="47" width="122" height="15"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="88" id="PIt-ZT-5vD"/>
+                                    <constraint firstAttribute="width" constant="240" id="YSU-FH-xxM"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Uic-jJ-PVN" firstAttribute="top" secondItem="zwV-cd-S0l" secondAttribute="bottom" constant="5" id="0IJ-fk-VDK"/>
                             <constraint firstItem="wqn-ZD-zTx" firstAttribute="width" secondItem="wqn-ZD-zTx" secondAttribute="height" multiplier="1:1" id="3fG-Bb-d0i"/>
                             <constraint firstItem="wqn-ZD-zTx" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="7tL-jC-ghz"/>
+                            <constraint firstItem="bT8-EQ-b6r" firstAttribute="top" secondItem="Uic-jJ-PVN" secondAttribute="bottom" constant="8" id="BY2-IH-OX2"/>
                             <constraint firstItem="Uic-jJ-PVN" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="TDj-X9-ccD"/>
                             <constraint firstItem="Ruy-Jc-pNi" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Wtn-zO-iEK"/>
                             <constraint firstItem="rhQ-vm-Q9J" firstAttribute="firstBaseline" secondItem="wqn-ZD-zTx" secondAttribute="baseline" constant="42.5" id="ckB-PB-Pwa"/>
                             <constraint firstItem="wqn-ZD-zTx" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" constant="-97.5" id="dib-4M-LIF"/>
                             <constraint firstItem="zwV-cd-S0l" firstAttribute="top" secondItem="rhQ-vm-Q9J" secondAttribute="bottom" constant="8" id="iHE-nh-FMY"/>
+                            <constraint firstItem="bT8-EQ-b6r" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ieV-84-eA8"/>
                             <constraint firstItem="zwV-cd-S0l" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="jUO-8C-BeK"/>
                             <constraint firstItem="rhQ-vm-Q9J" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="usP-tX-t3X"/>
                             <constraint firstItem="Ruy-Jc-pNi" firstAttribute="top" secondItem="Uic-jJ-PVN" secondAttribute="bottom" constant="8" id="zYm-Ph-T9F"/>
@@ -107,6 +130,8 @@
                     </view>
                     <connections>
                         <outlet property="callControlView" destination="Ruy-Jc-pNi" id="vQY-i1-hxV"/>
+                        <outlet property="callOptionsView" destination="bT8-EQ-b6r" id="qr9-g1-fgO"/>
+                        <outlet property="customAudioDeviceSwitch" destination="dXC-8e-wfE" id="DWB-nk-qql"/>
                         <outlet property="iconView" destination="wqn-ZD-zTx" id="Wko-Lc-Lcn"/>
                         <outlet property="muteSwitch" destination="3ee-Gh-QDM" id="d1C-2s-MOF"/>
                         <outlet property="outgoingValue" destination="rhQ-vm-Q9J" id="MSu-Nc-DfV"/>
