@@ -1,16 +1,16 @@
 ## Twilio Voice Quickstart for iOS
 
-> NOTE: These sample applications use the Twilio Voice 5.x APIs. For examples using our 2.x APIs, please see the [2.x](https://github.com/twilio/voice-quickstart-swift/tree/2.x) branch. If you are using SDK 2.x, we highly recommend planning your migration to 5.0 as soon as possible. Support for 2.x will cease 1/1/2020. Until then, SDK 2.x will only receive fixes for critical or security related issues.
+> NOTE: These sample applications use the Twilio Voice 5.x APIs. For examples using our 2.x APIs, please see the [2.x](https://github.com/twilio/voice-quickstart-ios/tree/2.x) branch. If you are using SDK 2.x, we highly recommend planning your migration to 5.0 as soon as possible. Support for 2.x will cease 1/1/2020. Until then, SDK 2.x will only receive fixes for critical or security related issues.
 
 > Please see our [iOS 13 Migration Guide](https://github.com/twilio/twilio-voice-ios/blob/Releases/iOS-13-Migration-Guide.md) for the latest information on iOS 13.
 
 ## Get started with Voice on iOS:
 * [Quickstart](#quickstart) - Run the swift quickstart app
 * [Migration Guide from 4.x to 5.x](https://github.com/twilio/twilio-voice-ios/blob/Releases/iOS-13-Migration-Guide.md) - Migrating from 4.x to 5.x
-* [4.0 New Features](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/new-features-4.0.md) - New features in 4.0
-* [Migration Guide from 3.x to 4.x](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/migration-guide-3.x-4.x.md) - Migrating from 3.x to 4.x
-* [3.0 New Features](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/new-features-3.0.md) - New features in 3.0
-* [Migration Guide from 2.x to 3.x](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/migration-guide-2.x-3.x.md) - Migrating from 2.x to 3.x
+* [4.0 New Features](https://github.com/twilio/voice-quickstart-ios/blob/master/Docs/new-features-4.0.md) - New features in 4.0
+* [Migration Guide from 3.x to 4.x](https://github.com/twilio/voice-quickstart-ios/blob/master/Docs/migration-guide-3.x-4.x.md) - Migrating from 3.x to 4.x
+* [3.0 New Features](https://github.com/twilio/voice-quickstart-ios/blob/master/Docs/new-features-3.0.md) - New features in 3.0
+* [Migration Guide from 2.x to 3.x](https://github.com/twilio/voice-quickstart-ios/blob/master/Docs/migration-guide-2.x-3.x.md) - Migrating from 2.x to 3.x
 * [Access Tokens](#access-tokens) - Using access tokens
 * [Managing Audio Interruptions](#managing-audio-interruptions) - Managing audio interruptions
 * [Managing Push Credentials](#managing-push-credentials) - Managing push credentials
@@ -67,7 +67,7 @@ Note: You may need to update the [CocoaPods Master Spec Repo](https://github.com
 ### <a name="bullet2"></a>2. Create a Voice API key
 Go to the [Voice API Keys](https://www.twilio.com/console/voice/settings/api-keys) page and create a new API key:
 
-<kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/create-api-key.png"/></kbd>
+<kbd><img src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/create-api-key.png"/></kbd>
 
 **Save the generated `API_KEY` and `API_KEY_SECRET` in your notepad**. You will need them in the next step.
 
@@ -90,7 +90,7 @@ Follow the instructions in the server's README to get the application server up 
 Next, we need to create a TwiML application. A TwiML application identifies a public URL for retrieving [TwiML call control instructions](https://www.twilio.com/docs/api/twiml). When your iOS app makes a call to the Twilio cloud, Twilio will make a webhook request to this URL, your application server will respond with generated TwiML, and Twilio will execute the instructions you’ve provided.
 To create a TwiML application, go to the [TwiML app page](https://www.twilio.com/console/voice/twiml/apps). Create a new TwiML application, and use the public URL of your application server’s `/makeCall` endpoint as the Voice Request URL (If your app server is written in PHP, then you need `.php` extension at the end).
 
-<kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/create-twiml-app.png"/></kbd>
+<kbd><img src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/create-twiml-app.png"/></kbd>
 
 As you can see we’ve used our [ngrok](https://ngrok.com/) public address in the Request URL field above.
 Save your TwiML Application configuration, and grab the **TwiML Application SID** (a long identifier beginning with the characters `AP`).
@@ -126,11 +126,11 @@ class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationD
 
 Build and run the app
 
-<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/build-and-run.png"/></kbd>
+<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/build-and-run.png"/></kbd>
 
 Leave the text field empty and press the call button to start a call. You will hear the congratulatory message. Support for dialing another client or number is described in steps 11 and 12. Tap "Hang Up" to disconnect.
 
-<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/hang-up.png"/></kbd>
+<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/hang-up.png"/></kbd>
 
 ### <a name="bullet7"></a>7. Create VoIP Service Certificate
 The Programmable Voice SDK uses Apple’s VoIP Services to let your application know when it is receiving an incoming call. If you want your users to receive incoming calls, you’ll need to enable VoIP Services in your application and generate a VoIP Services Certificate.
@@ -141,14 +141,14 @@ Go to [Apple Developer portal](https://developer.apple.com/) and you’ll need t
 - Create a corresponding Provisioning Profile for your app ID.
 - Create an [Apple VoIP Services Certificate](https://developer.apple.com/library/prerelease/content/documentation/Performance/Conceptual/EnergyGuide-iOS/OptimizeVoIP.html#//apple_ref/doc/uid/TP40015243-CH30-SW1) for this app by navigating to Certificates --> Production and clicking the `+` on the top right to add the new certificate.
 
-<kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/create-voip-service-certificate.png"/></kbd>
+<kbd><img src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/create-voip-service-certificate.png"/></kbd>
 
 ### <a name="bullet8"></a>8. Create a Push Credential with your VoIP Service Certificate
 Once you have generated the VoIP Services Certificate using Keychain Access, you will need to upload it to Twilio so that Twilio can send push notifications to your app on your behalf.
 
 Export your VoIP Service Certificate as a .p12 file from Keychain Access.
 
-<kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/export_voip_cert.png"/></kbd>
+<kbd><img src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/export_voip_cert.png"/></kbd>
 
 Extract the certificate and private key from the .p12 file using the `openssl` command. 
 
@@ -165,7 +165,7 @@ Go to the [Push Credentials page](https://www.twilio.com/console/voice/sdks/cred
 
 Once the app is ready for store submission, update the plist with “APS Environment: production” and create another Push Credential with the same VoIP Certificate but without checking the sandbox option.
 
-<kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/add-push-credential.png"/></kbd>
+<kbd><img src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/add-push-credential.png"/></kbd>
 
 Now let's go back to your server code and update the Push Credential SID. The Push Credential SID will now be embedded in your access token.
 
@@ -175,7 +175,7 @@ Now let's go back to your server code and update the Push Credential SID. The Pu
 On the project’s Capabilities tab, enable “**Push Notifications**”.
 In Xcode 8 or earlier, enable both “**Voice over IP**” and “**Audio, AirPlay and Picture in Picture**” capabilities in the Background Modes
 
-<kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/xcode-project-capabilities.png"/></kbd>
+<kbd><img src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/xcode-project-capabilities.png"/></kbd>
 
 In Xcode 9+, make sure that the “**Audio, AirPlay and Picture in Picture**” capability is enabled and a "**UIBackgroundModes**" dictionary with "**audio**" and "**voip**" is in the app's plist.
 ```
@@ -189,7 +189,7 @@ In Xcode 9+, make sure that the “**Audio, AirPlay and Picture in Picture**” 
 ### <a name="bullet10"></a>10. Receive an incoming call
 You are now ready to receive incoming calls. Rebuild your app and hit your application server's **/placeCall** endpoint: `https://{YOUR_SERVER_URL}/placeCall` (If your app server is written in PHP, then you need `.php` extension at the end). This will trigger a Twilio REST API request that will make an inbound call to your mobile app. Once your app accepts the call, you should hear a congratulatory message.
 
-<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/incoming-call.png"/></kbd>
+<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/incoming-call.png"/></kbd>
 
 ### <a name="bullet11"></a>11. Make client to client call
 To make client to client calls, you need the application running on two devices. To run the application on an additional device, make sure you use a different identity in your access token when registering the new device. For example, change `kIdentity` to `bob` and run the application
@@ -202,14 +202,43 @@ let twimlParamTo = "to"
 
 Use the text field to specify the identity of the call receiver, then tap the “Call” button to make a call. The TwiML parameters used in `TwilioVoice.connect()` method should match the name used in the server.
 
-<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/client-to-client.png"/></kbd>
+<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/client-to-client.png"/></kbd>
 
 ### <a name="bullet12"></a>12. Make client to PSTN call
 A verified phone number is one that you can use as your Caller ID when making outbound calls with Twilio. This number has not been ported into Twilio and you do not pay Twilio for this phone number.
 
 To make client to number calls, first get a valid Twilio number to your account via https://www.twilio.com/console/phone-numbers/verified. Update your server code and replace the caller number variable  (`CALLER_NUMBER` or `callerNumber` depending on which server you chose) with the verified number. Restart the server so it uses the new value. Voice Request URL of your TwiML application should point to the public URL of your application server’s `/makeCall` endpoint.
 
-<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/client-to-pstn.png"/></kbd>
+<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/client-to-pstn.png"/></kbd>
+
+## <a name="custom-audio-device-example"></a> Custom Audio Device Example
+
+The `ExampleAVAudioEngineDevice` uses CoreAudio's VoiceProcessingIO audio unit to playback and record audio at up to 48KHz with built-in echo cancellation. The example uses two AVAudioEngine in manual rendering mode:
+
+1. The upstream AVAudioEngine is used for mixing the Remote Participant's audio with audio from a file. The AudioUnit receives mixed audio samples from AVAudioEngine's output node.
+2. The downstream AVAudioEngine is used for mixing the Local Participant's microphone audio with audio from a file. The Video SDK receives the mixed audio samples from the AVAudioEngine's output node.
+
+This diagram describes how `ExampleAVAudioEngineDevice` uses TwilioVideo, AVAudioEngine, and CoreAudio -
+
+<kbd><img width="600px" src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/audio-engine-example.jpg"/></kbd>
+
+Please note, `ExampleAVAudioEngineDevice` requires iOS 11.0 or above.
+
+To use the `ExampleAVAudioEngineDevice`, toggle the "Custom Audio Device" switch and then tap the "Call" button to make a call
+
+<kbd><img width="600px" src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/custom-audio-device.png"/></kbd>
+
+Note: make sure to set up the custom audio device before starting any call.
+
+```swift
+  audioDevice = ExampleAVAudioEngineDevice()
+  TwilioVoice.audioDevice = audioDevice
+  let call = TwilioVoice.connect(with: connectOptions, delegate: self)
+```
+
+If the `ExampleAVAudioEngineDevice` is used as the audio device, a "Play Music" button will appear once the call is connected. Tap the button to start playing music
+
+<kbd><img width="600px" src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/play-music.png"/></kbd>
 
 ## <a name="access-tokens"></a> Access Tokens
 
@@ -303,7 +332,7 @@ Whenever a registration is performed via `TwilioVoice.registerWithAccessToken:de
 
 If you need to change or update your credentials provided by Apple you can do so by selecting the Push Credential in the [console](https://www.twilio.com/console/voice/sdks/credentials) and adding your new `certificate` and `private key` in the text box provided on the Push Credential page shown below:
 
-<kbd><img height="667px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/update_push_credential.png"/></kbd>
+<kbd><img height="667px" src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/update_push_credential.png"/></kbd>
 
 ### Deleting a Push Credential
 
@@ -333,7 +362,7 @@ To learn more about how to use TwiML and the Programmable Voice Calls API, check
 * [TwiML Quickstart for C#](https://www.twilio.com/docs/quickstart/csharp/twiml)
 
 ## Issues and Support
-Please file any issues you find here on Github: [Voice Swift Quickstart](https://github.com/twilio/voice-quickstart-swift).
+Please file any issues you find here on Github: [Voice Swift Quickstart](https://github.com/twilio/voice-quickstart-ios).
 Please ensure that you are not sharing any
 [Personally Identifiable Information(PII)](https://www.twilio.com/docs/glossary/what-is-personally-identifiable-information-pii)
 or sensitive account information (API keys, credentials, etc.) when reporting an issue.
