@@ -27,6 +27,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var callControlView: UIView!
     @IBOutlet weak var muteSwitch: UISwitch!
     @IBOutlet weak var speakerSwitch: UISwitch!
+    @IBOutlet weak var playMusicButton: UIButton!
     @IBOutlet weak var callOptionsView: UIView!
     @IBOutlet weak var customAudioDeviceSwitch: UISwitch!
     
@@ -36,7 +37,7 @@ class ViewController: UIViewController {
     var incomingAlertController: UIAlertController?
 
     var callKitCompletionCallback: ((Bool) -> Void)? = nil
-    var audioDevice = TVODefaultAudioDevice()
+    var audioDevice : TVOAudioDevice = TVODefaultAudioDevice()
     var activeCallInvites: [String: TVOCallInvite]! = [:]
     var activeCalls: [String: TVOCall]! = [:]
     
@@ -109,6 +110,11 @@ class ViewController: UIViewController {
         muteSwitch.isOn = !showCallControl;
         speakerSwitch.isOn = showCallControl;
         callOptionsView.isHidden = showCallControl;
+        if #available(iOS 11.0, *) {
+            playMusicButton.isHidden = !(audioDevice is ExampleAVAudioEngineDevice)
+        } else {
+            playMusicButton.isHidden = true
+        }
     }
 
     func showMicrophoneAccessRequest(_ uuid: UUID, _ handle: String) {
@@ -188,26 +194,46 @@ class ViewController: UIViewController {
         toggleAudioRoute(toSpeaker: sender.isOn)
     }
     
+    @IBAction func customAudioDeviceToggled(_ sender: UISwitch) {
+        if sender.isOn {
+            if #available(iOS 11.0, *) {
+                audioDevice = ExampleAVAudioEngineDevice()
+                TwilioVoice.audioDevice = audioDevice
+            }
+        }
+    }
+    
+    @IBAction func playMusic(_ sender: UIButton) {
+        if #available(iOS 11.0, *) {
+            if audioDevice is ExampleAVAudioEngineDevice {
+                let device = audioDevice as! ExampleAVAudioEngineDevice
+                device.playMusic()
+            }
+        }
+    }
     
     // MARK: AVAudioSession
     
     func toggleAudioRoute(toSpeaker: Bool) {
         // The mode set by the Voice SDK is "VoiceChat" so the default audio route is the built-in receiver. Use port override to switch the route.
-        audioDevice.block = {
-            kTVODefaultAVAudioSessionConfigurationBlock()
-            
-            do {
-                if toSpeaker {
-                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
-                } else {
-                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+        if audioDevice is TVODefaultAudioDevice {
+            let device = audioDevice as! TVODefaultAudioDevice
+            device.block = {
+                kTVODefaultAVAudioSessionConfigurationBlock()
+                
+                do {
+                    if toSpeaker {
+                        try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+                    } else {
+                        try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
+                    }
+                } catch {
+                    NSLog(error.localizedDescription)
                 }
-            } catch {
-                NSLog(error.localizedDescription)
             }
+            
+            device.block()
         }
-        
-        audioDevice.block()
     }
     
     
@@ -483,7 +509,10 @@ extension ViewController: TVOCallDelegate {
 extension ViewController: CXProviderDelegate {
     func providerDidReset(_ provider: CXProvider) {
         NSLog("providerDidReset:")
-        audioDevice.isEnabled = true
+        if audioDevice is TVODefaultAudioDevice {
+            let device = audioDevice as! TVODefaultAudioDevice
+            device.isEnabled = true
+        }
     }
 
     func providerDidBegin(_ provider: CXProvider) {
@@ -492,7 +521,10 @@ extension ViewController: CXProviderDelegate {
 
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
         NSLog("provider:didActivateAudioSession:")
-        audioDevice.isEnabled = true
+        if audioDevice is TVODefaultAudioDevice {
+            let device = audioDevice as! TVODefaultAudioDevice
+            device.isEnabled = true
+        }
     }
 
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
@@ -509,8 +541,11 @@ extension ViewController: CXProviderDelegate {
         toggleUIState(isEnabled: false, showCallControl: false)
         startSpin()
 
-        audioDevice.isEnabled = false
-        audioDevice.block()
+        if audioDevice is TVODefaultAudioDevice {
+            let device = audioDevice as! TVODefaultAudioDevice
+            device.isEnabled = false
+            device.block()
+        }
         
         provider.reportOutgoingCall(with: action.callUUID, startedConnectingAt: Date())
         
@@ -527,8 +562,11 @@ extension ViewController: CXProviderDelegate {
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         NSLog("provider:performAnswerCallAction:")
         
-        audioDevice.isEnabled = false
-        audioDevice.block()
+        if audioDevice is TVODefaultAudioDevice {
+            let device = audioDevice as! TVODefaultAudioDevice
+            device.isEnabled = false
+            device.block()
+        }
         
         performAnswerVoiceCall(uuid: action.callUUID) { success in
             if success {

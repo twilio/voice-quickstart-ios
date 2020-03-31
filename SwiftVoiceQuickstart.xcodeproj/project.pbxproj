@@ -14,6 +14,8 @@
 		24BA34411D874AC800B0B4F7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343F1D874AC800B0B4F7 /* LaunchScreen.storyboard */; };
 		24BA34491D874BBD00B0B4F7 /* TwilioLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */; };
 		8F6BABF92399B2F00030BE4F /* ringtone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8F6BABF82399B2F00030BE4F /* ringtone.wav */; };
+		8FE7479A2432A5040028B073 /* mixLoop.caf in Resources */ = {isa = PBXBuildFile; fileRef = 8FE747972432A5040028B073 /* mixLoop.caf */; };
+		8FE7479B2432A5040028B073 /* ExampleAVAudioEngineDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FE747992432A5040028B073 /* ExampleAVAudioEngineDevice.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +29,10 @@
 		24BA34481D874BBD00B0B4F7 /* TwilioLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TwilioLogo.png; sourceTree = "<group>"; };
 		8F6BABF82399B2F00030BE4F /* ringtone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringtone.wav; sourceTree = "<group>"; };
 		8FAD20B72332DC3900E5B42F /* SwiftVoiceQuickstart.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftVoiceQuickstart.entitlements; sourceTree = "<group>"; };
+		8FE747962432A5040028B073 /* ExampleAVAudioEngineDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleAVAudioEngineDevice.h; sourceTree = "<group>"; };
+		8FE747972432A5040028B073 /* mixLoop.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = mixLoop.caf; sourceTree = "<group>"; };
+		8FE747982432A5040028B073 /* AudioDevices-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AudioDevices-Bridging-Header.h"; sourceTree = "<group>"; };
+		8FE747992432A5040028B073 /* ExampleAVAudioEngineDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleAVAudioEngineDevice.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D1B28503CCEC75B1CA06C3B /* Pods_TwilioVoice_SwiftVoiceQuickstart.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,6 +51,7 @@
 			isa = PBXGroup;
 			children = (
 				24BA34351D874AC800B0B4F7 /* SwiftVoiceQuickstart */,
+				8FE747952432A5040028B073 /* AudioDevices */,
 				8F6BABF72399B2F00030BE4F /* ringtone */,
 				24BA34341D874AC800B0B4F7 /* Products */,
 				55E4DD2B129E858377D08E95 /* Pods */,
@@ -94,6 +102,17 @@
 				8F6BABF82399B2F00030BE4F /* ringtone.wav */,
 			);
 			path = ringtone;
+			sourceTree = "<group>";
+		};
+		8FE747952432A5040028B073 /* AudioDevices */ = {
+			isa = PBXGroup;
+			children = (
+				8FE747962432A5040028B073 /* ExampleAVAudioEngineDevice.h */,
+				8FE747972432A5040028B073 /* mixLoop.caf */,
+				8FE747982432A5040028B073 /* AudioDevices-Bridging-Header.h */,
+				8FE747992432A5040028B073 /* ExampleAVAudioEngineDevice.m */,
+			);
+			path = AudioDevices;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -167,6 +186,7 @@
 				24BA34411D874AC800B0B4F7 /* LaunchScreen.storyboard in Resources */,
 				24BA343E1D874AC800B0B4F7 /* Assets.xcassets in Resources */,
 				24BA34491D874BBD00B0B4F7 /* TwilioLogo.png in Resources */,
+				8FE7479A2432A5040028B073 /* mixLoop.caf in Resources */,
 				8F6BABF92399B2F00030BE4F /* ringtone.wav in Resources */,
 				24BA343C1D874AC800B0B4F7 /* Main.storyboard in Resources */,
 			);
@@ -181,6 +201,7 @@
 			files = (
 				24BA34391D874AC800B0B4F7 /* ViewController.swift in Sources */,
 				24BA34371D874AC800B0B4F7 /* AppDelegate.swift in Sources */,
+				8FE7479B2432A5040028B073 /* ExampleAVAudioEngineDevice.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

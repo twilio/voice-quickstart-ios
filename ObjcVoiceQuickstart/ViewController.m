@@ -7,6 +7,7 @@
 
 #import "AppDelegate.h"
 #import "ViewController.h"
+#import "ExampleAVAudioEngineDevice.h"
 
 @import AVFoundation;
 @import PushKit;
@@ -44,6 +45,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 @property (weak, nonatomic) IBOutlet UIView *callControlView;
 @property (weak, nonatomic) IBOutlet UISwitch *muteSwitch;
 @property (weak, nonatomic) IBOutlet UISwitch *speakerSwitch;
+@property (weak, nonatomic) IBOutlet UIButton *playMusicButton;
 @property (weak, nonatomic) IBOutlet UIView *callOptionsView;
 @property (weak, nonatomic) IBOutlet UISwitch *customAudioDeviceSwitch;
 
@@ -199,6 +201,17 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     self.muteSwitch.on = !showCallControl;
     self.speakerSwitch.on = showCallControl;
     self.callOptionsView.hidden = showCallControl;
+    self.playMusicButton.hidden = ![self.audioDevice isKindOfClass:[ExampleAVAudioEngineDevice class]];
+}
+
+- (IBAction)customAudioDeviceToggled:(UISwitch *)sender {
+    if (sender.on) {
+        self.audioDevice = [ExampleAVAudioEngineDevice new];
+    } else {
+        self.audioDevice = [TVODefaultAudioDevice audioDevice];
+    }
+
+    TwilioVoice.audioDevice = self.audioDevice;
 }
 
 - (IBAction)muteSwitchToggled:(UISwitch *)sender {
@@ -216,6 +229,12 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [self.outgoingValue resignFirstResponder];
     return YES;
+}
+
+- (IBAction)playMusic:(UIButton *)sender {
+    if ([self.audioDevice isKindOfClass:[ExampleAVAudioEngineDevice class]]) {
+        [((ExampleAVAudioEngineDevice *)self.audioDevice) playMusic];
+    }
 }
 
 #pragma mark - PushKitEventDelegate
@@ -432,25 +451,27 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 
 #pragma mark - AVAudioSession
 - (void)toggleAudioRoute:(BOOL)toSpeaker {
-    // The mode set by the Voice SDK is "VoiceChat" so the default audio route is the built-in receiver. Use port override to switch the route.
-    self.audioDevice.block =  ^ {
-        // We will execute `kDefaultAVAudioSessionConfigurationBlock` first.
-        kTVODefaultAVAudioSessionConfigurationBlock();
-        
-        // Overwrite the audio route
-        AVAudioSession *session = [AVAudioSession sharedInstance];
-        NSError *error = nil;
-        if (toSpeaker) {
-            if (![session overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error]) {
-                NSLog(@"Unable to reroute audio: %@", [error localizedDescription]);
+    if ([self.audioDevice isKindOfClass:[TVODefaultAudioDevice class]]) {
+        // The mode set by the Voice SDK is "VoiceChat" so the default audio route is the built-in receiver. Use port override to switch the route.
+        self.audioDevice.block =  ^ {
+            // We will execute `kDefaultAVAudioSessionConfigurationBlock` first.
+            kTVODefaultAVAudioSessionConfigurationBlock();
+            
+            // Overwrite the audio route
+            AVAudioSession *session = [AVAudioSession sharedInstance];
+            NSError *error = nil;
+            if (toSpeaker) {
+                if (![session overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error]) {
+                    NSLog(@"Unable to reroute audio: %@", [error localizedDescription]);
+                }
+            } else {
+                if (![session overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:&error]) {
+                    NSLog(@"Unable to reroute audio: %@", [error localizedDescription]);
+                }
             }
-        } else {
-            if (![session overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:&error]) {
-                NSLog(@"Unable to reroute audio: %@", [error localizedDescription]);
-            }
-        }
-    };
-    self.audioDevice.block();
+        };
+        self.audioDevice.block();
+    }
 }
 
 #pragma mark - Icon spinning
@@ -490,7 +511,9 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 #pragma mark - CXProviderDelegate
 - (void)providerDidReset:(CXProvider *)provider {
     NSLog(@"providerDidReset:");
-    self.audioDevice.enabled = YES;
+    if ([self.audioDevice isKindOfClass:[TVODefaultAudioDevice class]]) {
+        self.audioDevice.enabled = YES;
+    }
 }
 
 - (void)providerDidBegin:(CXProvider *)provider {
@@ -499,7 +522,9 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 
 - (void)provider:(CXProvider *)provider didActivateAudioSession:(AVAudioSession *)audioSession {
     NSLog(@"provider:didActivateAudioSession:");
-    self.audioDevice.enabled = YES;
+    if ([self.audioDevice isKindOfClass:[TVODefaultAudioDevice class]]) {
+        self.audioDevice.enabled = YES;
+    }
 }
 
 - (void)provider:(CXProvider *)provider didDeactivateAudioSession:(AVAudioSession *)audioSession {
@@ -516,8 +541,10 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     [self toggleUIState:NO showCallControl:NO];
     [self startSpin];
 
-    self.audioDevice.enabled = NO;
-    self.audioDevice.block();
+    if ([self.audioDevice isKindOfClass:[TVODefaultAudioDevice class]]) {
+        self.audioDevice.enabled = NO;
+        self.audioDevice.block();
+    }
     
     [self.callKitProvider reportOutgoingCallWithUUID:action.callUUID startedConnectingAtDate:[NSDate date]];
     
@@ -536,8 +563,10 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 - (void)provider:(CXProvider *)provider performAnswerCallAction:(CXAnswerCallAction *)action {
     NSLog(@"provider:performAnswerCallAction:");
     
-    self.audioDevice.enabled = NO;
-    self.audioDevice.block();
+    if ([self.audioDevice isKindOfClass:[TVODefaultAudioDevice class]]) {
+        self.audioDevice.enabled = NO;
+        self.audioDevice.block();
+    }
     
     [self performAnswerVoiceCallWithUUID:action.callUUID completion:^(BOOL success) {
         if (success) {
