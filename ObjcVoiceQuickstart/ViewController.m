@@ -511,9 +511,9 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 #pragma mark - CXProviderDelegate
 - (void)providerDidReset:(CXProvider *)provider {
     NSLog(@"providerDidReset:");
-    if ([self.audioDevice isKindOfClass:[TVODefaultAudioDevice class]]) {
+//    if ([self.audioDevice isKindOfClass:[TVODefaultAudioDevice class]]) {
         self.audioDevice.enabled = YES;
-    }
+//    }
 }
 
 - (void)providerDidBegin:(CXProvider *)provider {
@@ -522,9 +522,9 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 
 - (void)provider:(CXProvider *)provider didActivateAudioSession:(AVAudioSession *)audioSession {
     NSLog(@"provider:didActivateAudioSession:");
-    if ([self.audioDevice isKindOfClass:[TVODefaultAudioDevice class]]) {
+//    if ([self.audioDevice isKindOfClass:[TVODefaultAudioDevice class]]) {
         self.audioDevice.enabled = YES;
-    }
+//    }
 }
 
 - (void)provider:(CXProvider *)provider didDeactivateAudioSession:(AVAudioSession *)audioSession {
@@ -541,8 +541,9 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     [self toggleUIState:NO showCallControl:NO];
     [self startSpin];
 
+    self.audioDevice.enabled = NO;
     if ([self.audioDevice isKindOfClass:[TVODefaultAudioDevice class]]) {
-        self.audioDevice.enabled = NO;
+//        self.audioDevice.enabled = NO;
         self.audioDevice.block();
     }
     
@@ -563,8 +564,9 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 - (void)provider:(CXProvider *)provider performAnswerCallAction:(CXAnswerCallAction *)action {
     NSLog(@"provider:performAnswerCallAction:");
     
+    self.audioDevice.enabled = NO;
     if ([self.audioDevice isKindOfClass:[TVODefaultAudioDevice class]]) {
-        self.audioDevice.enabled = NO;
+//        self.audioDevice.enabled = NO;
         self.audioDevice.block();
     }
     

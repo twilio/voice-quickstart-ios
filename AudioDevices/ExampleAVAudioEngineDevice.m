@@ -101,6 +101,9 @@ static size_t kMaximumFramesPerBuffer = 3072;
     self = [super init];
 
     if (self) {
+        // By default audio device is enabled
+        _enabled = true;
+
         /*
          * Initialize rendering and capturing context. The deviceContext will be be filled in when startRendering or
          * startCapturing gets called.
@@ -188,6 +191,25 @@ static size_t kMaximumFramesPerBuffer = 3072;
 
 - (BOOL)setupAudioEngine {
     return [self setupPlayoutAudioEngine] && [self setupRecordAudioEngine];
+}
+
+- (void)setEnabled:(BOOL)enabled {
+    @synchronized(self) {
+        if (enabled) {
+            // If the worker block is executed, then context is guaranteed to be valid.
+            TVOAudioDeviceContext context = [self deviceContext];
+            if (context) {
+                TVOAudioDeviceExecuteWorkerBlock(context, ^{
+                    _enabled = enabled;
+
+                    if (self.audioUnit) {
+                        [self teardownAudioUnit];
+                        [self startAudioUnit];
+                    }
+                });
+            }
+        }
+    }
 }
 
 - (BOOL)setupRecordAudioEngine {
@@ -481,7 +503,7 @@ static size_t kMaximumFramesPerBuffer = 3072;
          * call backs. We will restart the audio unit if a remote participant adds an audio track after the audio graph is
          * established. Also we will re-establish the audio graph in case the format changes.
          */
-        if (_audioUnit) {
+        if (_audioUnit && _enabled) {
             [self stopAudioUnit];
             [self teardownAudioUnit];
         }
@@ -527,8 +549,10 @@ static size_t kMaximumFramesPerBuffer = 3072;
                 }
             });
 
-            [self stopAudioUnit];
-            [self teardownAudioUnit];
+            if (_enabled) {
+                [self stopAudioUnit];
+                [self teardownAudioUnit];
+            }
         }
 
         self.renderingContext->deviceContext = NULL;
@@ -574,7 +598,7 @@ static size_t kMaximumFramesPerBuffer = 3072;
     @synchronized (self) {
 
         // Restart the audio unit if the audio graph is alreay setup and if we publish an audio track.
-        if (_audioUnit) {
+        if (_audioUnit && _enabled) {
             [self stopAudioUnit];
             [self teardownAudioUnit];
         }
@@ -621,8 +645,10 @@ static size_t kMaximumFramesPerBuffer = 3072;
                 }
             });
 
-            [self stopAudioUnit];
-            [self teardownAudioUnit];
+            if (_enabled) {
+                [self stopAudioUnit];
+                [self teardownAudioUnit];
+            }
         }
 
         self.capturingContext->deviceContext = NULL;

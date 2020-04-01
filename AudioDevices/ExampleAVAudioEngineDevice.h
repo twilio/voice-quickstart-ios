@@ -10,6 +10,8 @@
 NS_CLASS_AVAILABLE(NA, 11_0)
 @interface ExampleAVAudioEngineDevice : NSObject <TVOAudioDevice>
 
+@property (nonatomic, assign, getter=isEnabled) BOOL enabled;
+
 - (void)playMusic;
 
 @end
