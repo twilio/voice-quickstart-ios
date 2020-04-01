@@ -110,11 +110,7 @@ class ViewController: UIViewController {
         muteSwitch.isOn = !showCallControl;
         speakerSwitch.isOn = showCallControl;
         callOptionsView.isHidden = showCallControl;
-        if #available(iOS 11.0, *) {
-            playMusicButton.isHidden = !(audioDevice is ExampleAVAudioEngineDevice)
-        } else {
-            playMusicButton.isHidden = true
-        }
+        playMusicButton.isHidden = !(audioDevice is ExampleAVAudioEngineDevice)
     }
 
     func showMicrophoneAccessRequest(_ uuid: UUID, _ handle: String) {
@@ -196,17 +192,13 @@ class ViewController: UIViewController {
     
     @IBAction func customAudioDeviceToggled(_ sender: UISwitch) {
         if sender.isOn {
-            if #available(iOS 11.0, *) {
-                audioDevice = ExampleAVAudioEngineDevice()
-                TwilioVoice.audioDevice = audioDevice
-            }
+            audioDevice = ExampleAVAudioEngineDevice()
+            TwilioVoice.audioDevice = audioDevice
         }
     }
     
     @IBAction func playMusic(_ sender: UIButton) {
-        if #available(iOS 11.0, *) {
-            (audioDevice as? ExampleAVAudioEngineDevice)?.playMusic()
-        }
+        (audioDevice as? ExampleAVAudioEngineDevice)?.playMusic()
     }
     
     // MARK: AVAudioSession
@@ -225,6 +217,12 @@ class ViewController: UIViewController {
             }
             
             device.block()
+        } else {
+            do {
+                try AVAudioSession.sharedInstance().overrideOutputAudioPort(toSpeaker ? .speaker : .none)
+            } catch {
+                NSLog(error.localizedDescription)
+            }
         }
     }
     
@@ -501,7 +499,11 @@ extension ViewController: TVOCallDelegate {
 extension ViewController: CXProviderDelegate {
     func providerDidReset(_ provider: CXProvider) {
         NSLog("providerDidReset:")
-        (audioDevice as? TVODefaultAudioDevice)?.isEnabled = true
+        if let device = audioDevice as? TVODefaultAudioDevice {
+            device.isEnabled = true
+        } else if let device = audioDevice as? ExampleAVAudioEngineDevice {
+            device.isEnabled = true
+        }
     }
 
     func providerDidBegin(_ provider: CXProvider) {
@@ -510,7 +512,11 @@ extension ViewController: CXProviderDelegate {
 
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
         NSLog("provider:didActivateAudioSession:")
-        (audioDevice as? TVODefaultAudioDevice)?.isEnabled = true
+        if let device = audioDevice as? TVODefaultAudioDevice {
+            device.isEnabled = true
+        } else if let device = audioDevice as? ExampleAVAudioEngineDevice {
+            device.isEnabled = true
+        }
     }
 
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
@@ -530,6 +536,8 @@ extension ViewController: CXProviderDelegate {
         if let device = audioDevice as? TVODefaultAudioDevice {
             device.isEnabled = false
             device.block()
+        } else if let device = audioDevice as? ExampleAVAudioEngineDevice {
+            device.isEnabled = false
         }
         
         provider.reportOutgoingCall(with: action.callUUID, startedConnectingAt: Date())
@@ -550,6 +558,8 @@ extension ViewController: CXProviderDelegate {
         if let device = audioDevice as? TVODefaultAudioDevice {
             device.isEnabled = false
             device.block()
+        } else if let device = audioDevice as? ExampleAVAudioEngineDevice {
+            device.isEnabled = false
         }
         
         performAnswerVoiceCall(uuid: action.callUUID) { success in

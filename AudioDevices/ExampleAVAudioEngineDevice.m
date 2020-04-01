@@ -804,7 +804,7 @@ static OSStatus ExampleAVAudioEngineDeviceRecordCallback(void *refCon,
         NSLog(@"Error setting session category: %@", error);
     }
 
-    if (![session setMode:AVAudioSessionModeVideoChat error:&error]) {
+    if (![session setMode:AVAudioSessionModeVoiceChat error:&error]) {
         NSLog(@"Error setting session category: %@", error);
     }
 

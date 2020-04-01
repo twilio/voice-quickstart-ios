@@ -196,17 +196,27 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 
 - (void)toggleUIState:(BOOL)isEnabled showCallControl:(BOOL)showCallControl {
     self.placeCallButton.enabled = isEnabled;
-    self.customAudioDeviceSwitch.enabled = isEnabled;
+    if (@available(iOS 11.0, *)) {
+        self.customAudioDeviceSwitch.enabled = isEnabled;
+    } else {
+        self.customAudioDeviceSwitch.hidden = YES;
+    }
     self.callControlView.hidden = !showCallControl;
     self.muteSwitch.on = !showCallControl;
     self.speakerSwitch.on = showCallControl;
     self.callOptionsView.hidden = showCallControl;
-    self.playMusicButton.hidden = ![self.audioDevice isKindOfClass:[ExampleAVAudioEngineDevice class]];
+    if (@available(iOS 11.0, *)) {
+        self.playMusicButton.hidden = ![self.audioDevice isKindOfClass:[ExampleAVAudioEngineDevice class]];
+    } else {
+        self.playMusicButton.hidden = YES;
+    }
 }
 
 - (IBAction)customAudioDeviceToggled:(UISwitch *)sender {
     if (sender.on) {
-        self.audioDevice = [ExampleAVAudioEngineDevice new];
+        if (@available(iOS 11.0, *)) {
+            self.audioDevice = [ExampleAVAudioEngineDevice new];
+        }
     } else {
         self.audioDevice = [TVODefaultAudioDevice audioDevice];
     }
@@ -232,8 +242,10 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 }
 
 - (IBAction)playMusic:(UIButton *)sender {
-    if ([self.audioDevice isKindOfClass:[ExampleAVAudioEngineDevice class]]) {
-        [((ExampleAVAudioEngineDevice *)self.audioDevice) playMusic];
+    if (@available(iOS 11.0, *)) {
+        if ([self.audioDevice isKindOfClass:[ExampleAVAudioEngineDevice class]]) {
+            [((ExampleAVAudioEngineDevice *)self.audioDevice) playMusic];
+        }
     }
 }
 
@@ -460,17 +472,17 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
             // Overwrite the audio route
             AVAudioSession *session = [AVAudioSession sharedInstance];
             NSError *error = nil;
-            if (toSpeaker) {
-                if (![session overrideOutputAudioPort:AVAudioSessionPortOverrideSpeaker error:&error]) {
-                    NSLog(@"Unable to reroute audio: %@", [error localizedDescription]);
-                }
-            } else {
-                if (![session overrideOutputAudioPort:AVAudioSessionPortOverrideNone error:&error]) {
-                    NSLog(@"Unable to reroute audio: %@", [error localizedDescription]);
-                }
+            if (![session overrideOutputAudioPort:(toSpeaker)? AVAudioSessionPortOverrideSpeaker : AVAudioSessionPortOverrideNone error:&error]) {
+                NSLog(@"Unable to reroute audio: %@", [error localizedDescription]);
             }
         };
         self.audioDevice.block();
+    } else {
+        AVAudioSession *session = [AVAudioSession sharedInstance];
+        NSError *error = nil;
+        if (![session overrideOutputAudioPort:(toSpeaker)? AVAudioSessionPortOverrideSpeaker : AVAudioSessionPortOverrideNone error:&error]) {
+            NSLog(@"Unable to reroute audio: %@", [error localizedDescription]);
+        }
     }
 }
 
@@ -511,9 +523,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 #pragma mark - CXProviderDelegate
 - (void)providerDidReset:(CXProvider *)provider {
     NSLog(@"providerDidReset:");
-//    if ([self.audioDevice isKindOfClass:[TVODefaultAudioDevice class]]) {
-        self.audioDevice.enabled = YES;
-//    }
+    self.audioDevice.enabled = YES;
 }
 
 - (void)providerDidBegin:(CXProvider *)provider {
@@ -522,9 +532,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 
 - (void)provider:(CXProvider *)provider didActivateAudioSession:(AVAudioSession *)audioSession {
     NSLog(@"provider:didActivateAudioSession:");
-//    if ([self.audioDevice isKindOfClass:[TVODefaultAudioDevice class]]) {
-        self.audioDevice.enabled = YES;
-//    }
+    self.audioDevice.enabled = YES;
 }
 
 - (void)provider:(CXProvider *)provider didDeactivateAudioSession:(AVAudioSession *)audioSession {
@@ -543,7 +551,6 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 
     self.audioDevice.enabled = NO;
     if ([self.audioDevice isKindOfClass:[TVODefaultAudioDevice class]]) {
-//        self.audioDevice.enabled = NO;
         self.audioDevice.block();
     }
     
@@ -566,7 +573,6 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     
     self.audioDevice.enabled = NO;
     if ([self.audioDevice isKindOfClass:[TVODefaultAudioDevice class]]) {
-//        self.audioDevice.enabled = NO;
         self.audioDevice.block();
     }
     
