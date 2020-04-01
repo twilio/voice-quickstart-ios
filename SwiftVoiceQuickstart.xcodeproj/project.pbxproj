@@ -108,9 +108,9 @@
 			isa = PBXGroup;
 			children = (
 				8FE747962432A5040028B073 /* ExampleAVAudioEngineDevice.h */,
-				8FE747972432A5040028B073 /* mixLoop.caf */,
-				8FE747982432A5040028B073 /* AudioDevices-Bridging-Header.h */,
 				8FE747992432A5040028B073 /* ExampleAVAudioEngineDevice.m */,
+				8FE747982432A5040028B073 /* AudioDevices-Bridging-Header.h */,
+				8FE747972432A5040028B073 /* mixLoop.caf */,
 			);
 			path = AudioDevices;
 			sourceTree = "<group>";
@@ -331,6 +331,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.SwiftVoiceQuickstart;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "AudioDevices/AudioDevices-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
@@ -346,6 +347,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.SwiftVoiceQuickstart;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "AudioDevices/AudioDevices-Bridging-Header.h";
 				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
