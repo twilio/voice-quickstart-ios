@@ -37,7 +37,7 @@ class ViewController: UIViewController {
     var incomingAlertController: UIAlertController?
 
     var callKitCompletionCallback: ((Bool) -> Void)? = nil
-    var audioDevice : TVOAudioDevice = TVODefaultAudioDevice()
+    var audioDevice: TVOAudioDevice = TVODefaultAudioDevice()
     var activeCallInvites: [String: TVOCallInvite]! = [:]
     var activeCalls: [String: TVOCall]! = [:]
     
