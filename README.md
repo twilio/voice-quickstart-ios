@@ -216,9 +216,9 @@ To make client to number calls, first get a valid Twilio number to your account 
 The `ExampleAVAudioEngineDevice` uses CoreAudio's VoiceProcessingIO audio unit to playback and record audio at up to 48KHz with built-in echo cancellation. The example uses two AVAudioEngine in manual rendering mode:
 
 1. The upstream AVAudioEngine is used for mixing the Remote Participant's audio with audio from a file. The AudioUnit receives mixed audio samples from AVAudioEngine's output node.
-2. The downstream AVAudioEngine is used for mixing the Local Participant's microphone audio with audio from a file. The Video SDK receives the mixed audio samples from the AVAudioEngine's output node.
+2. The downstream AVAudioEngine is used for mixing the Local Participant's microphone audio with audio from a file. The Voice SDK receives the mixed audio samples from the AVAudioEngine's output node.
 
-This diagram describes how `ExampleAVAudioEngineDevice` uses TwilioVideo, AVAudioEngine, and CoreAudio -
+This diagram describes how `ExampleAVAudioEngineDevice` uses TwilioVoice, AVAudioEngine, and CoreAudio -
 
 <kbd><img width="600px" src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/audio-engine-example.jpg"/></kbd>
 
