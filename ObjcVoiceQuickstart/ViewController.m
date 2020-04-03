@@ -196,27 +196,17 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 
 - (void)toggleUIState:(BOOL)isEnabled showCallControl:(BOOL)showCallControl {
     self.placeCallButton.enabled = isEnabled;
-    if (@available(iOS 11.0, *)) {
-        self.customAudioDeviceSwitch.enabled = isEnabled;
-    } else {
-        self.customAudioDeviceSwitch.hidden = YES;
-    }
+    self.customAudioDeviceSwitch.enabled = isEnabled;
+    self.playMusicButton.hidden = ![self.audioDevice isKindOfClass:[ExampleAVAudioEngineDevice class]];
     self.callControlView.hidden = !showCallControl;
     self.muteSwitch.on = !showCallControl;
     self.speakerSwitch.on = showCallControl;
     self.callOptionsView.hidden = showCallControl;
-    if (@available(iOS 11.0, *)) {
-        self.playMusicButton.hidden = ![self.audioDevice isKindOfClass:[ExampleAVAudioEngineDevice class]];
-    } else {
-        self.playMusicButton.hidden = YES;
-    }
 }
 
 - (IBAction)customAudioDeviceToggled:(UISwitch *)sender {
     if (sender.on) {
-        if (@available(iOS 11.0, *)) {
-            self.audioDevice = [ExampleAVAudioEngineDevice new];
-        }
+        self.audioDevice = [ExampleAVAudioEngineDevice new];
     } else {
         self.audioDevice = [TVODefaultAudioDevice audioDevice];
     }
@@ -242,10 +232,8 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 }
 
 - (IBAction)playMusic:(UIButton *)sender {
-    if (@available(iOS 11.0, *)) {
-        if ([self.audioDevice isKindOfClass:[ExampleAVAudioEngineDevice class]]) {
-            [((ExampleAVAudioEngineDevice *)self.audioDevice) playMusic];
-        }
+    if ([self.audioDevice isKindOfClass:[ExampleAVAudioEngineDevice class]]) {
+        [((ExampleAVAudioEngineDevice *)self.audioDevice) playMusic];
     }
 }
 
