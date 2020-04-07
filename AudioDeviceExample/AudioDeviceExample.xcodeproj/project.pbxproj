@@ -3,27 +3,31 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		8F09DB87243D1ACE00C6994E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F09DB86243D1ACE00C6994E /* AppDelegate.swift */; };
-		8F09DB89243D1ACE00C6994E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F09DB88243D1ACE00C6994E /* SceneDelegate.swift */; };
 		8F09DB8B243D1ACE00C6994E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F09DB8A243D1ACE00C6994E /* ViewController.swift */; };
 		8F09DB8E243D1ACE00C6994E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F09DB8C243D1ACE00C6994E /* Main.storyboard */; };
 		8F09DB90243D1AD300C6994E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F09DB8F243D1AD300C6994E /* Assets.xcassets */; };
 		8F09DB93243D1AD300C6994E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F09DB91243D1AD300C6994E /* LaunchScreen.storyboard */; };
+		8F09DB9F243D202500C6994E /* mixLoop.caf in Resources */ = {isa = PBXBuildFile; fileRef = 8F09DB9C243D202500C6994E /* mixLoop.caf */; };
+		8F09DBA0243D202500C6994E /* ExampleAVAudioEngineDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 8F09DB9E243D202500C6994E /* ExampleAVAudioEngineDevice.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		8F09DB83243D1ACE00C6994E /* AudioDeviceExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioDeviceExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F09DB86243D1ACE00C6994E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8F09DB88243D1ACE00C6994E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		8F09DB8A243D1ACE00C6994E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		8F09DB8D243D1ACE00C6994E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8F09DB8F243D1AD300C6994E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8F09DB92243D1AD300C6994E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8F09DB94243D1AD300C6994E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8F09DB9B243D202500C6994E /* ExampleAVAudioEngineDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleAVAudioEngineDevice.h; sourceTree = "<group>"; };
+		8F09DB9C243D202500C6994E /* mixLoop.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = mixLoop.caf; sourceTree = "<group>"; };
+		8F09DB9D243D202500C6994E /* AudioDevices-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AudioDevices-Bridging-Header.h"; sourceTree = "<group>"; };
+		8F09DB9E243D202500C6994E /* ExampleAVAudioEngineDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleAVAudioEngineDevice.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +45,7 @@
 			isa = PBXGroup;
 			children = (
 				8F09DB85243D1ACE00C6994E /* AudioDeviceExample */,
+				8F09DB9A243D202500C6994E /* AudioDevices */,
 				8F09DB84243D1ACE00C6994E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -57,7 +62,6 @@
 			isa = PBXGroup;
 			children = (
 				8F09DB86243D1ACE00C6994E /* AppDelegate.swift */,
-				8F09DB88243D1ACE00C6994E /* SceneDelegate.swift */,
 				8F09DB8A243D1ACE00C6994E /* ViewController.swift */,
 				8F09DB8C243D1ACE00C6994E /* Main.storyboard */,
 				8F09DB8F243D1AD300C6994E /* Assets.xcassets */,
@@ -65,6 +69,18 @@
 				8F09DB94243D1AD300C6994E /* Info.plist */,
 			);
 			path = AudioDeviceExample;
+			sourceTree = "<group>";
+		};
+		8F09DB9A243D202500C6994E /* AudioDevices */ = {
+			isa = PBXGroup;
+			children = (
+				8F09DB9B243D202500C6994E /* ExampleAVAudioEngineDevice.h */,
+				8F09DB9E243D202500C6994E /* ExampleAVAudioEngineDevice.m */,
+				8F09DB9D243D202500C6994E /* AudioDevices-Bridging-Header.h */,
+				8F09DB9C243D202500C6994E /* mixLoop.caf */,
+			);
+			name = AudioDevices;
+			path = AudioDeviceExample/AudioDevices;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -128,6 +144,7 @@
 				8F09DB93243D1AD300C6994E /* LaunchScreen.storyboard in Resources */,
 				8F09DB90243D1AD300C6994E /* Assets.xcassets in Resources */,
 				8F09DB8E243D1ACE00C6994E /* Main.storyboard in Resources */,
+				8F09DB9F243D202500C6994E /* mixLoop.caf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -140,7 +157,7 @@
 			files = (
 				8F09DB8B243D1ACE00C6994E /* ViewController.swift in Sources */,
 				8F09DB87243D1ACE00C6994E /* AppDelegate.swift in Sources */,
-				8F09DB89243D1ACE00C6994E /* SceneDelegate.swift in Sources */,
+				8F09DBA0243D202500C6994E /* ExampleAVAudioEngineDevice.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,6 +311,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.AudioDeviceExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/AudioDeviceExample/AudioDevices/AudioDevices-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -313,6 +331,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.AudioDeviceExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/AudioDeviceExample/AudioDevices/AudioDevices-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
