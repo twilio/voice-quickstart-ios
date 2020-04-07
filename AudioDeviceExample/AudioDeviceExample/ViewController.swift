@@ -21,15 +21,29 @@ class ViewController: UIViewController {
     var userInitiatedDisconnect: Bool = false
     var callKitCompletionCallback: ((Bool) -> Void)? = nil
 
+    @IBOutlet weak var outgoingTextField: UITextField!
+    @IBOutlet weak var callButton: UIButton!
+    @IBOutlet weak var callControlView: UIView!
+    @IBOutlet weak var muteSwitch: UISwitch!
+    @IBOutlet weak var speakerSwitch: UISwitch!
+    @IBOutlet weak var playMusicButton: UIButton!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
 
     required init?(coder aDecoder: NSCoder) {
+        let configuration = CXProviderConfiguration(localizedName: "AudioDeviceExample")
+        configuration.maximumCallGroups = 1
+        configuration.maximumCallsPerCallGroup = 1
+
+        callKitProvider = CXProvider(configuration: configuration)
+        callKitCallController = CXCallController()
+
         super.init(coder: aDecoder)
 
-        setUpCallKit()
+        callKitProvider.setDelegate(self, queue: nil)
     }
     
     deinit {
@@ -37,17 +51,101 @@ class ViewController: UIViewController {
         callKitProvider.invalidate()
     }
     
-    func setUpCallKit() {
-        let configuration = CXProviderConfiguration(localizedName: "Quickstart")
-         configuration.maximumCallGroups = 1
-         configuration.maximumCallsPerCallGroup = 1
-
-         callKitProvider = CXProvider(configuration: configuration)
-         callKitCallController = CXCallController()
-        
-        callKitProvider.setDelegate(self, queue: nil)
+    func toggleUIState(isEnabled: Bool, showCallControl: Bool) {
+        callButton.isEnabled = isEnabled
+        callControlView.isHidden = !showCallControl;
+        muteSwitch.isOn = !showCallControl;
+        speakerSwitch.isOn = showCallControl;
     }
+    
+    // MARK: AVAudioSession
+    
+    func toggleAudioRoute(toSpeaker: Bool) {
+        // The mode set by the Voice SDK is "VoiceChat" so the default audio route is the built-in receiver. Use port override to switch the route.
+        do {
+            try AVAudioSession.sharedInstance().overrideOutputAudioPort(toSpeaker ? .speaker : .none)
+        } catch {
+            NSLog(error.localizedDescription)
+        }
+    }
+}
 
+// MARK: - TVOCallDelegate
+
+extension ViewController: TVOCallDelegate {
+    func callDidStartRinging(_ call: TVOCall) {
+        NSLog("callDidStartRinging:")
+        
+        callButton.setTitle("Ringing", for: .normal)
+    }
+    
+    func callDidConnect(_ call: TVOCall) {
+        NSLog("callDidConnect:")
+        
+        if let callKitCompletionCallback = callKitCompletionCallback {
+            callKitCompletionCallback(true)
+        }
+        
+        callButton.setTitle("Hang Up", for: .normal)
+        toggleUIState(isEnabled: true, showCallControl: true)
+        toggleAudioRoute(toSpeaker: true)
+    }
+    
+    func call(_ call: TVOCall, isReconnectingWithError error: Error) {
+        NSLog("call:isReconnectingWithError:")
+        
+        callButton.setTitle("Reconnecting", for: .normal)
+        toggleUIState(isEnabled: false, showCallControl: false)
+    }
+    
+    func callDidReconnect(_ call: TVOCall) {
+        NSLog("callDidReconnect:")
+        
+        callButton.setTitle("Hang Up", for: .normal)
+        toggleUIState(isEnabled: true, showCallControl: true)
+    }
+    
+    func call(_ call: TVOCall, didFailToConnectWithError error: Error) {
+        NSLog("Call failed to connect: \(error.localizedDescription)")
+        
+        if let completion = callKitCompletionCallback {
+            completion(false)
+        }
+
+        performEndCallAction(uuid: call.uuid)
+        callDisconnected(call)
+    }
+    
+    func call(_ call: TVOCall, didDisconnectWithError error: Error?) {
+        if let error = error {
+            NSLog("Call failed: \(error.localizedDescription)")
+        } else {
+            NSLog("Call disconnected")
+        }
+        
+        if !userInitiatedDisconnect {
+            var reason = CXCallEndedReason.remoteEnded
+            
+            if error != nil {
+                reason = .failed
+            }
+            
+            callKitProvider.reportCall(with: call.uuid, endedAt: Date(), reason: reason)
+        }
+
+        callDisconnected(call)
+    }
+    
+    func callDisconnected(_ call: TVOCall) {
+        if call == activeCall {
+            activeCall = nil
+        }
+        
+        userInitiatedDisconnect = false
+
+        toggleUIState(isEnabled: true, showCallControl: false)
+        callButton.setTitle("Call", for: .normal)
+    }
 }
 
 // MARK: - CXProviderDelegate
@@ -95,7 +193,7 @@ extension ViewController: CXProviderDelegate {
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
         NSLog("provider:performEndCallAction:")
         
-        if let call = self.activeCall {
+        if let call = activeCall {
             call.disconnect()
         }
 
@@ -105,7 +203,7 @@ extension ViewController: CXProviderDelegate {
     func provider(_ provider: CXProvider, perform action: CXSetHeldCallAction) {
         NSLog("provider:performSetHeldAction:")
         
-        if let call = self.activeCall {
+        if let call = activeCall {
             call.isOnHold = action.isOnHold
             action.fulfill()
         } else {
@@ -116,7 +214,7 @@ extension ViewController: CXProviderDelegate {
     func provider(_ provider: CXProvider, perform action: CXSetMutedCallAction) {
         NSLog("provider:performSetMutedAction:")
 
-        if let call = self.activeCall {
+        if let call = activeCall {
             call.isMuted = action.isMuted
             action.fulfill()
         } else {
@@ -194,7 +292,7 @@ extension ViewController: CXProviderDelegate {
         }
         
         let connectOptions = TVOConnectOptions(accessToken: token) { builder in
-            builder.params = [twimlParamTo: self.outgoingValue.text ?? ""]
+            builder.params = [twimlParamTo: self.outgoingTextField.text ?? ""]
             builder.uuid = uuid
         }
         
