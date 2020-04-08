@@ -44,6 +44,8 @@ class ViewController: UIViewController {
         super.init(coder: aDecoder)
 
         callKitProvider.setDelegate(self, queue: nil)
+        
+        TwilioVoice.audioDevice = audioDevice
     }
     
     deinit {
@@ -67,6 +69,85 @@ class ViewController: UIViewController {
         } catch {
             NSLog(error.localizedDescription)
         }
+    }
+    
+    func showMicrophoneAccessRequest(_ uuid: UUID, _ handle: String) {
+        let alertController = UIAlertController(title: "Voice Quick Start",
+                                                message: "Microphone permission not granted",
+                                                preferredStyle: .alert)
+        
+        let continueWithoutMic = UIAlertAction(title: "Continue without microphone", style: .default) { [weak self] _ in
+            self?.performStartCallAction(uuid: uuid, handle: handle)
+        }
+        
+        let goToSettings = UIAlertAction(title: "Settings", style: .default) { _ in
+            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!,
+                                      options: [UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: false],
+                                      completionHandler: nil)
+        }
+        
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel) { [weak self] _ in
+            self?.toggleUIState(isEnabled: true, showCallControl: false)
+        }
+        
+        [continueWithoutMic, goToSettings, cancel].forEach { alertController.addAction($0) }
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    func checkRecordPermission(completion: @escaping (_ permissionGranted: Bool) -> Void) {
+        let permissionStatus = AVAudioSession.sharedInstance().recordPermission
+        
+        switch permissionStatus {
+        case .granted:
+            // Record permission already granted.
+            completion(true)
+        case .denied:
+            // Record permission denied.
+            completion(false)
+        case .undetermined:
+            // Requesting record permission.
+            // Optional: pop up app dialog to let the users know if they want to request.
+            AVAudioSession.sharedInstance().requestRecordPermission { granted in completion(granted) }
+        default:
+            completion(false)
+        }
+    }
+
+    @IBAction func callButtonTapped(_ sender: Any) {
+        guard activeCall == nil else {
+            userInitiatedDisconnect = true
+            performEndCallAction(uuid: activeCall!.uuid)
+            toggleUIState(isEnabled: false, showCallControl: false)
+            
+            return
+        }
+        
+        checkRecordPermission { [weak self] permissionGranted in
+            let uuid = UUID()
+            let handle = "Voice Bot"
+            
+            guard !permissionGranted else {
+                self?.performStartCallAction(uuid: uuid, handle: handle)
+                return
+            }
+        
+            self?.showMicrophoneAccessRequest(uuid, handle)
+        }
+    }
+    
+    @IBAction func muteSwitchToggled(_ sender: UISwitch) {
+        guard let activeCall = activeCall else { return }
+        
+        activeCall.isMuted = sender.isOn
+    }
+    
+    @IBAction func speakerSwitchToggled(_ sender: UISwitch) {
+        toggleAudioRoute(toSpeaker: sender.isOn)
+    }
+    
+    @IBAction func playMusicButtonTapped(_ sender: UIButton) {
+        audioDevice.playMusic()
     }
 }
 

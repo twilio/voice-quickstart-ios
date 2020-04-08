@@ -16,34 +16,34 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ww4-1m-PRP" userLabel="Outgoing Text Field">
-                                <rect key="frame" x="117" y="410" width="180" height="34"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="180" id="iAX-TA-e9T"/>
-                                    <constraint firstAttribute="height" constant="34" id="qS1-MV-tgl"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4yO-4z-zif" userLabel="Call Button">
-                                <rect key="frame" x="121" y="452" width="172" height="41"/>
+                                <rect key="frame" x="121" y="394" width="172" height="41"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="172" id="D2g-g1-ob7"/>
                                     <constraint firstAttribute="height" constant="41" id="mnb-X5-jKX"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <state key="normal" title="Call"/>
+                                <connections>
+                                    <action selector="callButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="GPa-zo-fRf"/>
+                                </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dP8-KD-PZC" userLabel="Call Control View">
-                                <rect key="frame" x="87" y="501" width="240" height="120"/>
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dP8-KD-PZC" userLabel="Call Control View">
+                                <rect key="frame" x="87" y="443" width="240" height="120"/>
                                 <subviews>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="G28-Yx-Y2u" userLabel="Mute Switch">
                                         <rect key="frame" x="48" y="8" width="49" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <connections>
+                                            <action selector="muteSwitchToggled:" destination="BYZ-38-t0r" eventType="valueChanged" id="1V3-ln-IF9"/>
+                                        </connections>
                                     </switch>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="bb3-W7-zso" userLabel="Speaker Switch">
                                         <rect key="frame" x="146" y="8" width="49" height="31"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <connections>
+                                            <action selector="speakerSwitchToggled:" destination="BYZ-38-t0r" eventType="valueChanged" id="hOY-Mc-6TY"/>
+                                        </connections>
                                     </switch>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Mute" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fvy-rW-1Wu">
                                         <rect key="frame" x="57" y="47" width="29" height="15"/>
@@ -63,6 +63,9 @@
                                         <rect key="frame" x="83" y="70" width="74" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <state key="normal" title="Play Music"/>
+                                        <connections>
+                                            <action selector="playMusicButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aeU-EH-Iw6"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -71,14 +74,23 @@
                                     <constraint firstAttribute="height" constant="120" id="ueR-Np-WYc"/>
                                 </constraints>
                             </view>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ww4-1m-PRP" userLabel="Outgoing Text Field">
+                                <rect key="frame" x="117" y="352" width="180" height="34"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="180" id="iAX-TA-e9T"/>
+                                    <constraint firstAttribute="height" constant="34" id="qS1-MV-tgl"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="Ww4-1m-PRP" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" constant="-26" id="GhE-Dg-dTn"/>
+                            <constraint firstItem="Ww4-1m-PRP" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" constant="-84" id="GhE-Dg-dTn"/>
                             <constraint firstItem="4yO-4z-zif" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Rd7-8G-eQX"/>
-                            <constraint firstItem="4yO-4z-zif" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" constant="19.5" id="S77-IG-AOI"/>
+                            <constraint firstItem="4yO-4z-zif" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" constant="-38.5" id="S77-IG-AOI"/>
                             <constraint firstItem="dP8-KD-PZC" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Y9G-oa-wMf"/>
-                            <constraint firstItem="dP8-KD-PZC" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" constant="108" id="r1J-Sw-Jxo"/>
+                            <constraint firstItem="dP8-KD-PZC" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" constant="50" id="r1J-Sw-Jxo"/>
                             <constraint firstItem="Ww4-1m-PRP" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="y53-aV-vod"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
