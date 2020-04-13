@@ -6,6 +6,7 @@
 
 ## Get started with Voice on iOS:
 * [Quickstart](#quickstart) - Run the swift quickstart app
+* [Examples](#examples) - Sample applications
 * [Migration Guide from 4.x to 5.x](https://github.com/twilio/twilio-voice-ios/blob/Releases/iOS-13-Migration-Guide.md) - Migrating from 4.x to 5.x
 * [4.0 New Features](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/new-features-4.0.md) - New features in 4.0
 * [Migration Guide from 3.x to 4.x](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/migration-guide-3.x-4.x.md) - Migrating from 3.x to 4.x
@@ -210,6 +211,12 @@ A verified phone number is one that you can use as your Caller ID when making ou
 To make client to number calls, first get a valid Twilio number to your account via https://www.twilio.com/console/phone-numbers/verified. Update your server code and replace the caller number variable  (`CALLER_NUMBER` or `callerNumber` depending on which server you chose) with the verified number. Restart the server so it uses the new value. Voice Request URL of your TwiML application should point to the public URL of your application server’s `/makeCall` endpoint.
 
 <kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/client-to-pstn.png"/></kbd>
+
+## <a name="examples"></a> Examples
+
+You will also find additional examples that provide more advanced use cases of the Voice SDK:
+
+- [AudioDevice](AudioDeviceExample) - Provide your own means to playback and record audio using a custom `TVOAudioDevice` and [CoreAudio](https://developer.apple.com/documentation/coreaudio).
 
 ## <a name="access-tokens"></a> Access Tokens
 

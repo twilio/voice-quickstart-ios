@@ -15,4 +15,9 @@ abstract_target 'TwilioVoice' do
     platform :ios, '10.0'
     project 'ObjCVoiceQuickstart.xcproject'
   end
+
+  target 'AudioDeviceExample' do
+    platform :ios, '11.0'
+    project 'AudioDeviceExample.xcproject'
+  end
 end
