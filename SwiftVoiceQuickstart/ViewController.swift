@@ -484,16 +484,13 @@ extension ViewController: TVOCallDelegate {
     }
     
     func qualityWarningsUpdatePopup(_ warnings: Set<NSNumber>, isCleared: Bool) {
-        var popupMessage: String! = "Warnings detected:"
+        var popupMessage: String = "Warnings detected: "
         if isCleared {
-            popupMessage = "Warnings cleared:"
+            popupMessage = "Warnings cleared: "
         }
         
-        for warning in warnings {
-            if let warningName = warningString(TVOCallQualityWarning(rawValue: warning.uintValue)!) {
-                popupMessage = popupMessage + " " + warningName
-            }
-        }
+        let mappedWarnings: [String] = warnings.map { number in warningString(TVOCallQualityWarning(rawValue: number.uintValue)!)}
+        popupMessage += mappedWarnings.joined(separator: ", ")
         
         qualityWarningsToaster.alpha = 0.0
         qualityWarningsToaster.text = popupMessage
@@ -513,20 +510,14 @@ extension ViewController: TVOCallDelegate {
         }
     }
     
-    func warningString(_ warning: TVOCallQualityWarning) -> String! {
+    func warningString(_ warning: TVOCallQualityWarning) -> String {
         switch warning {
-        case .highRtt:
-            return "high-rtt"
-        case .highJitter:
-            return "high-jitter"
-        case .highPacketsLostFraction:
-            return "high-packets-lost-fraction"
-        case .lowMos:
-            return "low-mos"
-        case .constantAudioInputLevel:
-            return "constant-audio-input-level"
-        default:
-            return "Unknown warning"
+        case .highRtt: return "high-rtt"
+        case .highJitter: return "high-jitter"
+        case .highPacketsLostFraction: return "high-packets-lost-fraction"
+        case .lowMos: return "low-mos"
+        case .constantAudioInputLevel: return "constant-audio-input-level"
+        default: return "Unknown warning"
         }
     }
     
