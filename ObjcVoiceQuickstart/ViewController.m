@@ -36,6 +36,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 @property (nonatomic, strong) CXCallController *callKitCallController;
 @property (nonatomic, assign) BOOL userInitiatedDisconnect;
 
+@property (weak, nonatomic) IBOutlet UILabel *qualityWarningsToaster;
 @property (nonatomic, weak) IBOutlet UIImageView *iconView;
 @property (nonatomic, assign, getter=isSpinning) BOOL spinning;
 
@@ -428,6 +429,84 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     [self stopSpin];
     [self toggleUIState:YES showCallControl:NO];
     [self.placeCallButton setTitle:@"Call" forState:UIControlStateNormal];
+}
+
+- (void)call:(TVOCall *)call
+didReceiveQualityWarnings:(NSSet<NSNumber *> *)currentWarnings
+previousWarnings:(NSSet<NSNumber *> *)previousWarnings {
+    /**
+     * currentWarnings: existing quality warnings that have not been cleared yet
+     * previousWarnings: last set of warnings prior to receiving this callback
+     *
+     * Example:
+     *   - currentWarnings: { A, B }
+     *   - previousWarnings: { B, C }
+     *   - intersection: { B }
+     *
+     * Newly raised warnings = currentWarnings - intersection = { A }
+     * Newly cleared warnings = previousWarnings - intersection = { C }
+     */
+    NSMutableSet *warningIntersetction = [currentWarnings mutableCopy];
+    [warningIntersetction intersectSet:previousWarnings];
+    
+    NSMutableSet *newWarnings = [currentWarnings mutableCopy];
+    [newWarnings minusSet:warningIntersetction];
+    if ([newWarnings count] > 0) {
+        [self qualityWarningUpdatePopup:newWarnings isCleared:NO];
+    }
+    
+    NSMutableSet *clearedWarnings = [previousWarnings mutableCopy];
+    [clearedWarnings minusSet:warningIntersetction];
+    if ([clearedWarnings count] > 0) {
+        [self qualityWarningUpdatePopup:clearedWarnings isCleared:YES];
+    }
+}
+
+- (void)qualityWarningUpdatePopup:(NSSet *)warnings isCleared:(BOOL)cleared {
+    NSString *popupMessage = (cleared)? @"Warnings cleared:" : @"Warnings detected:";
+    for (NSNumber *warning in warnings) {
+        NSString *warningName = [self warningString:[warning unsignedIntValue]];
+        popupMessage = [popupMessage stringByAppendingString:[NSString stringWithFormat:@" %@", warningName]];
+    }
+    
+    self.qualityWarningsToaster.alpha = 0.0f;
+    self.qualityWarningsToaster.text = popupMessage;
+    [UIView animateWithDuration:1.0f
+                     animations:^{
+        self.qualityWarningsToaster.hidden = NO;
+        self.qualityWarningsToaster.alpha = 1.0f;
+    } completion:^(BOOL finished) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0f * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [UIView animateWithDuration:1.0 animations:^{
+                self.qualityWarningsToaster.alpha = 0.0f;
+            } completion:^(BOOL finished) {
+                self.qualityWarningsToaster.hidden = YES;
+            }];
+        });
+    }];
+}
+
+- (NSString *)warningString:(TVOCallQualityWarning)qualityWarning {
+    switch (qualityWarning) {
+        case TVOCallQualityWarningHighRtt:
+            return @"high-rtt";
+            break;
+        case TVOCallQualityWarningHighJitter:
+            return @"high-jitter";
+            break;
+        case TVOCallQualityWarningHighPacketsLostFraction:
+            return @"high-packets-lost-fraction";
+            break;
+        case TVOCallQualityWarningLowMos:
+            return @"low-mos";
+            break;
+        case TVOCallQualityWarningConstantAudioInputLevel:
+            return @"constant-audio-input-level";
+            break;
+        default:
+            return @"Unknown warning";
+            break;
+    }
 }
 
 #pragma mark - AVAudioSession
