@@ -21,6 +21,7 @@ let kCachedDeviceToken = "CachedDeviceToken"
 
 class ViewController: UIViewController {
 
+    @IBOutlet weak var qualityWarningsToaster: UILabel!
     @IBOutlet weak var placeCallButton: UIButton!
     @IBOutlet weak var iconView: UIImageView!
     @IBOutlet weak var outgoingValue: UITextField!
@@ -451,6 +452,82 @@ extension ViewController: TVOCallDelegate {
         stopSpin()
         toggleUIState(isEnabled: true, showCallControl: false)
         placeCallButton.setTitle("Call", for: .normal)
+    }
+    
+    func call(_ call: TVOCall, didReceiveQualityWarnings currentWarnings: Set<NSNumber>, previousWarnings: Set<NSNumber>) {
+        /**
+        * currentWarnings: existing quality warnings that have not been cleared yet
+        * previousWarnings: last set of warnings prior to receiving this callback
+        *
+        * Example:
+        *   - currentWarnings: { A, B }
+        *   - previousWarnings: { B, C }
+        *   - intersection: { B }
+        *
+        * Newly raised warnings = currentWarnings - intersection = { A }
+        * Newly cleared warnings = previousWarnings - intersection = { C }
+        */
+        var warningsIntersection: Set<NSNumber> = currentWarnings
+        warningsIntersection = warningsIntersection.intersection(previousWarnings)
+        
+        var newWarnings: Set<NSNumber> = currentWarnings
+        newWarnings.subtract(warningsIntersection)
+        if newWarnings.count > 0 {
+            qualityWarningsUpdatePopup(newWarnings, isCleared: false)
+        }
+        
+        var clearedWarnings: Set<NSNumber> = previousWarnings
+        clearedWarnings.subtract(warningsIntersection)
+        if clearedWarnings.count > 0 {
+            qualityWarningsUpdatePopup(clearedWarnings, isCleared: true)
+        }
+    }
+    
+    func qualityWarningsUpdatePopup(_ warnings: Set<NSNumber>, isCleared: Bool) {
+        var popupMessage: String! = "Warnings detected:"
+        if isCleared {
+            popupMessage = "Warnings cleared:"
+        }
+        
+        for warning in warnings {
+            if let warningName = warningString(TVOCallQualityWarning(rawValue: warning.uintValue)!) {
+                popupMessage = popupMessage + " " + warningName
+            }
+        }
+        
+        qualityWarningsToaster.alpha = 0.0
+        qualityWarningsToaster.text = popupMessage
+        UIView.animate(withDuration: 1.0, animations: {
+            self.qualityWarningsToaster.isHidden = false
+            self.qualityWarningsToaster.alpha = 1.0
+        }) { [weak self] finish in
+            guard let strongSelf = self else { return }
+            let deadlineTime = DispatchTime.now() + .seconds(5)
+            DispatchQueue.main.asyncAfter(deadline: deadlineTime, execute: {
+                UIView.animate(withDuration: 1.0, animations: {
+                    strongSelf.qualityWarningsToaster.alpha = 0.0
+                }) { (finished) in
+                    strongSelf.qualityWarningsToaster.isHidden = true
+                }
+            })
+        }
+    }
+    
+    func warningString(_ warning: TVOCallQualityWarning) -> String! {
+        switch warning {
+        case .highRtt:
+            return "high-rtt"
+        case .highJitter:
+            return "high-jitter"
+        case .highPacketsLostFraction:
+            return "high-packets-lost-fraction"
+        case .lowMos:
+            return "low-mos"
+        case .constantAudioInputLevel:
+            return "constant-audio-input-level"
+        default:
+            return "Unknown warning"
+        }
     }
     
     

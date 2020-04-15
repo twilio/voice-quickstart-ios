@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15510"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -89,6 +89,16 @@
                                 <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Warnings Raised" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a2r-Q4-Duu">
+                                <rect key="frame" x="16" y="20" width="343" height="18"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="343" id="Q5b-8P-pyc"/>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="121" id="Vm1-db-4g2"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -97,9 +107,12 @@
                             <constraint firstItem="V5R-Ky-YRW" firstAttribute="top" secondItem="r25-bA-TjD" secondAttribute="bottom" constant="8" id="Cf6-jr-cUl"/>
                             <constraint firstItem="LCr-Ji-S0e" firstAttribute="top" secondItem="V5R-Ky-YRW" secondAttribute="bottom" constant="8" id="JLB-FW-qyu"/>
                             <constraint firstItem="V5R-Ky-YRW" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Sje-sA-ye7"/>
+                            <constraint firstItem="a2r-Q4-Duu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="16" id="Vdl-O0-maL"/>
                             <constraint firstItem="KbF-3Z-6Zb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="VeB-Km-SPV"/>
                             <constraint firstItem="KbF-3Z-6Zb" firstAttribute="top" secondItem="Yv2-Ab-jqI" secondAttribute="bottom" constant="24" id="evG-yH-jC4"/>
+                            <constraint firstItem="a2r-Q4-Duu" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="mVf-Fn-3Mz"/>
                             <constraint firstItem="Yv2-Ab-jqI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="o83-xB-gqy"/>
+                            <constraint firstItem="a2r-Q4-Duu" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="tDg-UQ-eBv"/>
                             <constraint firstItem="LCr-Ji-S0e" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xTc-1X-DGJ"/>
                             <constraint firstItem="r25-bA-TjD" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="zyz-9B-31r"/>
                         </constraints>
@@ -110,6 +123,7 @@
                         <outlet property="muteSwitch" destination="viR-NY-T2b" id="fZy-Mo-G3K"/>
                         <outlet property="outgoingValue" destination="KbF-3Z-6Zb" id="Rqf-W7-jY1"/>
                         <outlet property="placeCallButton" destination="V5R-Ky-YRW" id="80v-ij-SXe"/>
+                        <outlet property="qualityWarningsToaster" destination="a2r-Q4-Duu" id="nK2-HT-xCd"/>
                         <outlet property="speakerSwitch" destination="YU7-VZ-8Ys" id="Vdc-12-cQK"/>
                     </connections>
                 </viewController>
