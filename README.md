@@ -22,17 +22,16 @@
 To get started with the quickstart application follow these steps. Steps 1-6 will enable the application to make a call. The remaining steps 7-10 will enable the application to receive incoming calls in the form of push notifications using Apple’s VoIP Service.
 
 1. [Install the TwilioVoice framework](#bullet1)
-2. [Create a Voice API key](#bullet2)
-3. [Configure a server to generate an access token to be used in the app](#bullet3)
-4. [Create a TwiML application](#bullet4)
-5. [Configure your application server](#bullet5)
-6. [Run the Swift Quickstart app](#bullet6)
-7. [Create a VoIP Service Certificate](#bullet7)
-8. [Create a Push Credential with your VoIP Service Certificate](#bullet8)
-9. [Configure Xcode project settings for VoIP push notifications](#bullet9)
-10. [Receive an incoming call](#bullet10)
-11. [Make client to client call](#bullet11)
-12. [Make client to PSTN call](#bullet12)
+2. [Use Twilio CLI to deploy access token and TwiML application to Twilio Serverless](#bullet2)
+3. [Create a TwiML application for the access token](#bullet3)
+4. [Generate an access token for the quickstart](#bullet4)
+5. [Run the Swift Quickstart app](#bullet5)
+6. [Create a VoIP Service Certificate](#bullet6)
+7. [Create a Push Credential with your VoIP Service Certificate](#bullet7)
+8. [Configure Xcode project settings for VoIP push notifications](#bullet8)
+9. [Receive an incoming call](#bullet9)
+10. [Make client to client call](#bullet10)
+11. [Make client to PSTN call](#bullet11)
 
 ### <a name="bullet1"></a>1. Install the TwilioVoice framework
 
@@ -65,75 +64,97 @@ Once Cocoapods finishes installing, open the `VoiceQuickstart.xcworkspace` and y
 
 Note: You may need to update the [CocoaPods Master Spec Repo](https://github.com/CocoaPods/Specs) by running `pod repo update master` in order to fetch the latest specs for TwilioVoice.
 
-### <a name="bullet2"></a>2. Create a Voice API key
-Go to the [Voice API Keys](https://www.twilio.com/console/voice/settings/api-keys) page and create a new API key:
+### <a name="bullet2"></a>2. Use Twilio CLI to deploy access token and TwiML application to Twilio Serverless
 
-<kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/create-api-key.png"/></kbd>
+You must have the following installed:
 
-**Save the generated `API_KEY` and `API_KEY_SECRET` in your notepad**. You will need them in the next step.
+* [Node.js v10+](https://nodejs.org/en/download/)
+* NPM v6+ (comes installed with newer Node versions)
 
-### <a name="bullet3"></a>3. Configure a server to generate an access token to be used in the app
+Run `npm install` to install all dependencies from NPM.
 
-Download one of the starter projects for the server.
+Install twilio-cli with:
+
+    $ npm install -g twilio-cli
+
+Login to the Twilio CLI. You will be prompted for your Account SID and Auth Token, both of which you can find on the dashboard of your [Twilio console](https://twilio.com/console).
+
+    $ twilio login
+
+This app requires the [Serverless plug-in](https://github.com/twilio-labs/plugin-serverless). Install the CLI plugin with:
+
+    $ twilio plugins:install @twilio-labs/plugin-serverless
+
+Before deploying, create a `Server/.env` by copying from `Server/.env.example`
+
+    $ cp Server/.env.example Server/.env
+
+Update `Server/.env` with your Account SID, auth token, API Key and secret
+
+    ACCOUNT_SID=ACxxxx
+    AUTH_TOKEN=xxxxxx
+    API_KEY=SKxxxx
+    API_SECRET=xxxxxx
+    APP_SID=APxxxx
+    PUSH_CREDENTIAL_SID=CRxxxx
+
+The app is deployed to Twilio Serverless with the `serverless` plug-in:
+
+    $ cd Server
+    Server $ twilio serverless:deploy
+
+The server example that comes with the quickstart is in Node.js. You can find the server starter project in the following languages.
 
 * [voice-quickstart-server-java](https://github.com/twilio/voice-quickstart-server-java)
 * [voice-quickstart-server-node](https://github.com/twilio/voice-quickstart-server-node)
 * [voice-quickstart-server-php](https://github.com/twilio/voice-quickstart-server-php)
 * [voice-quickstart-server-python](https://github.com/twilio/voice-quickstart-server-python)
 
-Follow the instructions in the server's README to get the application server up and running locally and accessible via the public Internet. For now just replace the **Twilio Account SID** that you can obtain from the [console](https://www.twilio.com/console), and the `API_KEY` and `API_SECRET` you obtained in the previous step.
-    
-    ACCOUNT_SID=AC12345678901234567890123456789012
-    API_KEY=SK12345678901234567890123456789012
-    API_KEY_SECRET=the_secret_generated_when_creating_the_api_key
+Follow the instructions in the server's README to get the application server up and running locally and accessible via the public Internet.
 
-### <a name="bullet4"></a>4. Create a TwiML application
+### <a name="bullet3"></a>3. Create a TwiML application for the Access Token
 Next, we need to create a TwiML application. A TwiML application identifies a public URL for retrieving [TwiML call control instructions](https://www.twilio.com/docs/api/twiml). When your iOS app makes a call to the Twilio cloud, Twilio will make a webhook request to this URL, your application server will respond with generated TwiML, and Twilio will execute the instructions you’ve provided.
-To create a TwiML application, go to the [TwiML app page](https://www.twilio.com/console/voice/twiml/apps). Create a new TwiML application, and use the public URL of your application server’s `/makeCall` endpoint as the Voice Request URL (If your app server is written in PHP, then you need `.php` extension at the end).
 
-<kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/create-twiml-app.png"/></kbd>
+Use Twilio CLI to create a TwiML app with the `make-call` endpoint you have just deployed
 
-As you can see we’ve used our [ngrok](https://ngrok.com/) public address in the Request URL field above.
-Save your TwiML Application configuration, and grab the **TwiML Application SID** (a long identifier beginning with the characters `AP`).
+    $ twilio api:core:applications:create --friendly-name=my-twiml-app --voice-method=post --voice-url="https://quickstart-5930-dev.twil.io/make-call" 
 
-### <a name="bullet5"></a>5. Configure your application server
-Let's put the remaining `APP_SID` configuration info into your server code. 
+### <a name="bullet4"></a>4. Generate an access token for the quickstart
 
-    ACCOUNT_SID=AC12345678901234567890123456789012
-    API_KEY=SK12345678901234567890123456789012
-    API_KEY_SECRET=the_secret_generated_when_creating_the_api_key
-    APP_SID=AP12345678901234567890123456789012
+You will need the `token` plug-in
 
-Once you’ve done that, restart the server so it uses the new configuration info. Now it's time to test.
+    $ twilio plugins:install @twilio-labs/plugin-token
 
-Open up a browser and visit the URL for your application server's **Access Token endpoint**: `https://{YOUR_SERVER_URL}/accessToken` (If your app server is written in PHP, then you need `.php` extension at the end). If everything is configured correctly, you should see a long string of letters and numbers, which is a Twilio Access Token. Your iOS app will use a token like this to connect to Twilio.
+Use the TwiML App SID you just created to generate an access token
 
-### <a name="bullet6"></a>6. Run the Swift Quickstart app
-Now let’s go back to the `VoiceQuickstart.xcworkspace`. Update the placeholder of `baseURLString` with your ngrok public URL
+    $ twilio token:voice --identity=alice --voice-app-sid=APxxxx
+
+Copy the access token string. Your iOS app will use this token to connect to Twilio.
+
+### <a name="bullet5"></a>5. Run the Swift Quickstart app
+
+Now let’s go back to the `VoiceQuickstart.xcworkspace`. Update the placeholder of `accessToken` with access token string you just copied
 
 ```swift
 import UIKit
 import AVFoundation
 import PushKit
+import CallKit
 import TwilioVoice
 
-let baseURLString = "https://3b57e324.ngrok.io"
-let accessTokenEndpoint = "/accessToken"
-let identity = "alice"
+let accessToken = "PASTE_YOUR_ACCESS_TOKEN_HERE"
 let twimlParamTo = "to"
 
-class ViewController: UIViewController, PKPushRegistryDelegate, TVONotificationDelegate, TVOCallDelegate, AVAudioPlayerDelegate, UITextFieldDelegate {
+let kCachedDeviceToken = "CachedDeviceToken"
+
+class ViewController: UIViewController {
 ```
 
-Build and run the app
+Build and run the app. Leave the text field empty and press the call button to start a call. You will hear the congratulatory message. Support for dialing another client or number is described in steps 10 and 11. Tap "Hang Up" to disconnect.
 
-<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/build-and-run.png"/></kbd>
+<kbd><img width="300px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/hang-up.png"/></kbd>
 
-Leave the text field empty and press the call button to start a call. You will hear the congratulatory message. Support for dialing another client or number is described in steps 11 and 12. Tap "Hang Up" to disconnect.
-
-<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/hang-up.png"/></kbd>
-
-### <a name="bullet7"></a>7. Create VoIP Service Certificate
+### <a name="bullet6"></a>6. Create VoIP Service Certificate
 The Programmable Voice SDK uses Apple’s VoIP Services to let your application know when it is receiving an incoming call. If you want your users to receive incoming calls, you’ll need to enable VoIP Services in your application and generate a VoIP Services Certificate.
 
 Go to [Apple Developer portal](https://developer.apple.com/) and you’ll need to do the following:
@@ -142,14 +163,14 @@ Go to [Apple Developer portal](https://developer.apple.com/) and you’ll need t
 - Create a corresponding Provisioning Profile for your app ID.
 - Create an [Apple VoIP Services Certificate](https://developer.apple.com/library/prerelease/content/documentation/Performance/Conceptual/EnergyGuide-iOS/OptimizeVoIP.html#//apple_ref/doc/uid/TP40015243-CH30-SW1) for this app by navigating to Certificates --> Production and clicking the `+` on the top right to add the new certificate.
 
-<kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/create-voip-service-certificate.png"/></kbd>
+<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/create-voip-service-certificate.png"/></kbd>
 
-### <a name="bullet8"></a>8. Create a Push Credential with your VoIP Service Certificate
+### <a name="bullet7"></a>7. Create a Push Credential with your VoIP Service Certificate
 Once you have generated the VoIP Services Certificate using Keychain Access, you will need to upload it to Twilio so that Twilio can send push notifications to your app on your behalf.
 
 Export your VoIP Service Certificate as a .p12 file from Keychain Access.
 
-<kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/export_voip_cert.png"/></kbd>
+<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/export_voip_cert.png"/></kbd>
 
 Extract the certificate and private key from the .p12 file using the `openssl` command. 
 
@@ -166,17 +187,17 @@ Go to the [Push Credentials page](https://www.twilio.com/console/voice/sdks/cred
 
 Once the app is ready for store submission, update the plist with “APS Environment: production” and create another Push Credential with the same VoIP Certificate but without checking the sandbox option.
 
-<kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/add-push-credential.png"/></kbd>
+<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/add-push-credential.png"/></kbd>
 
 Now let's go back to your server code and update the Push Credential SID. The Push Credential SID will now be embedded in your access token.
 
     PUSH_CREDENTIAL_SID=CR12345678901234567890123456789012
 
-### <a name="bullet9"></a>9. Configure Xcode project settings for push notifications
+### <a name="bullet8"></a>8. Configure Xcode project settings for push notifications
 On the project’s Capabilities tab, enable “**Push Notifications**”.
 In Xcode 8 or earlier, enable both “**Voice over IP**” and “**Audio, AirPlay and Picture in Picture**” capabilities in the Background Modes
 
-<kbd><img src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/xcode-project-capabilities.png"/></kbd>
+<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/xcode-project-capabilities.png"/></kbd>
 
 In Xcode 9+, make sure that the “**Audio, AirPlay and Picture in Picture**” capability is enabled and a "**UIBackgroundModes**" dictionary with "**audio**" and "**voip**" is in the app's plist.
 ```
@@ -187,12 +208,12 @@ In Xcode 9+, make sure that the “**Audio, AirPlay and Picture in Picture**” 
 </array>
 ```
 
-### <a name="bullet10"></a>10. Receive an incoming call
+### <a name="bullet9"></a>9. Receive an incoming call
 You are now ready to receive incoming calls. Rebuild your app and hit your application server's **/placeCall** endpoint: `https://{YOUR_SERVER_URL}/placeCall` (If your app server is written in PHP, then you need `.php` extension at the end). This will trigger a Twilio REST API request that will make an inbound call to your mobile app. Once your app accepts the call, you should hear a congratulatory message.
 
-<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/incoming-call.png"/></kbd>
+<kbd><img width="300px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/incoming-call.png"/></kbd>
 
-### <a name="bullet11"></a>11. Make client to client call
+### <a name="bullet10"></a>10. Make client to client call
 To make client to client calls, you need the application running on two devices. To run the application on an additional device, make sure you use a different identity in your access token when registering the new device. For example, change `kIdentity` to `bob` and run the application
 
 ```swift
@@ -203,14 +224,14 @@ let twimlParamTo = "to"
 
 Use the text field to specify the identity of the call receiver, then tap the “Call” button to make a call. The TwiML parameters used in `TwilioVoice.connect()` method should match the name used in the server.
 
-<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/client-to-client.png"/></kbd>
+<kbd><img width="300px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/client-to-client.png"/></kbd>
 
-### <a name="bullet12"></a>12. Make client to PSTN call
+### <a name="bullet11"></a>11. Make client to PSTN call
 A verified phone number is one that you can use as your Caller ID when making outbound calls with Twilio. This number has not been ported into Twilio and you do not pay Twilio for this phone number.
 
 To make client to number calls, first get a valid Twilio number to your account via https://www.twilio.com/console/phone-numbers/verified. Update your server code and replace the caller number variable  (`CALLER_NUMBER` or `callerNumber` depending on which server you chose) with the verified number. Restart the server so it uses the new value. Voice Request URL of your TwiML application should point to the public URL of your application server’s `/makeCall` endpoint.
 
-<kbd><img width="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/client-to-pstn.png"/></kbd>
+<kbd><img width="300px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/client-to-pstn.png"/></kbd>
 
 ## <a name="examples"></a> Examples
 
@@ -310,7 +331,7 @@ Whenever a registration is performed via `TwilioVoice.registerWithAccessToken:de
 
 If you need to change or update your credentials provided by Apple you can do so by selecting the Push Credential in the [console](https://www.twilio.com/console/voice/sdks/credentials) and adding your new `certificate` and `private key` in the text box provided on the Push Credential page shown below:
 
-<kbd><img height="667px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/update_push_credential.png"/></kbd>
+<kbd><img height="500px" src="https://github.com/twilio/voice-quickstart-swift/raw/master/Images/update_push_credential.png"/></kbd>
 
 ### Deleting a Push Credential
 

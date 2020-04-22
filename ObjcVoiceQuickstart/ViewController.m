@@ -13,10 +13,7 @@
 @import CallKit;
 @import TwilioVoice;
 
-static NSString *const kYourServerBaseURLString = <#URL TO YOUR ACCESS TOKEN SERVER#>;
-// If your token server is written in PHP, kAccessTokenEndpoint needs .php extension at the end. For example : /accessToken.php
-static NSString *const kAccessTokenEndpoint = @"/accessToken";
-static NSString *const kIdentity = @"alice";
+static NSString *const kAccessToken = <#YOUR ACCESS TOKEN#>;
 static NSString *const kTwimlParamTo = @"to";
 
 NSString * const kCachedDeviceToken = @"CachedDeviceToken";
@@ -101,16 +98,6 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     if (self.callKitProvider) {
         [self.callKitProvider invalidate];
     }
-}
-
-- (NSString *)fetchAccessToken {
-    NSString *accessTokenEndpointWithIdentity = [NSString stringWithFormat:@"%@?identity=%@", kAccessTokenEndpoint, kIdentity];
-    NSString *accessTokenURLString = [kYourServerBaseURLString stringByAppendingString:accessTokenEndpointWithIdentity];
-
-    NSString *accessToken = [NSString stringWithContentsOfURL:[NSURL URLWithString:accessTokenURLString]
-                                                     encoding:NSUTF8StringEncoding
-                                                        error:nil];
-    return accessToken;
 }
 
 - (IBAction)mainButtonPressed:(id)sender {
@@ -220,8 +207,6 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 
 #pragma mark - PushKitEventDelegate
 - (void)credentialsUpdated:(PKPushCredentials *)credentials {
-    NSString *accessToken = [self fetchAccessToken];
-
     NSData *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
     if (![cachedDeviceToken isEqualToData:credentials.token]) {
         cachedDeviceToken = credentials.token;
@@ -229,7 +214,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
         /*
          * Perform registration if a new device token is detected.
          */
-        [TwilioVoice registerWithAccessToken:accessToken
+        [TwilioVoice registerWithAccessToken:kAccessToken
                              deviceTokenData:cachedDeviceToken
                                   completion:^(NSError *error) {
              if (error) {
@@ -247,11 +232,9 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 }
 
 - (void)credentialsInvalidated {
-    NSString *accessToken = [self fetchAccessToken];
-
     NSData *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
     if ([cachedDeviceToken length] > 0) {
-        [TwilioVoice unregisterWithAccessToken:accessToken
+        [TwilioVoice unregisterWithAccessToken:kAccessToken
                                deviceTokenData:cachedDeviceToken
                                     completion:^(NSError *error) {
             if (error) {
@@ -656,7 +639,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
                           client:(NSString *)client
                       completion:(void(^)(BOOL success))completionHandler {
     __weak typeof(self) weakSelf = self;
-    TVOConnectOptions *connectOptions = [TVOConnectOptions optionsWithAccessToken:[self fetchAccessToken] block:^(TVOConnectOptionsBuilder *builder) {
+    TVOConnectOptions *connectOptions = [TVOConnectOptions optionsWithAccessToken:kAccessToken block:^(TVOConnectOptionsBuilder *builder) {
         __strong typeof(self) strongSelf = weakSelf;
         builder.params = @{kTwimlParamTo: strongSelf.outgoingValue.text};
         builder.uuid = uuid;
