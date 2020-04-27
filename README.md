@@ -117,7 +117,10 @@ Next, we need to create a TwiML application. A TwiML application identifies a pu
 
 Use Twilio CLI to create a TwiML app with the `make-call` endpoint you have just deployed
 
-    $ twilio api:core:applications:create --friendly-name=my-twiml-app --voice-method=post --voice-url="https://my-quickstart-dev.twil.io/make-call" 
+    $ twilio api:core:applications:create \
+        --friendly-name=my-twiml-app \
+        --voice-method=post \
+        --voice-url="https://my-quickstart-dev.twil.io/make-call" 
 
 ### <a name="bullet4"></a>4. Generate an access token for the quickstart
 
@@ -169,7 +172,12 @@ Export your VoIP Service Certificate as a .p12 file from Keychain Access and ext
 
 Use Twilio CLI to create a Push Credential using the cert and key.
 
-    $ twilio api:chat:v2:credentials:create --type=apn --sandbox --friendly-name="voice-push-credential (sandbox)" --certificate="$(cat PATH_TO_CERT_PEM)" --private-key="$(cat PATH_TO_KEY_PEM)"
+    $ twilio api:chat:v2:credentials:create \
+        --type=apn \
+        --sandbox \
+        --friendly-name="voice-push-credential (sandbox)" \
+        --certificate="$(cat PATH_TO_CERT_PEM)" \
+        --private-key="$(cat PATH_TO_KEY_PEM)"
     
 The `--sandbox` option tells Twilio to send the notification requests to the sandbox endpoint of Apple's APNS service. 
 
@@ -177,7 +185,10 @@ Once the app is ready for distribution or store submission, create a separate Pu
 
 Now let's generate another access token and add the Push Credential to the Voice Grant.
 
-    $ twilio token:voice --identity=alice --voice-app-sid=APxxxx --push-credential-sid=CRxxxxs
+    $ twilio token:voice \
+        --identity=alice \
+        --voice-app-sid=APxxxx \
+        --push-credential-sid=CRxxxxs
 
 ### <a name="bullet7"></a>7. Receive an incoming call
 You are now ready to receive incoming calls. Paste the access token generated from step 6 and rebuild your app. Hit your application server's **/place-call** endpoint: `https://my-quickstart-dev.twil.io/place-call?to=alice`. This will trigger a Twilio REST API request that will make an inbound call to the identity registered on your mobile app. Once your app accepts the call, you should hear a congratulatory message.
