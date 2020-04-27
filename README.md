@@ -7,9 +7,9 @@
 ## Get started with Voice on iOS:
 * [Quickstart](#quickstart) - Run the swift quickstart app
 * [Examples](#examples) - Sample applications
-* [Access Tokens](#https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/access-tokens.md) - Using access tokens
-* [Managing Audio Interruptions](#https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/managing-audio-interruptions.md) - Managing audio interruptions
-* [Managing Push Credentials](#https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/managing-push-credentials.md) - Managing push credentials
+* [Access Tokens](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/access-tokens.md) - Using access tokens
+* [Managing Audio Interruptions](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/managing-audio-interruptions.md) - Managing audio interruptions
+* [Managing Push Credentials](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/managing-push-credentials.md) - Managing push credentials
 * [More Documentation](#more-documentation) - More documentation related to the Voice iOS SDK
 * [Issues and Support](#issues-and-support) - Filing issues and general support
 
