@@ -13,7 +13,7 @@
 @import CallKit;
 @import TwilioVoice;
 
-static NSString *const kAccessToken = <#YOUR ACCESS TOKEN#>;
+static NSString *const kAccessToken = <#TWILIO_ACCESS_TOKEN#>;
 static NSString *const kTwimlParamTo = @"to";
 
 NSString * const kCachedDeviceToken = @"CachedDeviceToken";

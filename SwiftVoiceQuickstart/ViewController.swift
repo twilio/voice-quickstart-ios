@@ -11,7 +11,7 @@ import PushKit
 import CallKit
 import TwilioVoice
 
-let accessToken = <#YOUR ACCESS TOKEN#>
+let accessToken = <#TWILIO_ACCESS_TOKEN#>
 let twimlParamTo = "to"
 
 let kCachedDeviceToken = "CachedDeviceToken"

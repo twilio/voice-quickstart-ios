@@ -101,7 +101,7 @@ Update `Server/.env` with your Account SID, auth token, API Key and secret
 The app is deployed to Twilio Serverless with the `serverless` plug-in:
 
     $ cd Server
-    Server $ twilio serverless:deploy
+    $ twilio serverless:deploy
 
 The server example that comes with the quickstart is in Node.js. You can find the server starter project in the following languages.
 
@@ -151,6 +151,8 @@ let twimlParamTo = "to"
 let kCachedDeviceToken = "CachedDeviceToken"
 
 class ViewController: UIViewController {
+    ...
+}
 ```
 
 Build and run the app. Leave the text field empty and press the call button to start a call. You will hear the congratulatory message. Support for dialing another client or number is described in steps 10 and 11. Tap "Hang Up" to disconnect.
