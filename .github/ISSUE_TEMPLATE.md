@@ -38,7 +38,7 @@ or sensitive account information (API keys, credentials, etc.) when reporting an
 
 #### Twilio Call SID(s)
 
-Twilio Call SID when the issue happened. You can find Call SIDs in TVOCall.sid or TVOCallInvite.callSid. Call SIDs are also available in https://www.twilio.com/console/voice/calls/logs.
+You can find the Call SID in the SDK from [TVOCall.sid](https://twilio.github.io/twilio-voice-ios/docs/latest/Classes/TVOCall.html#//api/name/sid) or [TVOCallInvite.callSid](https://twilio.github.io/twilio-voice-ios/docs/latest/Classes/TVOCallInvite.html#//api/name/callSid). The Call SID can also be found on the [Twilio Calls Console](https://www.twilio.com/console/voice/calls/logs).
 
 #### Logs
 
