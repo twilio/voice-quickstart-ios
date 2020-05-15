@@ -36,6 +36,10 @@ or sensitive account information (API keys, credentials, etc.) when reporting an
 
 [What percentage of the time does it reproduce?]
 
+#### Twilio Call SID(s)
+
+Twilio Call SID when the issue happened. You can find Call SIDs in TVOCall.sid or TVOCallInvite.callSid. Call SIDs are also available in https://www.twilio.com/console/voice/calls/logs.
+
 #### Logs
 
 ```
