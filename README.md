@@ -216,7 +216,7 @@ To make client to number calls, first get a valid Twilio number to your account 
 
 You will also find additional examples that provide more advanced use cases of the Voice SDK:
 
-- [AudioDevice](AudioDeviceExample) - Provide your own means to playback and record audio using a custom `TVOAudioDevice` and [CoreAudio](https://developer.apple.com/documentation/coreaudio).
+- [AudioDevice](https://www.twilio.com/docs/voice/voip-sdk/ios/new-features-ios-3#custom-audio-device) - Provide your own means to playback and record audio using a custom `TVOAudioDevice` and [CoreAudio](https://developer.apple.com/documentation/coreaudio).
 
 ## <a name="access-tokens"></a> Access Tokens
 
