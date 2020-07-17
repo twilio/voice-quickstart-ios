@@ -3,6 +3,8 @@
 > NOTE: These sample applications use the Twilio Voice 5.x APIs. For examples using our 2.x APIs, please see the [2.x](https://github.com/twilio/voice-quickstart-swift/tree/2.x) branch. If you are using SDK 2.x, we highly recommend planning your migration to 5.0 as soon as possible. Support for 2.x will cease 1/1/2020. Until then, SDK 2.x will only receive fixes for critical or security related issues.
 
 > Please see our [iOS 13 Migration Guide](https://github.com/twilio/twilio-voice-ios/blob/Releases/iOS-13-Migration-Guide.md) for the latest information on iOS 13.
+ 
+> To make sure your app is ready for iOS 14 please visit [this page](https://github.com/twilio/twilio-voice-ios/issues/56).
 
 ## Get started with Voice on iOS:
 * [Quickstart](#quickstart) - Run the swift quickstart app
