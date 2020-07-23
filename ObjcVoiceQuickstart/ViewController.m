@@ -303,6 +303,18 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 
     NSLog(@"callInviteReceived:");
     
+    NSString *callKitProviderName = @"Voice Quickstart\n";
+    if (callInvite.callerInfo.verified != nil && [callInvite.callerInfo.verified boolValue]) {
+        callKitProviderName = @"✅ Caller Verified\n";
+    }
+    
+    CXProviderConfiguration *configuration = [[CXProviderConfiguration alloc] initWithLocalizedName:callKitProviderName];
+    configuration.maximumCallGroups = 1;
+    configuration.maximumCallsPerCallGroup = 1;
+    
+    self.callKitProvider = [[CXProvider alloc] initWithConfiguration:configuration];
+    [self.callKitProvider setDelegate:self queue:nil];
+    
     NSString *from = @"Voice Bot";
     if (callInvite.from) {
         from = [callInvite.from stringByReplacingOccurrencesOfString:@"client:" withString:@""];
@@ -391,7 +403,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     NSLog(@"Call failed to connect: %@", error);
     
     self.callKitCompletionCallback(NO);
-    [self performEndCallActionWithUUID:call.uuid];
+    [self.callKitProvider reportCallWithUUID:call.uuid endedAtDate:[NSDate date] reason:CXCallEndedReasonFailed];
     [self callDisconnected:call];
 }
 
@@ -618,8 +630,11 @@ previousWarnings:(NSSet<NSNumber *> *)previousWarnings {
     self.audioDevice.enabled = NO;
     self.audioDevice.block();
     
+    __weak typeof(self) weakSelf = self;
     [self performAnswerVoiceCallWithUUID:action.callUUID completion:^(BOOL success) {
         if (success) {
+            __strong typeof(self) strongSelf = weakSelf;
+            [strongSelf.callKitProvider reportOutgoingCallWithUUID:action.callUUID connectedAtDate:[NSDate date]];
             [action fulfill];
         } else {
             [action fail];

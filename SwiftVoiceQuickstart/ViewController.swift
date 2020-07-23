@@ -42,7 +42,7 @@ class ViewController: UIViewController {
     // activeCall represents the last connected call
     var activeCall: TVOCall? = nil
 
-    let callKitProvider: CXProvider
+    var callKitProvider: CXProvider
     let callKitCallController: CXCallController
     var userInitiatedDisconnect: Bool = false
     
@@ -328,6 +328,21 @@ extension ViewController: TVONotificationDelegate {
     func callInviteReceived(_ callInvite: TVOCallInvite) {
         NSLog("callInviteReceived:")
         
+        var callKitProviderName = "Voice Quickstart\n"
+        let callerInfo: TVOCallerInfo = callInvite.callerInfo
+        if let verified: NSNumber = callerInfo.verified {
+            if verified.boolValue {
+                callKitProviderName = "✅ Caller Verified\n"
+            }
+        }
+        
+        let configuration = CXProviderConfiguration(localizedName: callKitProviderName)
+        configuration.maximumCallGroups = 1
+        configuration.maximumCallsPerCallGroup = 1
+
+        callKitProvider = CXProvider(configuration: configuration)
+        callKitProvider.setDelegate(self, queue: nil)
+        
         let from = (callInvite.from ?? "Voice Bot").replacingOccurrences(of: "client:", with: "")
 
         // Always report to CallKit
@@ -411,8 +426,9 @@ extension ViewController: TVOCallDelegate {
         if let completion = callKitCompletionCallback {
             completion(false)
         }
+        
+        callKitProvider.reportCall(with: call.uuid, endedAt: Date(), reason: CXCallEndedReason.failed)
 
-        performEndCallAction(uuid: call.uuid)
         callDisconnected(call)
     }
     
@@ -601,6 +617,7 @@ extension ViewController: CXProviderDelegate {
         
         performAnswerVoiceCall(uuid: action.callUUID) { success in
             if success {
+                provider.reportOutgoingCall(with: action.callUUID, connectedAt: Date())
                 action.fulfill()
             } else {
                 action.fail()
