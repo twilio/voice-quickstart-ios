@@ -21,7 +21,7 @@
 * [Migration Guide from 2.x to 3.x](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/migration-guide-2.x-3.x.md) - Migrating from 2.x to 3.x
 
 ## Quickstart
-To get started with the quickstart application follow these steps. Steps 1-6 will enable the application to make a call. The remaining steps 6-9 will enable the application to receive incoming calls in the form of push notifications using Apple’s VoIP Service.
+To get started with the quickstart application follow these steps. Steps 1-5 will enable the application to make a call. The remaining steps 6-9 will enable the application to receive incoming calls in the form of push notifications using Apple’s VoIP Service.
 
 1. [Install the TwilioVoice framework](#bullet1)
 2. [Use Twilio CLI to deploy access token and TwiML application to Twilio Serverless](#bullet2)
