@@ -8,7 +8,7 @@
 
 ## Get started with Voice on iOS:
 * [Quickstart](#quickstart) - Run the swift quickstart app
-* [Examples](#examples) - Sample applications
+* [Examples](#examples) - Sample applications and code snippets
 * [Migration Guide from 4.x to 5.x](https://github.com/twilio/twilio-voice-ios/blob/Releases/iOS-13-Migration-Guide.md) - Migrating from 4.x to 5.x
 * [4.0 New Features](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/new-features-4.0.md) - New features in 4.0
 * [Migration Guide from 3.x to 4.x](https://github.com/twilio/voice-quickstart-swift/blob/master/Docs/migration-guide-3.x-4.x.md) - Migrating from 3.x to 4.x
@@ -219,6 +219,7 @@ To make client to number calls, first get a valid Twilio number to your account 
 You will also find additional examples that provide more advanced use cases of the Voice SDK:
 
 - [AudioDevice](https://www.twilio.com/docs/voice/voip-sdk/ios/new-features-ios-3#custom-audio-device) - Provide your own means to playback and record audio using a custom `TVOAudioDevice` and [CoreAudio](https://developer.apple.com/documentation/coreaudio).
+- [Verified Caller Number](https://github.com/twilio/voice-quickstart-ios/blob/master/Docs/verified-caller-number.md) - display the number verification information on the incoming call UI using the `TVOCallerInfo` object.
 
 ## <a name="access-tokens"></a> Access Tokens
 
