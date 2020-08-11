@@ -617,7 +617,6 @@ extension ViewController: CXProviderDelegate {
         
         performAnswerVoiceCall(uuid: action.callUUID) { success in
             if success {
-                provider.reportOutgoingCall(with: action.callUUID, connectedAt: Date())
                 action.fulfill()
             } else {
                 action.fail()

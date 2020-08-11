@@ -630,11 +630,8 @@ previousWarnings:(NSSet<NSNumber *> *)previousWarnings {
     self.audioDevice.enabled = NO;
     self.audioDevice.block();
     
-    __weak typeof(self) weakSelf = self;
     [self performAnswerVoiceCallWithUUID:action.callUUID completion:^(BOOL success) {
         if (success) {
-            __strong typeof(self) strongSelf = weakSelf;
-            [strongSelf.callKitProvider reportOutgoingCallWithUUID:action.callUUID connectedAtDate:[NSDate date]];
             [action fulfill];
         } else {
             [action fail];
