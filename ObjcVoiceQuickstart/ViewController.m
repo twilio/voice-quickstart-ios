@@ -299,6 +299,10 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     configuration.maximumCallGroups = 1;
     configuration.maximumCallsPerCallGroup = 1;
     
+    if (self.callKitProvider) {
+        [self.callKitProvider invalidate];
+    }
+    
     self.callKitProvider = [[CXProvider alloc] initWithConfiguration:configuration];
     [self.callKitProvider setDelegate:self queue:nil];
     
@@ -676,6 +680,10 @@ previousWarnings:(NSSet<NSNumber *> *)previousWarnings {
     CXProviderConfiguration *configuration = [[CXProviderConfiguration alloc] initWithLocalizedName:@"Quickstart"];
     configuration.maximumCallGroups = 1;
     configuration.maximumCallsPerCallGroup = 1;
+    
+    if (self.callKitProvider) {
+        [self.callKitProvider invalidate];
+    }
 
     self.callKitProvider = [[CXProvider alloc] initWithConfiguration:configuration];
     [self.callKitProvider setDelegate:self queue:nil];

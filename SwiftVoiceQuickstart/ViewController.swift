@@ -329,6 +329,10 @@ extension ViewController: TVONotificationDelegate {
         let configuration = CXProviderConfiguration(localizedName: callKitProviderName)
         configuration.maximumCallGroups = 1
         configuration.maximumCallsPerCallGroup = 1
+        
+        if let existingProvider = callKitProvider {
+            existingProvider.invalidate()
+        }
 
         callKitProvider = CXProvider(configuration: configuration)
         if let provider = callKitProvider {
@@ -668,6 +672,10 @@ extension ViewController: CXProviderDelegate {
         configuration.maximumCallGroups = 1
         configuration.maximumCallsPerCallGroup = 1
 
+        if let existingProvider = callKitProvider {
+            existingProvider.invalidate()
+        }
+        
         callKitProvider = CXProvider(configuration: configuration)
         if let provider = callKitProvider {
             provider.setDelegate(self, queue: nil)
