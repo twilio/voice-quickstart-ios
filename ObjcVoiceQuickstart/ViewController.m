@@ -59,7 +59,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     [self toggleUIState:YES showCallControl:NO];
     self.outgoingValue.delegate = self;
 
-    [self configureCallKit];
+    self.callKitCallController = [[CXCallController alloc] init];
     
     /*
      * The important thing to remember when providing a TVOAudioDevice is that the device must be set
@@ -79,19 +79,6 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
      to be accepted on the callee's side. Configure this flag based on the TwiML application.
      */
     self.playCustomRingback = NO;
-}
-
-- (void)configureCallKit {
-    CXProviderConfiguration *configuration = [[CXProviderConfiguration alloc] initWithLocalizedName:@"Quickstart"];
-    configuration.maximumCallGroups = 1;
-    configuration.maximumCallsPerCallGroup = 1;
-    UIImage *callkitIcon = [UIImage imageNamed:@"iconMask80"];
-    configuration.iconTemplateImageData = UIImagePNGRepresentation(callkitIcon);
-
-    _callKitProvider = [[CXProvider alloc] initWithConfiguration:configuration];
-    [_callKitProvider setDelegate:self queue:nil];
-
-    _callKitCallController = [[CXCallController alloc] init];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -243,7 +230,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
                   */
                  [[NSUserDefaults standardUserDefaults] setObject:cachedDeviceToken forKey:kCachedDeviceToken];
              }
-         }];
+        }];
     }
 }
 
@@ -616,11 +603,12 @@ previousWarnings:(NSSet<NSNumber *> *)previousWarnings {
     [self performVoiceCallWithUUID:action.callUUID client:nil completion:^(BOOL success) {
         __strong typeof(self) strongSelf = weakSelf;
         if (success) {
+            NSLog(@"performVoiceCallWithUUID successful");
             [strongSelf.callKitProvider reportOutgoingCallWithUUID:action.callUUID connectedAtDate:[NSDate date]];
-            [action fulfill];
         } else {
-            [action fail];
+            NSLog(@"performVoiceCallWithUUID failed");
         }
+        [action fulfill];
     }];
 }
 
@@ -632,9 +620,9 @@ previousWarnings:(NSSet<NSNumber *> *)previousWarnings {
     
     [self performAnswerVoiceCallWithUUID:action.callUUID completion:^(BOOL success) {
         if (success) {
-            [action fulfill];
+            NSLog(@"performAnswerVoiceCallWithUUID successful");
         } else {
-            [action fail];
+            NSLog(@"performAnswerVoiceCallWithUUID failed");
         }
     }];
     
@@ -684,6 +672,13 @@ previousWarnings:(NSSet<NSNumber *> *)previousWarnings {
     if (uuid == nil || handle == nil) {
         return;
     }
+    
+    CXProviderConfiguration *configuration = [[CXProviderConfiguration alloc] initWithLocalizedName:@"Quickstart"];
+    configuration.maximumCallGroups = 1;
+    configuration.maximumCallsPerCallGroup = 1;
+
+    self.callKitProvider = [[CXProvider alloc] initWithConfiguration:configuration];
+    [self.callKitProvider setDelegate:self queue:nil];
 
     CXHandle *callHandle = [[CXHandle alloc] initWithType:CXHandleTypeGeneric value:handle];
     CXStartCallAction *startCallAction = [[CXStartCallAction alloc] initWithCallUUID:uuid handle:callHandle];

@@ -42,7 +42,7 @@ class ViewController: UIViewController {
     // activeCall represents the last connected call
     var activeCall: TVOCall? = nil
 
-    var callKitProvider: CXProvider
+    var callKitProvider: CXProvider?
     let callKitCallController: CXCallController
     var userInitiatedDisconnect: Bool = false
     
@@ -57,26 +57,16 @@ class ViewController: UIViewController {
 
     required init?(coder aDecoder: NSCoder) {
         isSpinning = false
-
-        let configuration = CXProviderConfiguration(localizedName: "Quickstart")
-        configuration.maximumCallGroups = 1
-        configuration.maximumCallsPerCallGroup = 1
-       
-        if let callKitIcon = UIImage(named: "iconMask80") {
-            configuration.iconTemplateImageData = UIImagePNGRepresentation(callKitIcon)
-        }
-
-        callKitProvider = CXProvider(configuration: configuration)
         callKitCallController = CXCallController()
 
         super.init(coder: aDecoder)
-
-        callKitProvider.setDelegate(self, queue: nil)
     }
     
     deinit {
         // CallKit has an odd API contract where the developer must call invalidate or the CXProvider is leaked.
-        callKitProvider.invalidate()
+        if let provider = callKitProvider {
+            provider.invalidate()
+        }
     }
 
     override func viewDidLoad() {
@@ -341,7 +331,9 @@ extension ViewController: TVONotificationDelegate {
         configuration.maximumCallsPerCallGroup = 1
 
         callKitProvider = CXProvider(configuration: configuration)
-        callKitProvider.setDelegate(self, queue: nil)
+        if let provider = callKitProvider {
+            provider.setDelegate(self, queue: nil)
+        }
         
         let from = (callInvite.from ?? "Voice Bot").replacingOccurrences(of: "client:", with: "")
 
@@ -427,7 +419,9 @@ extension ViewController: TVOCallDelegate {
             completion(false)
         }
         
-        callKitProvider.reportCall(with: call.uuid, endedAt: Date(), reason: CXCallEndedReason.failed)
+        if let provider = callKitProvider {
+            provider.reportCall(with: call.uuid, endedAt: Date(), reason: CXCallEndedReason.failed)
+        }
 
         callDisconnected(call)
     }
@@ -446,7 +440,9 @@ extension ViewController: TVOCallDelegate {
                 reason = .failed
             }
             
-            callKitProvider.reportCall(with: call.uuid, endedAt: Date(), reason: reason)
+            if let provider = callKitProvider {
+                provider.reportCall(with: call.uuid, endedAt: Date(), reason: reason)
+            }
         }
 
         callDisconnected(call)
@@ -601,12 +597,14 @@ extension ViewController: CXProviderDelegate {
         
         performVoiceCall(uuid: action.callUUID, client: "") { success in
             if success {
+                NSLog("performVoiceCall() successful")
                 provider.reportOutgoingCall(with: action.callUUID, connectedAt: Date())
-                action.fulfill()
             } else {
-                action.fail()
+                NSLog("performVoiceCall() failed")
             }
         }
+        
+        action.fulfill()
     }
 
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
@@ -617,9 +615,9 @@ extension ViewController: CXProviderDelegate {
         
         performAnswerVoiceCall(uuid: action.callUUID) { success in
             if success {
-                action.fulfill()
+                NSLog("performAnswerVoiceCall() successful")
             } else {
-                action.fail()
+                NSLog("performAnswerVoiceCall() failed")
             }
         }
         
@@ -666,17 +664,43 @@ extension ViewController: CXProviderDelegate {
     
     // MARK: Call Kit Actions
     func performStartCallAction(uuid: UUID, handle: String) {
-        let callHandle = CXHandle(type: .generic, value: handle)
-        let startCallAction = CXStartCallAction(call: uuid, handle: callHandle)
-        let transaction = CXTransaction(action: startCallAction)
+        let configuration = CXProviderConfiguration(localizedName: "Voice Quickstart")
+        configuration.maximumCallGroups = 1
+        configuration.maximumCallsPerCallGroup = 1
 
-        callKitCallController.request(transaction) { error in
-            if let error = error {
-                NSLog("StartCallAction transaction request failed: \(error.localizedDescription)")
-                return
+        callKitProvider = CXProvider(configuration: configuration)
+        if let provider = callKitProvider {
+            provider.setDelegate(self, queue: nil)
+            
+            let callHandle = CXHandle(type: .generic, value: handle)
+            let startCallAction = CXStartCallAction(call: uuid, handle: callHandle)
+            let transaction = CXTransaction(action: startCallAction)
+
+            callKitCallController.request(transaction) { error in
+                if let error = error {
+                    NSLog("StartCallAction transaction request failed: \(error.localizedDescription)")
+                    return
+                }
+
+                NSLog("StartCallAction transaction request successful")
+
+                let callUpdate = CXCallUpdate()
+                
+                callUpdate.remoteHandle = callHandle
+                callUpdate.supportsDTMF = true
+                callUpdate.supportsHolding = true
+                callUpdate.supportsGrouping = false
+                callUpdate.supportsUngrouping = false
+                callUpdate.hasVideo = false
+
+                provider.reportCall(with: uuid, updated: callUpdate)
             }
+        }
+    }
 
-            NSLog("StartCallAction transaction request successful")
+    func reportIncomingCall(from: String, uuid: UUID) {
+        if let provider = callKitProvider {
+            let callHandle = CXHandle(type: .generic, value: from)
 
             let callUpdate = CXCallUpdate()
             
@@ -687,27 +711,12 @@ extension ViewController: CXProviderDelegate {
             callUpdate.supportsUngrouping = false
             callUpdate.hasVideo = false
 
-            self.callKitProvider.reportCall(with: uuid, updated: callUpdate)
-        }
-    }
-
-    func reportIncomingCall(from: String, uuid: UUID) {
-        let callHandle = CXHandle(type: .generic, value: from)
-
-        let callUpdate = CXCallUpdate()
-        
-        callUpdate.remoteHandle = callHandle
-        callUpdate.supportsDTMF = true
-        callUpdate.supportsHolding = true
-        callUpdate.supportsGrouping = false
-        callUpdate.supportsUngrouping = false
-        callUpdate.hasVideo = false
-
-        callKitProvider.reportNewIncomingCall(with: uuid, update: callUpdate) { error in
-            if let error = error {
-                NSLog("Failed to report incoming call successfully: \(error.localizedDescription).")
-            } else {
-                NSLog("Incoming call successfully reported.")
+            provider.reportNewIncomingCall(with: uuid, update: callUpdate) { error in
+                if let error = error {
+                    NSLog("Failed to report incoming call successfully: \(error.localizedDescription).")
+                } else {
+                    NSLog("Incoming call successfully reported.")
+                }
             }
         }
     }
