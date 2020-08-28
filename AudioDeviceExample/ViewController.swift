@@ -235,7 +235,7 @@ extension ViewController: CallDelegate {
 extension ViewController: CXProviderDelegate {
     func providerDidReset(_ provider: CXProvider) {
         NSLog("providerDidReset:")
-        audioDevice.isEnabled = true
+        audioDevice.isEnabled = false
     }
 
     func providerDidBegin(_ provider: CXProvider) {
@@ -249,6 +249,7 @@ extension ViewController: CXProviderDelegate {
 
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
         NSLog("provider:didDeactivateAudioSession:")
+        audioDevice.isEnabled = false
     }
 
     func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
@@ -257,8 +258,6 @@ extension ViewController: CXProviderDelegate {
 
     func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
         NSLog("provider:performStartCallAction:")
-
-        audioDevice.isEnabled = false
         
         provider.reportOutgoingCall(with: action.callUUID, startedConnectingAt: Date())
         
