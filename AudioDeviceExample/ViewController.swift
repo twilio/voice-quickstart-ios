@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     
     var accessToken: String? = <#Replace with Access Token string#>
     var activeCall: TVOCall?
+    var activeCall: Call?
     var audioDevice: ExampleAVAudioEngineDevice = ExampleAVAudioEngineDevice()
     
     var callKitProvider: CXProvider
@@ -117,7 +118,7 @@ class ViewController: UIViewController {
     @IBAction func callButtonTapped(_ sender: Any) {
         guard activeCall == nil else {
             userInitiatedDisconnect = true
-            performEndCallAction(uuid: activeCall!.uuid)
+            performEndCallAction(uuid: activeCall!.uuid!)
             toggleUIState(isEnabled: false, showCallControl: false)
             
             return
@@ -153,14 +154,14 @@ class ViewController: UIViewController {
 
 // MARK: - TVOCallDelegate
 
-extension ViewController: TVOCallDelegate {
-    func callDidStartRinging(_ call: TVOCall) {
+extension ViewController: CallDelegate {
+    func callDidStartRinging(call: Call) {
         NSLog("callDidStartRinging:")
         
         callButton.setTitle("Ringing", for: .normal)
     }
     
-    func callDidConnect(_ call: TVOCall) {
+    func callDidConnect(call: Call) {
         NSLog("callDidConnect:")
         
         if let callKitCompletionCallback = callKitCompletionCallback {
@@ -172,32 +173,32 @@ extension ViewController: TVOCallDelegate {
         toggleAudioRoute(toSpeaker: true)
     }
     
-    func call(_ call: TVOCall, isReconnectingWithError error: Error) {
+    func call(call: Call, isReconnectingWithError error: Error) {
         NSLog("call:isReconnectingWithError:")
         
         callButton.setTitle("Reconnecting", for: .normal)
         toggleUIState(isEnabled: false, showCallControl: false)
     }
     
-    func callDidReconnect(_ call: TVOCall) {
+    func callDidReconnect(call: Call) {
         NSLog("callDidReconnect:")
         
         callButton.setTitle("Hang Up", for: .normal)
         toggleUIState(isEnabled: true, showCallControl: true)
     }
     
-    func call(_ call: TVOCall, didFailToConnectWithError error: Error) {
+    func callDidFailToConnect(call: Call, error: Error) {
         NSLog("Call failed to connect: \(error.localizedDescription)")
         
         if let completion = callKitCompletionCallback {
             completion(false)
         }
 
-        performEndCallAction(uuid: call.uuid)
+        performEndCallAction(uuid: call.uuid!)
         callDisconnected(call)
     }
     
-    func call(_ call: TVOCall, didDisconnectWithError error: Error?) {
+    func callDidDisconnect(call: Call, error: Error?) {
         if let error = error {
             NSLog("Call failed: \(error.localizedDescription)")
         } else {
@@ -211,13 +212,13 @@ extension ViewController: TVOCallDelegate {
                 reason = .failed
             }
             
-            callKitProvider.reportCall(with: call.uuid, endedAt: Date(), reason: reason)
+            callKitProvider.reportCall(with: call.uuid!, endedAt: Date(), reason: reason)
         }
 
         callDisconnected(call)
     }
     
-    func callDisconnected(_ call: TVOCall) {
+    func callDisconnected(_ call: Call) {
         if call == activeCall {
             activeCall = nil
         }
@@ -234,7 +235,7 @@ extension ViewController: TVOCallDelegate {
 extension ViewController: CXProviderDelegate {
     func providerDidReset(_ provider: CXProvider) {
         NSLog("providerDidReset:")
-        audioDevice.isEnabled = true
+        audioDevice.isEnabled = false
     }
 
     func providerDidBegin(_ provider: CXProvider) {
@@ -248,6 +249,7 @@ extension ViewController: CXProviderDelegate {
 
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
         NSLog("provider:didDeactivateAudioSession:")
+        audioDevice.isEnabled = false
     }
 
     func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
@@ -256,8 +258,6 @@ extension ViewController: CXProviderDelegate {
 
     func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
         NSLog("provider:performStartCallAction:")
-
-        audioDevice.isEnabled = false
         
         provider.reportOutgoingCall(with: action.callUUID, startedConnectingAt: Date())
         
@@ -372,12 +372,12 @@ extension ViewController: CXProviderDelegate {
             return
         }
         
-        let connectOptions = TVOConnectOptions(accessToken: token) { builder in
+        let connectOptions = ConnectOptions(accessToken: token) { builder in
             builder.params = [twimlParamTo: self.outgoingTextField.text ?? ""]
             builder.uuid = uuid
         }
         
-        let call = TwilioVoice.connect(with: connectOptions, delegate: self)
+        let call = TwilioVoice.connect(options: connectOptions, delegate: self)
         activeCall = call
         callKitCompletionCallback = completionHandler
     }

@@ -35,12 +35,12 @@ class ViewController: UIViewController {
     var incomingAlertController: UIAlertController?
 
     var callKitCompletionCallback: ((Bool) -> Void)? = nil
-    var audioDevice = TVODefaultAudioDevice()
-    var activeCallInvites: [String: TVOCallInvite]! = [:]
-    var activeCalls: [String: TVOCall]! = [:]
+    var audioDevice = DefaultAudioDevice()
+    var activeCallInvites: [String: CallInvite]! = [:]
+    var activeCalls: [String: Call]! = [:]
     
     // activeCall represents the last connected call
-    var activeCall: TVOCall? = nil
+    var activeCall: Call? = nil
 
     var callKitProvider: CXProvider?
     let callKitCallController: CXCallController
@@ -131,7 +131,7 @@ class ViewController: UIViewController {
     @IBAction func mainButtonPressed(_ sender: Any) {
         guard activeCall == nil else {
             userInitiatedDisconnect = true
-            performEndCallAction(uuid: activeCall!.uuid)
+            performEndCallAction(uuid: activeCall!.uuid!)
             toggleUIState(isEnabled: false, showCallControl: false)
             
             return
@@ -186,7 +186,7 @@ class ViewController: UIViewController {
     func toggleAudioRoute(toSpeaker: Bool) {
         // The mode set by the Voice SDK is "VoiceChat" so the default audio route is the built-in receiver. Use port override to switch the route.
         audioDevice.block = {
-            kTVODefaultAVAudioSessionConfigurationBlock()
+            DefaultAudioDevice.DefaultAVAudioSessionConfigurationBlock()
             
             do {
                 if toSpeaker {
@@ -259,7 +259,7 @@ extension ViewController: PushKitEventDelegate {
         /*
          * Perform registration if a new device token is detected.
          */
-        TwilioVoice.register(withAccessToken: accessToken, deviceToken: cachedDeviceToken) { error in
+        TwilioVoice.register(accessToken: accessToken, deviceToken: cachedDeviceToken) { error in
             if let error = error {
                 NSLog("An error occurred while registering: \(error.localizedDescription)")
             } else {
@@ -277,7 +277,7 @@ extension ViewController: PushKitEventDelegate {
         guard let deviceToken = UserDefaults.standard.data(forKey: kCachedDeviceToken),
             let accessToken = fetchAccessToken() else { return }
         
-        TwilioVoice.unregister(withAccessToken: accessToken, deviceToken: deviceToken) { error in
+        TwilioVoice.unregister(accessToken: accessToken, deviceToken: deviceToken) { error in
             if let error = error {
                 NSLog("An error occurred while unregistering: \(error.localizedDescription)")
             } else {
@@ -314,8 +314,8 @@ extension ViewController: PushKitEventDelegate {
 
 // MARK: - TVONotificaitonDelegate
 
-extension ViewController: TVONotificationDelegate {
-    func callInviteReceived(_ callInvite: TVOCallInvite) {
+extension ViewController: NotificationDelegate {
+    func callInviteReceived(callInvite: CallInvite) {
         NSLog("callInviteReceived:")
         
         var callKitProviderName = "Voice Quickstart\n"
@@ -346,7 +346,7 @@ extension ViewController: TVONotificationDelegate {
         activeCallInvites[callInvite.uuid.uuidString] = callInvite
     }
     
-    func cancelledCallInviteReceived(_ cancelledCallInvite: TVOCancelledCallInvite, error: Error) {
+    func cancelledCallInviteReceived(cancelledCallInvite: CancelledCallInvite, error: Error) {
         NSLog("cancelledCallInviteCanceled:error:, error: \(error.localizedDescription)")
         
         guard let activeCallInvites = activeCallInvites, !activeCallInvites.isEmpty else {
@@ -365,8 +365,8 @@ extension ViewController: TVONotificationDelegate {
 
 // MARK: - TVOCallDelegate
 
-extension ViewController: TVOCallDelegate {
-    func callDidStartRinging(_ call: TVOCall) {
+extension ViewController: CallDelegate {
+    func callDidStartRinging(call: Call) {
         NSLog("callDidStartRinging:")
         
         placeCallButton.setTitle("Ringing", for: .normal)
@@ -382,7 +382,7 @@ extension ViewController: TVOCallDelegate {
         }
     }
     
-    func callDidConnect(_ call: TVOCall) {
+    func callDidConnect(call: Call) {
         NSLog("callDidConnect:")
         
         if playCustomRingback {
@@ -400,7 +400,7 @@ extension ViewController: TVOCallDelegate {
         toggleAudioRoute(toSpeaker: true)
     }
     
-    func call(_ call: TVOCall, isReconnectingWithError error: Error) {
+    func call(call: Call, isReconnectingWithError error: Error) {
         NSLog("call:isReconnectingWithError:")
         
         placeCallButton.setTitle("Reconnecting", for: .normal)
@@ -408,7 +408,7 @@ extension ViewController: TVOCallDelegate {
         toggleUIState(isEnabled: false, showCallControl: false)
     }
     
-    func callDidReconnect(_ call: TVOCall) {
+    func callDidReconnect(call: Call) {
         NSLog("callDidReconnect:")
         
         placeCallButton.setTitle("Hang Up", for: .normal)
@@ -416,7 +416,7 @@ extension ViewController: TVOCallDelegate {
         toggleUIState(isEnabled: true, showCallControl: true)
     }
     
-    func call(_ call: TVOCall, didFailToConnectWithError error: Error) {
+    func callDidFailToConnect(call: Call, error: Error) {
         NSLog("Call failed to connect: \(error.localizedDescription)")
         
         if let completion = callKitCompletionCallback {
@@ -424,13 +424,13 @@ extension ViewController: TVOCallDelegate {
         }
         
         if let provider = callKitProvider {
-            provider.reportCall(with: call.uuid, endedAt: Date(), reason: CXCallEndedReason.failed)
+            provider.reportCall(with: call.uuid!, endedAt: Date(), reason: CXCallEndedReason.failed)
         }
 
-        callDisconnected(call)
+        callDisconnected(call: call)
     }
     
-    func call(_ call: TVOCall, didDisconnectWithError error: Error?) {
+    func callDidDisconnect(call: Call, error: Error?) {
         if let error = error {
             NSLog("Call failed: \(error.localizedDescription)")
         } else {
@@ -445,19 +445,19 @@ extension ViewController: TVOCallDelegate {
             }
             
             if let provider = callKitProvider {
-                provider.reportCall(with: call.uuid, endedAt: Date(), reason: reason)
+                provider.reportCall(with: call.uuid!, endedAt: Date(), reason: reason)
             }
         }
 
-        callDisconnected(call)
+        callDisconnected(call: call)
     }
     
-    func callDisconnected(_ call: TVOCall) {
+    func callDisconnected(call: Call) {
         if call == activeCall {
             activeCall = nil
         }
         
-        activeCalls.removeValue(forKey: call.uuid.uuidString)
+        activeCalls.removeValue(forKey: call.uuid!.uuidString)
         
         userInitiatedDisconnect = false
         
@@ -470,7 +470,7 @@ extension ViewController: TVOCallDelegate {
         placeCallButton.setTitle("Call", for: .normal)
     }
     
-    func call(_ call: TVOCall, didReceiveQualityWarnings currentWarnings: Set<NSNumber>, previousWarnings: Set<NSNumber>) {
+    func call(call: Call, didReceiveQualityWarnings currentWarnings: Set<NSNumber>, previousWarnings: Set<NSNumber>) {
         /**
         * currentWarnings: existing quality warnings that have not been cleared yet
         * previousWarnings: last set of warnings prior to receiving this callback
@@ -505,7 +505,7 @@ extension ViewController: TVOCallDelegate {
             popupMessage = "Warnings cleared: "
         }
         
-        let mappedWarnings: [String] = warnings.map { number in warningString(TVOCallQualityWarning(rawValue: number.uintValue)!)}
+        let mappedWarnings: [String] = warnings.map { number in warningString(Call.QualityWarning(rawValue: number.uintValue)!)}
         popupMessage += mappedWarnings.joined(separator: ", ")
         
         qualityWarningsToaster.alpha = 0.0
@@ -526,7 +526,7 @@ extension ViewController: TVOCallDelegate {
         }
     }
     
-    func warningString(_ warning: TVOCallQualityWarning) -> String {
+    func warningString(_ warning: Call.QualityWarning) -> String {
         switch warning {
         case .highRtt: return "high-rtt"
         case .highJitter: return "high-jitter"
@@ -568,7 +568,7 @@ extension ViewController: TVOCallDelegate {
 extension ViewController: CXProviderDelegate {
     func providerDidReset(_ provider: CXProvider) {
         NSLog("providerDidReset:")
-        audioDevice.isEnabled = true
+        audioDevice.isEnabled = false
     }
 
     func providerDidBegin(_ provider: CXProvider) {
@@ -582,6 +582,7 @@ extension ViewController: CXProviderDelegate {
 
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
         NSLog("provider:didDeactivateAudioSession:")
+        audioDevice.isEnabled = false
     }
 
     func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
@@ -593,9 +594,6 @@ extension ViewController: CXProviderDelegate {
         
         toggleUIState(isEnabled: false, showCallControl: false)
         startSpin()
-
-        audioDevice.isEnabled = false
-        audioDevice.block()
         
         provider.reportOutgoingCall(with: action.callUUID, startedConnectingAt: Date())
         
@@ -613,9 +611,6 @@ extension ViewController: CXProviderDelegate {
 
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         NSLog("provider:performAnswerCallAction:")
-        
-        audioDevice.isEnabled = false
-        audioDevice.block()
         
         performAnswerVoiceCall(uuid: action.callUUID) { success in
             if success {
@@ -749,14 +744,14 @@ extension ViewController: CXProviderDelegate {
             return
         }
         
-        let connectOptions = TVOConnectOptions(accessToken: accessToken) { builder in
+        let connectOptions = ConnectOptions(accessToken: accessToken) { builder in
             builder.params = [twimlParamTo: self.outgoingValue.text ?? ""]
             builder.uuid = uuid
         }
         
-        let call = TwilioVoice.connect(with: connectOptions, delegate: self)
+        let call = TwilioVoice.connect(options: connectOptions, delegate: self)
         activeCall = call
-        activeCalls[call.uuid.uuidString] = call
+        activeCalls[call.uuid!.uuidString] = call
         callKitCompletionCallback = completionHandler
     }
     
@@ -766,13 +761,13 @@ extension ViewController: CXProviderDelegate {
             return
         }
         
-        let acceptOptions = TVOAcceptOptions(callInvite: callInvite) { builder in
+        let acceptOptions = AcceptOptions(callInvite: callInvite) { builder in
             builder.uuid = callInvite.uuid
         }
         
-        let call = callInvite.accept(with: acceptOptions, delegate: self)
+        let call = callInvite.accept(options: acceptOptions, delegate: self)
         activeCall = call
-        activeCalls[call.uuid.uuidString] = call
+        activeCalls[call.uuid!.uuidString] = call
         callKitCompletionCallback = completionHandler
         
         activeCallInvites.removeValue(forKey: uuid.uuidString)
