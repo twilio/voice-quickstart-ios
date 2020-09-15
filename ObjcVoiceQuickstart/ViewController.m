@@ -572,7 +572,7 @@ previousWarnings:(NSSet<NSNumber *> *)previousWarnings {
 #pragma mark - CXProviderDelegate
 - (void)providerDidReset:(CXProvider *)provider {
     NSLog(@"providerDidReset:");
-    self.audioDevice.enabled = YES;
+    self.audioDevice.enabled = NO;
 }
 
 - (void)providerDidBegin:(CXProvider *)provider {
@@ -586,6 +586,7 @@ previousWarnings:(NSSet<NSNumber *> *)previousWarnings {
 
 - (void)provider:(CXProvider *)provider didDeactivateAudioSession:(AVAudioSession *)audioSession {
     NSLog(@"provider:didDeactivateAudioSession:");
+    self.audioDevice.enabled = NO;
 }
 
 - (void)provider:(CXProvider *)provider timedOutPerformingAction:(CXAction *)action {
@@ -597,9 +598,6 @@ previousWarnings:(NSSet<NSNumber *> *)previousWarnings {
     
     [self toggleUIState:NO showCallControl:NO];
     [self startSpin];
-
-    self.audioDevice.enabled = NO;
-    self.audioDevice.block();
     
     [self.callKitProvider reportOutgoingCallWithUUID:action.callUUID startedConnectingAtDate:[NSDate date]];
     
@@ -618,9 +616,6 @@ previousWarnings:(NSSet<NSNumber *> *)previousWarnings {
 
 - (void)provider:(CXProvider *)provider performAnswerCallAction:(CXAnswerCallAction *)action {
     NSLog(@"provider:performAnswerCallAction:");
-    
-    self.audioDevice.enabled = NO;
-    self.audioDevice.block();
     
     [self performAnswerVoiceCallWithUUID:action.callUUID completion:^(BOOL success) {
         if (success) {
