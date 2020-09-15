@@ -218,7 +218,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
          * Perform registration if a new device token is detected.
          */
         [TwilioVoice registerWithAccessToken:accessToken
-                             deviceTokenData:cachedDeviceToken
+                                 deviceToken:cachedDeviceToken
                                   completion:^(NSError *error) {
              if (error) {
                  NSLog(@"An error occurred while registering: %@", [error localizedDescription]);
@@ -240,7 +240,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     NSData *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
     if ([cachedDeviceToken length] > 0) {
         [TwilioVoice unregisterWithAccessToken:accessToken
-                               deviceTokenData:cachedDeviceToken
+                                   deviceToken:cachedDeviceToken
                                     completion:^(NSError *error) {
             if (error) {
                 NSLog(@"An error occurred while unregistering: %@", [error localizedDescription]);
