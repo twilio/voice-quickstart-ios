@@ -13,7 +13,6 @@ let twimlParamTo = "to"
 class ViewController: UIViewController {
     
     var accessToken: String? = <#Replace with Access Token string#>
-    var activeCall: TVOCall?
     var activeCall: Call?
     var audioDevice: ExampleAVAudioEngineDevice = ExampleAVAudioEngineDevice()
     
