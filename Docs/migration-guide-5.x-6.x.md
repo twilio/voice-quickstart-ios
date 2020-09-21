@@ -36,6 +36,3 @@ Please note, if you are not using CallKit in your app, you must not set `Connect
 | Error Codes | ErrorCode  | Error Message |
 | ------------| -----------| ------------- |
 | 53407 | TVOMediaDtlsTransportFailedErrorCode | Media connection failed due to DTLS handshake failure |
-
-
-
