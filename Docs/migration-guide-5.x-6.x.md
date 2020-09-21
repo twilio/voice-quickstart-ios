@@ -2,14 +2,39 @@
 
 - The Voice SDK has been updated for better Swift interoperability. The `TVO` class prefix has been removed from all Twilio Voice types.
  
- ```swift
+```swift
     let connectOptions = ConnectOptions(accessToken: accessToken) { builder in
         // build connect options using builder
     }
     let call = TwilioVoice.connect(options: connectOptions, delegate: self)
- ```
+```
  
 - This release has improved API for CallKit integration. In order to use CallKit with SDK, you must set `ConnectOptions.uuid` or `AcceptOptions.uuid` while making or answering a Call. When `ConnectOptions.uuid` or `AcceptOptions.uuid` is set, it is your responsibility to enable and disable the audio device. You should enable the audio device in `[CXProviderDelegate provider:didActivateAudioSession:]`, and disable the audio device in `[CXProviderDelegate provider:didDeactivateAudioSession:]`.
+
+Passing a uuid to make a Call with CallKit code snippets -
+
+```swift
+    let uuid = UUID()
+    
+    let connectOptions = ConnectOptions(accessToken: accessToken) { builder in
+        builder.uuid = uuid
+    }
+
+    let call = TwilioVoice.connect(options: connectOptions, delegate: self)
+```
+
+
+Passing a uuid to answer an incoming Call with CallKit code snippets -
+
+```swift
+    let acceptOptions = AcceptOptions(callInvite: callInvite) { builder in
+         builder.uuid = callInvite.uuid
+    }
+        
+    let call = callInvite.accept(options: acceptOptions, delegate: self)
+```
+
+`ProviderDelegate` implementation code snippets -
 
 ```swift
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
