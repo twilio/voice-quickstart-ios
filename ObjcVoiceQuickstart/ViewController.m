@@ -60,6 +60,12 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     self.outgoingValue.delegate = self;
 
     self.callKitCallController = [[CXCallController alloc] init];
+    CXProviderConfiguration *configuration = [[CXProviderConfiguration alloc] initWithLocalizedName:@"Voice Quickstart"];
+    configuration.maximumCallGroups = 1;
+    configuration.maximumCallsPerCallGroup = 1;
+    
+    self.callKitProvider = [[CXProvider alloc] initWithConfiguration:configuration];
+    [self.callKitProvider setDelegate:self queue:nil];
     
     /*
      * The important thing to remember when providing a TVOAudioDevice is that the device must be set
@@ -290,21 +296,9 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 
     NSLog(@"callInviteReceived:");
     
-    NSString *callKitProviderName = @"Voice Quickstart\n";
     if (callInvite.callerInfo.verified != nil && [callInvite.callerInfo.verified boolValue]) {
-        callKitProviderName = @"✅ Caller Verified\n";
+        NSLog(@"Call invite received from verified caller number!");
     }
-    
-    CXProviderConfiguration *configuration = [[CXProviderConfiguration alloc] initWithLocalizedName:callKitProviderName];
-    configuration.maximumCallGroups = 1;
-    configuration.maximumCallsPerCallGroup = 1;
-    
-    if (self.callKitProvider) {
-        [self.callKitProvider invalidate];
-    }
-    
-    self.callKitProvider = [[CXProvider alloc] initWithConfiguration:configuration];
-    [self.callKitProvider setDelegate:self queue:nil];
     
     NSString *from = @"Voice Bot";
     if (callInvite.from) {
@@ -671,17 +665,6 @@ previousWarnings:(NSSet<NSNumber *> *)previousWarnings {
     if (uuid == nil || handle == nil) {
         return;
     }
-    
-    CXProviderConfiguration *configuration = [[CXProviderConfiguration alloc] initWithLocalizedName:@"Quickstart"];
-    configuration.maximumCallGroups = 1;
-    configuration.maximumCallsPerCallGroup = 1;
-    
-    if (self.callKitProvider) {
-        [self.callKitProvider invalidate];
-    }
-
-    self.callKitProvider = [[CXProvider alloc] initWithConfiguration:configuration];
-    [self.callKitProvider setDelegate:self queue:nil];
 
     CXHandle *callHandle = [[CXHandle alloc] initWithType:CXHandleTypeGeneric value:handle];
     CXStartCallAction *startCallAction = [[CXStartCallAction alloc] initWithCallUUID:uuid handle:callHandle];
