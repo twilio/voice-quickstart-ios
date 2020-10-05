@@ -74,6 +74,7 @@ class ViewController: UIViewController {
         toggleUIState(isEnabled: true, showCallControl: false)
         outgoingValue.delegate = self
         
+        /* Please note that the designated initializer `CXProviderConfiguration(localizedName: String)` has been deprecated on iOS 14. */
         let configuration = CXProviderConfiguration(localizedName: "Voice Quickstart")
         configuration.maximumCallGroups = 1
         configuration.maximumCallsPerCallGroup = 1

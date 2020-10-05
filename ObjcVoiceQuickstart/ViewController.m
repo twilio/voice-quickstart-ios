@@ -60,6 +60,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     self.outgoingValue.delegate = self;
 
     self.callKitCallController = [[CXCallController alloc] init];
+    /* Please note that the designated initializer `[CXProviderConfiguration initWithLocalizedName:]` has been deprecated on iOS 14. */
     CXProviderConfiguration *configuration = [[CXProviderConfiguration alloc] initWithLocalizedName:@"Voice Quickstart"];
     configuration.maximumCallGroups = 1;
     configuration.maximumCallsPerCallGroup = 1;
