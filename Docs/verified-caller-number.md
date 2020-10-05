@@ -36,6 +36,8 @@ func callInviteReceived(_ callInvite: TVOCallInvite) {
 }
 ```
 
+* Please note that the designated initializer `[CXProviderConfiguration initWithLocalizedName:]` has been deprecated on iOS 14.
+
 If the number of the caller is verified
 
 <kbd><img width="300px" src="../Images/verified-caller-number.png"/></kbd>

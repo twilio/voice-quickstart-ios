@@ -43,7 +43,7 @@ class ViewController: UIViewController {
     var activeCall: Call? = nil
 
     var callKitProvider: CXProvider?
-    let callKitCallController: CXCallController
+    let callKitCallController = CXCallController()
     var userInitiatedDisconnect: Bool = false
     
     /*
@@ -57,7 +57,6 @@ class ViewController: UIViewController {
 
     required init?(coder aDecoder: NSCoder) {
         isSpinning = false
-        callKitCallController = CXCallController()
 
         super.init(coder: aDecoder)
     }
@@ -74,6 +73,15 @@ class ViewController: UIViewController {
 
         toggleUIState(isEnabled: true, showCallControl: false)
         outgoingValue.delegate = self
+        
+        /* Please note that the designated initializer `CXProviderConfiguration(localizedName: String)` has been deprecated on iOS 14. */
+        let configuration = CXProviderConfiguration(localizedName: "Voice Quickstart")
+        configuration.maximumCallGroups = 1
+        configuration.maximumCallsPerCallGroup = 1
+        callKitProvider = CXProvider(configuration: configuration)
+        if let provider = callKitProvider {
+            provider.setDelegate(self, queue: nil)
+        }
         
         /*
          * The important thing to remember when providing a TVOAudioDevice is that the device must be set
@@ -318,25 +326,11 @@ extension ViewController: NotificationDelegate {
     func callInviteReceived(callInvite: CallInvite) {
         NSLog("callInviteReceived:")
         
-        var callKitProviderName = "Voice Quickstart\n"
         let callerInfo: TVOCallerInfo = callInvite.callerInfo
         if let verified: NSNumber = callerInfo.verified {
             if verified.boolValue {
-                callKitProviderName = "✅ Caller Verified\n"
+                NSLog("Call invite received from verified caller number!")
             }
-        }
-        
-        let configuration = CXProviderConfiguration(localizedName: callKitProviderName)
-        configuration.maximumCallGroups = 1
-        configuration.maximumCallsPerCallGroup = 1
-        
-        if let existingProvider = callKitProvider {
-            existingProvider.invalidate()
-        }
-
-        callKitProvider = CXProvider(configuration: configuration)
-        if let provider = callKitProvider {
-            provider.setDelegate(self, queue: nil)
         }
         
         let from = (callInvite.from ?? "Voice Bot").replacingOccurrences(of: "client:", with: "")
@@ -663,47 +657,22 @@ extension ViewController: CXProviderDelegate {
     
     // MARK: Call Kit Actions
     func performStartCallAction(uuid: UUID, handle: String) {
-        let configuration = CXProviderConfiguration(localizedName: "Voice Quickstart")
-        configuration.maximumCallGroups = 1
-        configuration.maximumCallsPerCallGroup = 1
-
-        if let existingProvider = callKitProvider {
-            existingProvider.invalidate()
+        guard let provider = callKitProvider else {
+            NSLog("CallKit provider not available")
+            return
         }
         
-        callKitProvider = CXProvider(configuration: configuration)
-        if let provider = callKitProvider {
-            provider.setDelegate(self, queue: nil)
-            
-            let callHandle = CXHandle(type: .generic, value: handle)
-            let startCallAction = CXStartCallAction(call: uuid, handle: callHandle)
-            let transaction = CXTransaction(action: startCallAction)
+        let callHandle = CXHandle(type: .generic, value: handle)
+        let startCallAction = CXStartCallAction(call: uuid, handle: callHandle)
+        let transaction = CXTransaction(action: startCallAction)
 
-            callKitCallController.request(transaction) { error in
-                if let error = error {
-                    NSLog("StartCallAction transaction request failed: \(error.localizedDescription)")
-                    return
-                }
-
-                NSLog("StartCallAction transaction request successful")
-
-                let callUpdate = CXCallUpdate()
-                
-                callUpdate.remoteHandle = callHandle
-                callUpdate.supportsDTMF = true
-                callUpdate.supportsHolding = true
-                callUpdate.supportsGrouping = false
-                callUpdate.supportsUngrouping = false
-                callUpdate.hasVideo = false
-
-                provider.reportCall(with: uuid, updated: callUpdate)
+        callKitCallController.request(transaction) { error in
+            if let error = error {
+                NSLog("StartCallAction transaction request failed: \(error.localizedDescription)")
+                return
             }
-        }
-    }
 
-    func reportIncomingCall(from: String, uuid: UUID) {
-        if let provider = callKitProvider {
-            let callHandle = CXHandle(type: .generic, value: from)
+            NSLog("StartCallAction transaction request successful")
 
             let callUpdate = CXCallUpdate()
             
@@ -714,12 +683,31 @@ extension ViewController: CXProviderDelegate {
             callUpdate.supportsUngrouping = false
             callUpdate.hasVideo = false
 
-            provider.reportNewIncomingCall(with: uuid, update: callUpdate) { error in
-                if let error = error {
-                    NSLog("Failed to report incoming call successfully: \(error.localizedDescription).")
-                } else {
-                    NSLog("Incoming call successfully reported.")
-                }
+            provider.reportCall(with: uuid, updated: callUpdate)
+        }
+    }
+
+    func reportIncomingCall(from: String, uuid: UUID) {
+        guard let provider = callKitProvider else {
+            NSLog("CallKit provider not available")
+            return
+        }
+
+        let callHandle = CXHandle(type: .generic, value: from)
+        let callUpdate = CXCallUpdate()
+        
+        callUpdate.remoteHandle = callHandle
+        callUpdate.supportsDTMF = true
+        callUpdate.supportsHolding = true
+        callUpdate.supportsGrouping = false
+        callUpdate.supportsUngrouping = false
+        callUpdate.hasVideo = false
+
+        provider.reportNewIncomingCall(with: uuid, update: callUpdate) { error in
+            if let error = error {
+                NSLog("Failed to report incoming call successfully: \(error.localizedDescription).")
+            } else {
+                NSLog("Incoming call successfully reported.")
             }
         }
     }
