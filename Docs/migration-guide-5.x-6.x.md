@@ -52,11 +52,28 @@ Passing a uuid to answer an incoming Call with CallKit code snippets -
 
 Please note, if you are not using CallKit in your app, you must not set `ConnectOptions.uuid` or `AcceptOptions.uuid` while making or answering a call. The Voice SDK will enable the audio device for you when the `uuid` is `nil`. 
 
-- The `[TwilioVoice registerWithAccessToken:deviceTokenData:completion:]` and the `[TwilioVoice unregisterWithAccessToken:deviceTokenData:completion:]` have been renamed to replace the `[TwilioVoice registerWithAccessToken:deviceToken:completion:]` and the `[TwilioVoice unregisterWithAccessToken:deviceToken:completion:]` methods and now take the `NSData` type device token as parameter.
+- The `[TwilioVoice registerWithAccessToken:deviceTokenData:completion:]` and the `[TwilioVoice unregisterWithAccessToken:deviceTokenData:completion:]` have been renamed to replace the `[TwilioVoice registerWithAccessToken:deviceToken:completion:]` and the `[TwilioVoice unregisterWithAccessToken:deviceToken:completion:]` methods and now take the `NSData` type device token as parameter. 
 
 - The `uuid` property of `TVOCall` is now optional.
 
 - In this release, `[TVOCallDelegate callDidConnect:]` is raised when both the ICE connection state is connected and DTLS negotiation has completed. There is no change in behavior however the SDK can detect DTLS failures and raise `kTVOMediaDtlsTransportFailedErrorCode` if they occur.
+
+- The `[TwilioVoice handleNotification:payload:delegate]` method has changed to `[TwilioVoice handleNotification:payload:delegate:delegateQueue]`
+ ```
+ // Previous
+ func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
+     if (!TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self)) {
+         // The push notification was not a Twilio Voice push notification.
+     }
+ }
+
+ // New
+ func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, forType type: PKPushType) {
+     if (!TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)) {
+         // The push notification was not a Twilio Voice push notification.
+     }
+ }
+ ```
 
 | Error Codes | ErrorCode  | Error Message |
 | ------------| -----------| ------------- |
