@@ -18,6 +18,7 @@ static NSString *const kYourServerBaseURLString = <#URL TO YOUR ACCESS TOKEN SER
 static NSString *const kAccessTokenEndpoint = @"/accessToken";
 static NSString *const kIdentity = @"alice";
 static NSString *const kTwimlParamTo = @"to";
+
 static NSInteger const kBindingExpirationIntervalDays = 365;
 
 NSString * const kCachedDeviceToken = @"CachedDeviceToken";
@@ -236,8 +237,12 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
                  
                  // Save the device token after successfully registered.
                  [[NSUserDefaults standardUserDefaults] setObject:cachedDeviceToken forKey:kCachedDeviceToken];
-
-                 // Save the date and time to make sure we register before binding enxpiry of 365 days
+                 
+                 /*
+                  * The twilio registration binding is refreshed for 365 days upon regirstrtion and when a new
+                  * push notification is dispatch.
+                  * Reset the binding date in UserDefaults.
+                  */
                  [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:kCachedBindingTime];
              }
         }];
@@ -245,8 +250,9 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
 }
 
 /*
- * The twilio registration binding is valid for 365 days. This method checks if binding exists in
- * NSUserDefaults, and if 365 days has been passed it returns true, else returns false.
+ * The twilio registration binding is refreshed for 365 days on twilio notify when a new
+ * push-notification is disptached. This method checks if binding exists in UserDefaults,
+ * and if 365 days has been passed then the method will return true, else false.
  */
 - (BOOL)bindingRequired {
     BOOL bindingRequired = YES;
@@ -282,6 +288,8 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
     }
 
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kCachedDeviceToken];
+        
+    // Remove the cached binding as credentials are invalidated
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kCachedBindingTime];
 }
 
@@ -322,6 +330,13 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
 
     NSLog(@"callInviteReceived:");
     
+    /*
+     * The twilio registration binding is refreshed for 365 days upon regirstrtion and when a new
+     * push notification is dispatch.
+     * Reset the binding date in UserDefaults.
+     */
+    [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:kCachedBindingTime];
+    
     if (callInvite.callerInfo.verified != nil && [callInvite.callerInfo.verified boolValue]) {
         NSLog(@"Call invite received from verified caller number!");
     }
@@ -348,6 +363,13 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
      */
     
     NSLog(@"cancelledCallInviteReceived:");
+    
+    /*
+     * The twilio registration binding is refreshed for 365 days upon regirstrtion and when a new
+     * push notification is dispatch.
+     * Reset the binding date in UserDefaults.
+     */
+    [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:kCachedBindingTime];
     
     TVOCallInvite *callInvite;
     for (NSString *uuid in self.activeCallInvites) {

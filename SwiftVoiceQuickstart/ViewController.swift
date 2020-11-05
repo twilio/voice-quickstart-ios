@@ -262,6 +262,10 @@ extension ViewController: UITextFieldDelegate {
 extension ViewController: PushKitEventDelegate {
     func credentialsUpdated(credentials: PKPushCredentials) {
         guard
+            // Register only if this is first time registration or 365 days has been passed
+            // since the last push notification was received.
+            bindingRequired(),
+    
             let accessToken = fetchAccessToken(),
             UserDefaults.standard.data(forKey: kCachedDeviceToken) != credentials.token
         else { return }
@@ -279,15 +283,20 @@ extension ViewController: PushKitEventDelegate {
                 // Save the device token after successfully registered.
                 UserDefaults.standard.set(cachedDeviceToken, forKey: kCachedDeviceToken)
                 
-                // Save the date and time to make sure we register before twilio binding enxpiry of 365 days
+                /*
+                 * The twilio registration binding is refreshed for 365 days upon regirstrtion and when a new
+                 * push notification is dispatch.
+                 * Reset the binding date in UserDefaults.
+                 */
                 UserDefaults.standard.set(Date(), forKey: kCachedBindingDate)
             }
         }
     }
     
     /*
-     * The twilio registration binding is valid for 365 days. This method checks if binding exists in
-     * UserDefaults, and if 365 days has been passed it returns true, else returns false.
+     * The twilio registration binding is refreshed for 365 days on twilio notify when a new
+     * push-notification is disptached. This method checks if binding exists in UserDefaults,
+     * and if 365 days has been passed then the method will return true, else false.
      */
     func bindingRequired() -> Bool {
         guard
@@ -318,6 +327,8 @@ extension ViewController: PushKitEventDelegate {
         }
         
         UserDefaults.standard.removeObject(forKey: kCachedDeviceToken)
+        
+        // Remove the cached binding as credentials are invalidated
         UserDefaults.standard.removeObject(forKey: kCachedBindingDate)
     }
     
@@ -351,6 +362,13 @@ extension ViewController: NotificationDelegate {
     func callInviteReceived(callInvite: CallInvite) {
         NSLog("callInviteReceived:")
         
+        /*
+         * The twilio registration binding is refreshed for 365 days upon regirstrtion and when a new
+         * push notification is dispatch.
+         * Reset the binding date in UserDefaults.
+         */
+        UserDefaults.standard.set(Date(), forKey: kCachedBindingDate)
+        
         let callerInfo: TVOCallerInfo = callInvite.callerInfo
         if let verified: NSNumber = callerInfo.verified {
             if verified.boolValue {
@@ -368,6 +386,13 @@ extension ViewController: NotificationDelegate {
     func cancelledCallInviteReceived(cancelledCallInvite: CancelledCallInvite, error: Error) {
         NSLog("cancelledCallInviteCanceled:error:, error: \(error.localizedDescription)")
         
+        /*
+         * The twilio registration binding is refreshed for 365 days upon regirstrtion and when a new
+         * push notification is dispatch.
+         * Reset the binding date in UserDefaults.
+         */
+        UserDefaults.standard.set(Date(), forKey: kCachedBindingDate)
+
         guard let activeCallInvites = activeCallInvites, !activeCallInvites.isEmpty else {
             NSLog("No pending call invite")
             return
