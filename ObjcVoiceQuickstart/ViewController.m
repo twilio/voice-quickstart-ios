@@ -244,15 +244,19 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
     }
 }
 
+/*
+ * The twilio registration binding is valid for 365 days. This method checks if binding exists in
+ * NSUserDefaults, and if 365 days has been passed it returns true, else returns false.
+ */
 - (BOOL)bindingRequired {
     BOOL bindingRequired = YES;
-    NSDate *lastTokenRetrivalTime = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedBindingTime];
+    NSDate *lastBindingCreated = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedBindingTime];
     
-    if (lastTokenRetrivalTime) {
+    if (lastBindingCreated) {
         NSDateComponents *dayComponent = [[NSDateComponents alloc] init];
         dayComponent.day = kBindingExpirationIntervalDays;
         
-        NSDate *bindingExpirationDate = [[NSCalendar currentCalendar] dateByAddingComponents:dayComponent toDate:[NSDate date] options:0];
+        NSDate *bindingExpirationDate = [[NSCalendar currentCalendar] dateByAddingComponents:dayComponent toDate:lastBindingCreated options:0];
         NSDate *currentDate = [NSDate date];
         if ([bindingExpirationDate compare:currentDate] == NSOrderedDescending) {
             bindingRequired = NO;

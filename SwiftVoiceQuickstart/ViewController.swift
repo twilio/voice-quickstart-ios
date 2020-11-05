@@ -285,21 +285,24 @@ extension ViewController: PushKitEventDelegate {
         }
     }
     
+    /*
+     * The twilio registration binding is valid for 365 days. This method checks if binding exists in
+     * UserDefaults, and if 365 days has been passed it returns true, else returns false.
+     */
     func bindingRequired() -> Bool {
         guard
-            let lastBinding = UserDefaults.standard.object(forKey: kCachedBindingDate)
+            let lastBindingCreated = UserDefaults.standard.object(forKey: kCachedBindingDate)
         else { return true }
         
         let date = Date()
         var components = DateComponents()
         components.setValue(kBindingExpiryDays, for: .day)
-        let expirationDate = Calendar.current.date(byAdding: components, to: lastBinding as! Date)!
+        let expirationDate = Calendar.current.date(byAdding: components, to: lastBindingCreated as! Date)!
 
         if expirationDate.compare(date) == ComparisonResult.orderedDescending {
             return false
-        } else {
-            return true;
         }
+        return true;
     }
     
     func credentialsInvalidated() {
