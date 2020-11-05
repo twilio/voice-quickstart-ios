@@ -17,7 +17,10 @@ let accessTokenEndpoint = "/accessToken"
 let identity = "alice"
 let twimlParamTo = "to"
 
+let kBindingExpiryDays = 365
+
 let kCachedDeviceToken = "CachedDeviceToken"
+let kCachedBindingDate = "CachedBindingDate"
 
 class ViewController: UIViewController {
 
@@ -273,11 +276,29 @@ extension ViewController: PushKitEventDelegate {
             } else {
                 NSLog("Successfully registered for VoIP push notifications.")
                 
-                /*
-                 * Save the device token after successfully registered.
-                 */
+                // Save the device token after successfully registered.
                 UserDefaults.standard.set(cachedDeviceToken, forKey: kCachedDeviceToken)
+                
+                // Save the date and time to make sure we register before twilio binding enxpiry of 365 days
+                UserDefaults.standard.set(Date(), forKey: kCachedBindingDate)
             }
+        }
+    }
+    
+    func bindingRequired() -> Bool {
+        guard
+            let lastBinding = UserDefaults.standard.object(forKey: kCachedBindingDate)
+        else { return true }
+        
+        let date = Date()
+        var components = DateComponents()
+        components.setValue(kBindingExpiryDays, for: .day)
+        let expirationDate = Calendar.current.date(byAdding: components, to: lastBinding as! Date)!
+
+        if expirationDate.compare(date) == ComparisonResult.orderedDescending {
+            return false
+        } else {
+            return true;
         }
     }
     
@@ -294,6 +315,7 @@ extension ViewController: PushKitEventDelegate {
         }
         
         UserDefaults.standard.removeObject(forKey: kCachedDeviceToken)
+        UserDefaults.standard.removeObject(forKey: kCachedBindingDate)
     }
     
     func incomingPushReceived(payload: PKPushPayload) {

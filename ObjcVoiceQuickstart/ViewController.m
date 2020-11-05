@@ -18,8 +18,10 @@ static NSString *const kYourServerBaseURLString = <#URL TO YOUR ACCESS TOKEN SER
 static NSString *const kAccessTokenEndpoint = @"/accessToken";
 static NSString *const kIdentity = @"alice";
 static NSString *const kTwimlParamTo = @"to";
+static NSInteger const kBindingExpirationIntervalDays = 365;
 
 NSString * const kCachedDeviceToken = @"CachedDeviceToken";
+NSString * const kCachedBindingTime = @"CachedBindingTime";
 
 @interface ViewController () <TVONotificationDelegate, TVOCallDelegate, CXProviderDelegate, UITextFieldDelegate, AVAudioPlayerDelegate>
 
@@ -218,7 +220,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     NSString *accessToken = [self fetchAccessToken];
 
     NSData *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
-    if (![cachedDeviceToken isEqualToData:credentials.token]) {
+    if ([self bindingRequired] || ![cachedDeviceToken isEqualToData:credentials.token]) {
         cachedDeviceToken = credentials.token;
         
         /*
@@ -232,13 +234,31 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
              } else {
                  NSLog(@"Successfully registered for VoIP push notifications.");
                  
-                 /*
-                  * Save the device token after successfully registered.
-                  */
+                 // Save the device token after successfully registered.
                  [[NSUserDefaults standardUserDefaults] setObject:cachedDeviceToken forKey:kCachedDeviceToken];
+
+                 // Save the date and time to make sure we register before binding enxpiry of 365 days
+                 [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:kCachedBindingTime];
              }
         }];
     }
+}
+
+- (BOOL)bindingRequired {
+    BOOL bindingRequired = YES;
+    NSDate *lastTokenRetrivalTime = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedBindingTime];
+    
+    if (lastTokenRetrivalTime) {
+        NSDateComponents *dayComponent = [[NSDateComponents alloc] init];
+        dayComponent.day = kBindingExpirationIntervalDays;
+        
+        NSDate *bindingExpirationDate = [[NSCalendar currentCalendar] dateByAddingComponents:dayComponent toDate:[NSDate date] options:0];
+        NSDate *currentDate = [NSDate date];
+        if ([bindingExpirationDate compare:currentDate] == NSOrderedDescending) {
+            bindingRequired = NO;
+        }
+    }
+    return bindingRequired;
 }
 
 - (void)credentialsInvalidated {
@@ -258,6 +278,7 @@ NSString * const kCachedDeviceToken = @"CachedDeviceToken";
     }
 
     [[NSUserDefaults standardUserDefaults] removeObjectForKey:kCachedDeviceToken];
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:kCachedBindingTime];
 }
 
 - (void)incomingPushReceived:(PKPushPayload *)payload withCompletionHandler:(void (^)(void))completion {
