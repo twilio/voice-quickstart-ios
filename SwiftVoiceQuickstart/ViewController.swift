@@ -17,7 +17,7 @@ let accessTokenEndpoint = "/accessToken"
 let identity = "alice"
 let twimlParamTo = "to"
 
-let kRegistrationBindingTTL = 365
+let kRegistrationTTLInDays = 365
 
 let kCachedDeviceToken = "CachedDeviceToken"
 let kCachedBindingDate = "CachedBindingDate"
@@ -262,10 +262,11 @@ extension ViewController: UITextFieldDelegate {
 extension ViewController: PushKitEventDelegate {
     func credentialsUpdated(credentials: PKPushCredentials) {
         guard
-            registrationRequired(),
-            let accessToken = fetchAccessToken(),
-            UserDefaults.standard.data(forKey: kCachedDeviceToken) != credentials.token
-        else { return }
+            (registrationRequired() || UserDefaults.standard.data(forKey: kCachedDeviceToken) != credentials.token),
+            let accessToken = fetchAccessToken()
+        else {
+            return
+        }
 
         let cachedDeviceToken = credentials.token
         /*
@@ -303,7 +304,7 @@ extension ViewController: PushKitEventDelegate {
         
         let date = Date()
         var components = DateComponents()
-        components.setValue(kRegistrationBindingTTL/2, for: .day)
+        components.setValue(kRegistrationTTLInDays/2, for: .day)
         let expirationDate = Calendar.current.date(byAdding: components, to: lastBindingCreated as! Date)!
 
         if expirationDate.compare(date) == ComparisonResult.orderedDescending {
@@ -383,13 +384,6 @@ extension ViewController: NotificationDelegate {
     
     func cancelledCallInviteReceived(cancelledCallInvite: CancelledCallInvite, error: Error) {
         NSLog("cancelledCallInviteCanceled:error:, error: \(error.localizedDescription)")
-        
-        /**
-         * The TTL of a registration is 1 year. The TTL for registration for this device/identity
-         * pair is reset to 1 year whenever a new registration occurs or a push notification is
-         * sent to this device/identity pair.
-         */
-        UserDefaults.standard.set(Date(), forKey: kCachedBindingDate)
 
         guard let activeCallInvites = activeCallInvites, !activeCallInvites.isEmpty else {
             NSLog("No pending call invite")

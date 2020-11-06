@@ -19,7 +19,7 @@ static NSString *const kAccessTokenEndpoint = @"/accessToken";
 static NSString *const kIdentity = @"alice";
 static NSString *const kTwimlParamTo = @"to";
 
-static NSInteger const kRegistrationBindingTTL = 365;
+static NSInteger const kRegistrationTTLInDays = 365;
 
 NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 NSString * const kCachedBindingTime = @"CachedBindingTime";
@@ -263,7 +263,7 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
         NSDateComponents *dayComponent = [[NSDateComponents alloc] init];
         
         // Register upon half of the TTL
-        dayComponent.day = kRegistrationBindingTTL / 2;
+        dayComponent.day = kRegistrationTTLInDays / 2;
         
         NSDate *bindingExpirationDate = [[NSCalendar currentCalendar] dateByAddingComponents:dayComponent toDate:lastBindingCreated options:0];
         NSDate *currentDate = [NSDate date];
@@ -366,13 +366,6 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
      */
     
     NSLog(@"cancelledCallInviteReceived:");
-    
-    /**
-     * The TTL of a registration is 1 year. The TTL for registration for this device/identity
-     * pair is reset to 1 year whenever a new registration occurs or a push notification is
-     * sent to this device/identity pair.
-     */
-    [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:kCachedBindingTime];
     
     TVOCallInvite *callInvite;
     for (NSString *uuid in self.activeCallInvites) {
