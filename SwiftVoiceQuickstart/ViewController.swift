@@ -17,7 +17,7 @@ let accessTokenEndpoint = "/accessToken"
 let identity = "alice"
 let twimlParamTo = "to"
 
-let kBindingExpiryDays = 365
+let kRegistrationBindingTTL = 365
 
 let kCachedDeviceToken = "CachedDeviceToken"
 let kCachedBindingDate = "CachedBindingDate"
@@ -262,10 +262,7 @@ extension ViewController: UITextFieldDelegate {
 extension ViewController: PushKitEventDelegate {
     func credentialsUpdated(credentials: PKPushCredentials) {
         guard
-            // Register only if this is first time registration or 365 days has been passed
-            // since the last push notification was received.
-            bindingRequired(),
-    
+            registrationRequired(),
             let accessToken = fetchAccessToken(),
             UserDefaults.standard.data(forKey: kCachedDeviceToken) != credentials.token
         else { return }
@@ -283,29 +280,30 @@ extension ViewController: PushKitEventDelegate {
                 // Save the device token after successfully registered.
                 UserDefaults.standard.set(cachedDeviceToken, forKey: kCachedDeviceToken)
                 
-                /*
-                 * The twilio registration binding is refreshed for 365 days upon regirstrtion and when a new
-                 * push notification is dispatch.
-                 * Reset the binding date in UserDefaults.
+                /**
+                 * The TTL of a registration is 1 year. The TTL for registration for this device/identity
+                 * pair is reset to 1 year whenever a new registration occurs or a push notification is
+                 * sent to this device/identity pair.
                  */
                 UserDefaults.standard.set(Date(), forKey: kCachedBindingDate)
             }
         }
     }
     
-    /*
-     * The twilio registration binding is refreshed for 365 days on twilio notify when a new
-     * push-notification is disptached. This method checks if binding exists in UserDefaults,
-     * and if 365 days has been passed then the method will return true, else false.
+    /**
+     * The TTL of a registration is 1 year. The TTL for registration for this device/identity pair is reset to
+     * 1 year whenever a new registration occurs or a push notification is sent to this device/identity pair.
+     * This method checks if binding exists in UserDefaults, and if half of TTL has been passed then the method
+     * will return true, else false.
      */
-    func bindingRequired() -> Bool {
+    func registrationRequired() -> Bool {
         guard
             let lastBindingCreated = UserDefaults.standard.object(forKey: kCachedBindingDate)
         else { return true }
         
         let date = Date()
         var components = DateComponents()
-        components.setValue(kBindingExpiryDays, for: .day)
+        components.setValue(kRegistrationBindingTTL/2, for: .day)
         let expirationDate = Calendar.current.date(byAdding: components, to: lastBindingCreated as! Date)!
 
         if expirationDate.compare(date) == ComparisonResult.orderedDescending {
@@ -362,10 +360,10 @@ extension ViewController: NotificationDelegate {
     func callInviteReceived(callInvite: CallInvite) {
         NSLog("callInviteReceived:")
         
-        /*
-         * The twilio registration binding is refreshed for 365 days upon regirstrtion and when a new
-         * push notification is dispatch.
-         * Reset the binding date in UserDefaults.
+        /**
+         * The TTL of a registration is 1 year. The TTL for registration for this device/identity
+         * pair is reset to 1 year whenever a new registration occurs or a push notification is
+         * sent to this device/identity pair.
          */
         UserDefaults.standard.set(Date(), forKey: kCachedBindingDate)
         
@@ -386,10 +384,10 @@ extension ViewController: NotificationDelegate {
     func cancelledCallInviteReceived(cancelledCallInvite: CancelledCallInvite, error: Error) {
         NSLog("cancelledCallInviteCanceled:error:, error: \(error.localizedDescription)")
         
-        /*
-         * The twilio registration binding is refreshed for 365 days upon regirstrtion and when a new
-         * push notification is dispatch.
-         * Reset the binding date in UserDefaults.
+        /**
+         * The TTL of a registration is 1 year. The TTL for registration for this device/identity
+         * pair is reset to 1 year whenever a new registration occurs or a push notification is
+         * sent to this device/identity pair.
          */
         UserDefaults.standard.set(Date(), forKey: kCachedBindingDate)
 

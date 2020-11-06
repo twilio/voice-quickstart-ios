@@ -19,7 +19,7 @@ static NSString *const kAccessTokenEndpoint = @"/accessToken";
 static NSString *const kIdentity = @"alice";
 static NSString *const kTwimlParamTo = @"to";
 
-static NSInteger const kBindingExpirationIntervalDays = 365;
+static NSInteger const kRegistrationBindingTTL = 365;
 
 NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 NSString * const kCachedBindingTime = @"CachedBindingTime";
@@ -221,7 +221,7 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
     NSString *accessToken = [self fetchAccessToken];
 
     NSData *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
-    if ([self bindingRequired] || ![cachedDeviceToken isEqualToData:credentials.token]) {
+    if ([self registrationRequired] || ![cachedDeviceToken isEqualToData:credentials.token]) {
         cachedDeviceToken = credentials.token;
         
         /*
@@ -238,10 +238,10 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
                  // Save the device token after successfully registered.
                  [[NSUserDefaults standardUserDefaults] setObject:cachedDeviceToken forKey:kCachedDeviceToken];
                  
-                 /*
-                  * The twilio registration binding is refreshed for 365 days upon regirstrtion and when a new
-                  * push notification is dispatch.
-                  * Reset the binding date in UserDefaults.
+                 /**
+                  * The TTL of a registration is 1 year. The TTL for registration for this device/identity
+                  * pair is reset to 1 year whenever a new registration occurs or a push notification is
+                  * sent to this device/identity pair.
                   */
                  [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:kCachedBindingTime];
              }
@@ -249,26 +249,29 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
     }
 }
 
-/*
- * The twilio registration binding is refreshed for 365 days on twilio notify when a new
- * push-notification is disptached. This method checks if binding exists in UserDefaults,
- * and if 365 days has been passed then the method will return true, else false.
+/**
+ * The TTL of a registration is 1 year. The TTL for registration for this device/identity pair is reset to
+ * 1 year whenever a new registration occurs or a push notification is sent to this device/identity pair.
+ * This method checks if binding exists in UserDefaults, and if half of TTL has been passed then the method
+ * will return true, else false.
  */
-- (BOOL)bindingRequired {
-    BOOL bindingRequired = YES;
+- (BOOL)registrationRequired {
+    BOOL registrationRequired = YES;
     NSDate *lastBindingCreated = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedBindingTime];
     
     if (lastBindingCreated) {
         NSDateComponents *dayComponent = [[NSDateComponents alloc] init];
-        dayComponent.day = kBindingExpirationIntervalDays;
+        
+        // Register upon half of the TTL
+        dayComponent.day = kRegistrationBindingTTL / 2;
         
         NSDate *bindingExpirationDate = [[NSCalendar currentCalendar] dateByAddingComponents:dayComponent toDate:lastBindingCreated options:0];
         NSDate *currentDate = [NSDate date];
         if ([bindingExpirationDate compare:currentDate] == NSOrderedDescending) {
-            bindingRequired = NO;
+            registrationRequired = NO;
         }
     }
-    return bindingRequired;
+    return registrationRequired;
 }
 
 - (void)credentialsInvalidated {
@@ -330,10 +333,10 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
 
     NSLog(@"callInviteReceived:");
     
-    /*
-     * The twilio registration binding is refreshed for 365 days upon regirstrtion and when a new
-     * push notification is dispatch.
-     * Reset the binding date in UserDefaults.
+    /**
+     * The TTL of a registration is 1 year. The TTL for registration for this device/identity
+     * pair is reset to 1 year whenever a new registration occurs or a push notification is
+     * sent to this device/identity pair.
      */
     [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:kCachedBindingTime];
     
@@ -364,10 +367,10 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
     
     NSLog(@"cancelledCallInviteReceived:");
     
-    /*
-     * The twilio registration binding is refreshed for 365 days upon regirstrtion and when a new
-     * push notification is dispatch.
-     * Reset the binding date in UserDefaults.
+    /**
+     * The TTL of a registration is 1 year. The TTL for registration for this device/identity
+     * pair is reset to 1 year whenever a new registration occurs or a push notification is
+     * sent to this device/identity pair.
      */
     [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:kCachedBindingTime];
     
