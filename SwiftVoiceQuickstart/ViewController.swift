@@ -17,7 +17,10 @@ let accessTokenEndpoint = "/accessToken"
 let identity = "alice"
 let twimlParamTo = "to"
 
+let kRegistrationTTLInDays = 365
+
 let kCachedDeviceToken = "CachedDeviceToken"
+let kCachedBindingDate = "CachedBindingDate"
 
 class ViewController: UIViewController {
 
@@ -259,9 +262,11 @@ extension ViewController: UITextFieldDelegate {
 extension ViewController: PushKitEventDelegate {
     func credentialsUpdated(credentials: PKPushCredentials) {
         guard
-            let accessToken = fetchAccessToken(),
-            UserDefaults.standard.data(forKey: kCachedDeviceToken) != credentials.token
-        else { return }
+            (registrationRequired() || UserDefaults.standard.data(forKey: kCachedDeviceToken) != credentials.token),
+            let accessToken = fetchAccessToken()
+        else {
+            return
+        }
 
         let cachedDeviceToken = credentials.token
         /*
@@ -273,12 +278,39 @@ extension ViewController: PushKitEventDelegate {
             } else {
                 NSLog("Successfully registered for VoIP push notifications.")
                 
-                /*
-                 * Save the device token after successfully registered.
-                 */
+                // Save the device token after successfully registered.
                 UserDefaults.standard.set(cachedDeviceToken, forKey: kCachedDeviceToken)
+                
+                /**
+                 * The TTL of a registration is 1 year. The TTL for registration for this device/identity
+                 * pair is reset to 1 year whenever a new registration occurs or a push notification is
+                 * sent to this device/identity pair.
+                 */
+                UserDefaults.standard.set(Date(), forKey: kCachedBindingDate)
             }
         }
+    }
+    
+    /**
+     * The TTL of a registration is 1 year. The TTL for registration for this device/identity pair is reset to
+     * 1 year whenever a new registration occurs or a push notification is sent to this device/identity pair.
+     * This method checks if binding exists in UserDefaults, and if half of TTL has been passed then the method
+     * will return true, else false.
+     */
+    func registrationRequired() -> Bool {
+        guard
+            let lastBindingCreated = UserDefaults.standard.object(forKey: kCachedBindingDate)
+        else { return true }
+        
+        let date = Date()
+        var components = DateComponents()
+        components.setValue(kRegistrationTTLInDays/2, for: .day)
+        let expirationDate = Calendar.current.date(byAdding: components, to: lastBindingCreated as! Date)!
+
+        if expirationDate.compare(date) == ComparisonResult.orderedDescending {
+            return false
+        }
+        return true;
     }
     
     func credentialsInvalidated() {
@@ -294,6 +326,9 @@ extension ViewController: PushKitEventDelegate {
         }
         
         UserDefaults.standard.removeObject(forKey: kCachedDeviceToken)
+        
+        // Remove the cached binding as credentials are invalidated
+        UserDefaults.standard.removeObject(forKey: kCachedBindingDate)
     }
     
     func incomingPushReceived(payload: PKPushPayload) {
@@ -326,6 +361,13 @@ extension ViewController: NotificationDelegate {
     func callInviteReceived(callInvite: CallInvite) {
         NSLog("callInviteReceived:")
         
+        /**
+         * The TTL of a registration is 1 year. The TTL for registration for this device/identity
+         * pair is reset to 1 year whenever a new registration occurs or a push notification is
+         * sent to this device/identity pair.
+         */
+        UserDefaults.standard.set(Date(), forKey: kCachedBindingDate)
+        
         let callerInfo: TVOCallerInfo = callInvite.callerInfo
         if let verified: NSNumber = callerInfo.verified {
             if verified.boolValue {
@@ -342,7 +384,7 @@ extension ViewController: NotificationDelegate {
     
     func cancelledCallInviteReceived(cancelledCallInvite: CancelledCallInvite, error: Error) {
         NSLog("cancelledCallInviteCanceled:error:, error: \(error.localizedDescription)")
-        
+
         guard let activeCallInvites = activeCallInvites, !activeCallInvites.isEmpty else {
             NSLog("No pending call invite")
             return
