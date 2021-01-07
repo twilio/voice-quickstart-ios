@@ -91,7 +91,7 @@ class ViewController: UIViewController {
          * before performing any other actions with the SDK (such as connecting a Call, or accepting an incoming Call).
          * In this case we've already initialized our own `TVODefaultAudioDevice` instance which we will now set.
          */
-        TwilioVoice.audioDevice = audioDevice
+        TwilioVoiceSDK.audioDevice = audioDevice
     }
 
     func fetchAccessToken() -> String? {
@@ -272,7 +272,7 @@ extension ViewController: PushKitEventDelegate {
         /*
          * Perform registration if a new device token is detected.
          */
-        TwilioVoice.register(accessToken: accessToken, deviceToken: cachedDeviceToken) { error in
+        TwilioVoiceSDK.register(accessToken: accessToken, deviceToken: cachedDeviceToken) { error in
             if let error = error {
                 NSLog("An error occurred while registering: \(error.localizedDescription)")
             } else {
@@ -317,7 +317,7 @@ extension ViewController: PushKitEventDelegate {
         guard let deviceToken = UserDefaults.standard.data(forKey: kCachedDeviceToken),
             let accessToken = fetchAccessToken() else { return }
         
-        TwilioVoice.unregister(accessToken: accessToken, deviceToken: deviceToken) { error in
+        TwilioVoiceSDK.unregister(accessToken: accessToken, deviceToken: deviceToken) { error in
             if let error = error {
                 NSLog("An error occurred while unregistering: \(error.localizedDescription)")
             } else {
@@ -333,12 +333,12 @@ extension ViewController: PushKitEventDelegate {
     
     func incomingPushReceived(payload: PKPushPayload) {
         // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error:` when delegate queue is not passed
-        TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
+        TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
     }
     
     func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void) {
         // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error:` when delegate queue is not passed
-        TwilioVoice.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
+        TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
         
         if let version = Float(UIDevice.current.systemVersion), version < 13.0 {
             // Save for later when the notification is properly handled.
@@ -779,7 +779,7 @@ extension ViewController: CXProviderDelegate {
             builder.uuid = uuid
         }
         
-        let call = TwilioVoice.connect(options: connectOptions, delegate: self)
+        let call = TwilioVoiceSDK.connect(options: connectOptions, delegate: self)
         activeCall = call
         activeCalls[call.uuid!.uuidString] = call
         callKitCompletionCallback = completionHandler

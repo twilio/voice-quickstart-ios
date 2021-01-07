@@ -77,7 +77,7 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
      * In this case we've already initialized our own `TVODefaultAudioDevice` instance which we will now set.
      */
     self.audioDevice = [TVODefaultAudioDevice audioDevice];
-    TwilioVoice.audioDevice = self.audioDevice;
+    TwilioVoiceSDK.audioDevice = self.audioDevice;
     
     self.activeCallInvites = [NSMutableDictionary dictionary];
     self.activeCalls = [NSMutableDictionary dictionary];
@@ -227,9 +227,9 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
         /*
          * Perform registration if a new device token is detected.
          */
-        [TwilioVoice registerWithAccessToken:accessToken
-                                 deviceToken:cachedDeviceToken
-                                  completion:^(NSError *error) {
+        [TwilioVoiceSDK registerWithAccessToken:accessToken
+                                    deviceToken:cachedDeviceToken
+                                     completion:^(NSError *error) {
              if (error) {
                  NSLog(@"An error occurred while registering: %@", [error localizedDescription]);
              } else {
@@ -279,9 +279,9 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
 
     NSData *cachedDeviceToken = [[NSUserDefaults standardUserDefaults] objectForKey:kCachedDeviceToken];
     if ([cachedDeviceToken length] > 0) {
-        [TwilioVoice unregisterWithAccessToken:accessToken
-                                   deviceToken:cachedDeviceToken
-                                    completion:^(NSError *error) {
+        [TwilioVoiceSDK unregisterWithAccessToken:accessToken
+                                      deviceToken:cachedDeviceToken
+                                       completion:^(NSError *error) {
             if (error) {
                 NSLog(@"An error occurred while unregistering: %@", [error localizedDescription]);
             } else {
@@ -298,7 +298,7 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
 
 - (void)incomingPushReceived:(PKPushPayload *)payload withCompletionHandler:(void (^)(void))completion {
     // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error` when delegate queue is not passed
-    if (![TwilioVoice handleNotification:payload.dictionaryPayload delegate:self delegateQueue:nil]) {
+    if (![TwilioVoiceSDK handleNotification:payload.dictionaryPayload delegate:self delegateQueue:nil]) {
         NSLog(@"This is not a valid Twilio Voice notification.");
     }
     
@@ -327,7 +327,7 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
 - (void)callInviteReceived:(TVOCallInvite *)callInvite {
     
     /**
-     * Calling `[TwilioVoice handleNotification:delegate:]` will synchronously process your notification payload and
+     * Calling `[TwilioVoiceSDK handleNotification:delegate:]` will synchronously process your notification payload and
      * provide you a `TVOCallInvite` object. Report the incoming call to CallKit upon receiving this callback.
      */
 
@@ -777,7 +777,7 @@ previousWarnings:(NSSet<NSNumber *> *)previousWarnings {
         builder.params = @{kTwimlParamTo: strongSelf.outgoingValue.text};
         builder.uuid = uuid;
     }];
-    TVOCall *call = [TwilioVoice connectWithOptions:connectOptions delegate:self];
+    TVOCall *call = [TwilioVoiceSDK connectWithOptions:connectOptions delegate:self];
     if (call) {
         self.activeCall = call;
         self.activeCalls[call.uuid.UUIDString] = call;
