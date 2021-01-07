@@ -45,7 +45,7 @@ class ViewController: UIViewController {
 
         callKitProvider.setDelegate(self, queue: nil)
         
-        TwilioVoice.audioDevice = audioDevice
+        TwilioVoiceSDK.audioDevice = audioDevice
     }
     
     deinit {
@@ -376,7 +376,7 @@ extension ViewController: CXProviderDelegate {
             builder.uuid = uuid
         }
         
-        let call = TwilioVoice.connect(options: connectOptions, delegate: self)
+        let call = TwilioVoiceSDK.connect(options: connectOptions, delegate: self)
         activeCall = call
         callKitCompletionCallback = completionHandler
     }

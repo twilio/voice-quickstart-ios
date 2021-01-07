@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKPushRegistryDelegate {
     var voipRegistry = PKPushRegistry.init(queue: DispatchQueue.main)
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        NSLog("Twilio Voice Version: %@", TwilioVoice.sdkVersion())
+        NSLog("Twilio Voice Version: %@", TwilioVoiceSDK.sdkVersion())
         
         let viewController = UIApplication.shared.windows.first?.rootViewController as? ViewController
         self.pushKitEventDelegate = viewController
@@ -99,7 +99,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKPushRegistryDelegate {
 
     /**
      * This delegate method is available on iOS 11 and above. Call the completion handler once the
-     * notification payload is passed to the `TwilioVoice.handleNotification()` method.
+     * notification payload is passed to the `TwilioVoiceSDK.handleNotification()` method.
      */
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:completion:")

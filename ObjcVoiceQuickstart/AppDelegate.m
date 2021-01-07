@@ -20,7 +20,7 @@
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    NSLog(@"Twilio Voice Version: %@", [TwilioVoice sdkVersion]);
+    NSLog(@"Twilio Voice Version: %@", [TwilioVoiceSDK sdkVersion]);
     
     ViewController* viewController = (ViewController*)self.window.rootViewController;
     self.pushKitEventDelegate = viewController;
@@ -99,7 +99,7 @@ didReceiveIncomingPushWithPayload:(PKPushPayload *)payload
 
 /**
  * This delegate method is available on iOS 11 and above. Call the completion handler once the
- * notification payload is passed to the `TwilioVoice.handleNotification()` method.
+ * notification payload is passed to the `TwilioVoiceSDK.handleNotification()` method.
  */
 - (void)pushRegistry:(PKPushRegistry *)registry
 didReceiveIncomingPushWithPayload:(PKPushPayload *)payload
