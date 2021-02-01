@@ -3,10 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8F03119425C8B3E800DE2236 /* TwilioVoice in Frameworks */ = {isa = PBXBuildFile; productRef = 8F03119325C8B3E800DE2236 /* TwilioVoice */; };
 		8F09DB87243D1ACE00C6994E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F09DB86243D1ACE00C6994E /* AppDelegate.swift */; };
 		8F09DB8B243D1ACE00C6994E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F09DB8A243D1ACE00C6994E /* ViewController.swift */; };
 		8F09DB8E243D1ACE00C6994E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F09DB8C243D1ACE00C6994E /* Main.storyboard */; };
@@ -35,6 +36,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F03119425C8B3E800DE2236 /* TwilioVoice in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,6 +101,9 @@
 			dependencies = (
 			);
 			name = AudioDeviceExample;
+			packageProductDependencies = (
+				8F03119325C8B3E800DE2236 /* TwilioVoice */,
+			);
 			productName = AudioDeviceExample;
 			productReference = 8F09DB83243D1ACE00C6994E /* AudioDeviceExample.app */;
 			productType = "com.apple.product-type.application";
@@ -127,6 +132,9 @@
 				Base,
 			);
 			mainGroup = 8F09DB7A243D1ACE00C6994E;
+			packageReferences = (
+				8F03119225C8B3E800DE2236 /* XCRemoteSwiftPackageReference "twilio-voice-ios" */,
+			);
 			productRefGroup = 8F09DB84243D1ACE00C6994E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -357,6 +365,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8F03119225C8B3E800DE2236 /* XCRemoteSwiftPackageReference "twilio-voice-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twilio/twilio-voice-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8F03119325C8B3E800DE2236 /* TwilioVoice */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8F03119225C8B3E800DE2236 /* XCRemoteSwiftPackageReference "twilio-voice-ios" */;
+			productName = TwilioVoice;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8F09DB7B243D1ACE00C6994E /* Project object */;
 }
