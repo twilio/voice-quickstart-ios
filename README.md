@@ -40,6 +40,8 @@ To get started with the quickstart application follow these steps. Steps 1-6 wil
 
 **Carthage**
 
+Note: Starting from `6.2.0`, Twilio Voice is delivered as an `.xcframework`. Carthage does not currently work with `.xcframeworks` as documented [here](https://github.com/Carthage/Carthage/issues/2890). Once Carthage supports binary `.xcframeworks`, Carthage distribution will be re-added.
+
 Add the following line to your Cartfile
 
 ```
