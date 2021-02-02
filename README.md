@@ -38,36 +38,9 @@ To get started with the quickstart application follow these steps. Steps 1-6 wil
 
 ### <a name="bullet1"></a>1. Install the TwilioVoice framework
 
-**Carthage**
+**Swift Package Manager**
 
-Note: Starting from `6.2.0`, Twilio Voice is delivered as an `.xcframework`. Carthage does not currently work with `.xcframeworks` as documented [here](https://github.com/Carthage/Carthage/issues/2890). Once Carthage supports binary `.xcframeworks`, Carthage distribution will be re-added.
-
-Add the following line to your Cartfile
-
-```
-github "twilio/twilio-voice-ios"
-```
-
-Then run `carthage bootstrap` (or `carthage update` if you are updating your SDKs)
-
-On your application targets’ “Build Phases” settings tab, click the “+” icon and choose “New Run Script Phase”. Create a Run Script in which you specify your shell (ex: `/bin/sh`), add the following contents to the script area below the shell:
-
-```
-/usr/local/bin/carthage copy-frameworks
-```
-
-Add the paths to the frameworks you want to use under “Input Files”, e.g.:
-
-```
-$(SRCROOT)/Carthage/Build/iOS/TwilioVoice.framework
-```
-
-**Cocoapods**
-
-Under the quickstart path, run `pod install` and let the Cocoapods library create the workspace for you. Also please make sure to use **Cocoapods v1.0 and later**.
-Once Cocoapods finishes installing, open the `VoiceQuickstart.xcworkspace` and you will find a basic Swift quickstart project and a CallKit quickstart project.
-
-Note: You may need to update the [CocoaPods Master Spec Repo](https://github.com/CocoaPods/Specs) by running `pod repo update master` in order to fetch the latest specs for TwilioVoice.
+Twilio Voice is now distributed via Swift Package Manager. To consume Twilio Voice using Swift Package Manager, add the `https://github.com/twilio/twilio-voice-ios` repository as a `Swift Pacakge`.
 
 ### <a name="bullet2"></a>2. Create a Voice API key
 Go to the [Voice API Keys](https://www.twilio.com/console/voice/settings/api-keys) page and create a new API key:
