@@ -86,7 +86,7 @@ The server example that comes with the quickstart is in Node.js. You can find th
 * [voice-quickstart-server-php](https://github.com/twilio/voice-quickstart-server-php)
 * [voice-quickstart-server-python](https://github.com/twilio/voice-quickstart-server-python)
 
-Follow the instructions in the server's README to get the application server up and running locally and accessible via the public Internet.
+Follow the instructions in the project's README to get the application server up and running locally and accessible via the public Internet.
 
 ### <a name="bullet3"></a>3. Create a TwiML application for the Access Token
 
@@ -111,7 +111,7 @@ Install the `token` plug-in
 
 Use the TwiML App SID you just created to generate an access token
 
-    $ twilio token:voice --identity=alice --voice-app-sid=APxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+    $ twilio token:voice --identity=alice **--voice-app-sid=APxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx**
 
 Copy the access token string. Your iOS app will use this token to connect to Twilio.
 
@@ -169,14 +169,14 @@ This will return a Push Credential SID that looks like this
     
 The `--sandbox` option tells Twilio to send the notification requests to the sandbox endpoint of Apple's APNS service. Once the app is ready for distribution or store submission, create a separate Push Credential with a new VoIP Service certificate **without** the `--sandbox` option.
 
-Note: we strongly recommend using different Twilio accounts (or subaccounts) to separate VoIP push notification requests for development and production apps.
+**Note: we strongly recommend using different Twilio accounts (or subaccounts) to separate VoIP push notification requests for development and production apps.**
 
 Now let's generate another access token and add the Push Credential to the Voice Grant.
 
     $ twilio token:voice \
         --identity=alice \
         --voice-app-sid=APxxxx \
-        --push-credential-sid=CRxxxxs
+        **--push-credential-sid=CRxxxxs**
 
 ### <a name="bullet7"></a>7. Receive an incoming call
 
