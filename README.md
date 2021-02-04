@@ -111,7 +111,7 @@ Install the `token` plug-in
 
 Use the TwiML App SID you just created to generate an access token
 
-    $ twilio token:voice --identity=alice **--voice-app-sid=APxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx**
+    $ twilio token:voice --identity=alice --voice-app-sid=APxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 Copy the access token string. Your iOS app will use this token to connect to Twilio.
 
@@ -176,7 +176,7 @@ Now let's generate another access token and add the Push Credential to the Voice
     $ twilio token:voice \
         --identity=alice \
         --voice-app-sid=APxxxx \
-        **--push-credential-sid=CRxxxxs**
+        --push-credential-sid=CRxxxxs
 
 ### <a name="bullet7"></a>7. Receive an incoming call
 
