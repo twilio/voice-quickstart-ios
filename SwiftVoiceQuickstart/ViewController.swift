@@ -394,6 +394,7 @@ extension ViewController: NotificationDelegate {
         
         if let callInvite = callInvite {
             performEndCallAction(uuid: callInvite.uuid)
+            self.activeCallInvites.removeValue(forKey: callInvite.uuid.uuidString)
         }
     }
 }
