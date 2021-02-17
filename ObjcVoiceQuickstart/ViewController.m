@@ -378,6 +378,7 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
     
     if (callInvite) {
         [self performEndCallActionWithUUID:callInvite.uuid];
+        [self.activeCallInvites removeObjectForKey:callInvite.uuid.UUIDString];
     }
 }
 
