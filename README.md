@@ -49,7 +49,7 @@ You must have the following installed:
 
 Run `npm install` to install all dependencies from NPM.
 
-Install twilio-cli with:
+Install [twilio-cli](https://www.twilio.com/docs/twilio-cli/quickstart) with:
 
     $ npm install -g twilio-cli
 
@@ -180,7 +180,7 @@ Now let's generate another access token and add the Push Credential to the Voice
 
 ### <a name="bullet7"></a>7. Receive an incoming call
 
-You are now ready to receive incoming calls. Paste the access token generated from step 6 and rebuild your app. Use `TwiliioVoice.register()` to register your mobile client with the PushKit device token as well as the access token, then hit your application server's **/place-call** endpoint: `https://my-quickstart-dev.twil.io/place-call?to=alice`. This will trigger a Twilio REST API request that will make an inbound call to the identity registered on your mobile app. Once your app accepts the call, you should hear a congratulatory message.
+You are now ready to receive incoming calls. Paste the access token generated from step 6 and rebuild your app. Use the `TwilioVoiceSDK.register()` method to register your mobile client with the PushKit device token as well as the access token, then hit your application server's **/place-call** endpoint: `https://my-quickstart-dev.twil.io/place-call?to=alice`. This will trigger a Twilio REST API request that will make an inbound call to the identity registered on your mobile app. Once your app accepts the call, you should hear a congratulatory message.
 
 <kbd><img width="300px" src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/incoming-call.png"/></kbd>
 
