@@ -79,7 +79,7 @@ The app is deployed to Twilio Serverless with the `serverless` plug-in:
     $ cd Server
     $ twilio serverless:deploy
 
-The server example that comes with the quickstart is in Node.js. You can find the server starter project in the following languages.
+The server component that's baked into this quickstart is in Node.js. If you’d like to roll your own or better understand the Twilio Voice server side implementations, please see the list of starter projects in the following supported languages below:
 
 * [voice-quickstart-server-java](https://github.com/twilio/voice-quickstart-server-java)
 * [voice-quickstart-server-node](https://github.com/twilio/voice-quickstart-server-node)
@@ -180,7 +180,21 @@ Now let's generate another access token and add the Push Credential to the Voice
 
 ### <a name="bullet7"></a>7. Receive an incoming call
 
-You are now ready to receive incoming calls. Paste the access token generated from step 6 and rebuild your app. Use the `TwilioVoiceSDK.register()` method to register your mobile client with the PushKit device token as well as the access token, then hit your application server's **/place-call** endpoint: `https://my-quickstart-dev.twil.io/place-call?to=alice`. This will trigger a Twilio REST API request that will make an inbound call to the identity registered on your mobile app. Once your app accepts the call, you should hear a congratulatory message.
+You are now ready to receive incoming calls. Update your app with the access token generated from step 6 and rebuild your app. The `TwilioVoiceSDK.register()` method will register your mobile client with the PushKit device token as well as the access token. Once registered, hit your application server's **/place-call** endpoint: `https://my-quickstart-dev.twil.io/place-call?to=alice`. This will trigger a Twilio REST API request that will make an inbound call to the identity registered on your mobile app. Once your app accepts the call, you should hear a congratulatory message.
+
+Register your mobile client with the PushKit device token:
+
+```.swift
+    TwilioVoiceSDK.register(accessToken: accessToken, deviceToken: cachedDeviceToken) { error in
+        if let error = error {
+            NSLog("An error occurred while registering: \(error.localizedDescription)")
+        } else {
+            NSLog("Successfully registered for VoIP push notifications.")                
+        }
+    }
+```
+
+Please note that your application must have `voip` enabled in the `UIBackgroundModes` of your app's plist in order to be able to receive push notifications.
 
 <kbd><img width="300px" src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/incoming-call.png"/></kbd>
 
