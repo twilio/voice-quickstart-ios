@@ -96,7 +96,7 @@ Use Twilio CLI to create a TwiML app with the `make-call` endpoint you have just
 
     $ twilio api:core:applications:create \
         --friendly-name=my-twiml-app \
-        --voice-method=post \
+        --voice-method=POST \
         --voice-url="https://my-quickstart-dev.twil.io/make-call"
 
 You should receive an Appliciation SID that looks like this
