@@ -57,6 +57,10 @@ Login to the Twilio CLI. You will be prompted for your Account SID and Auth Toke
 
     $ twilio login
 
+Once successfully logged in, an API Key, a secret get created and stored in your keychain as the `twilio-cli` password in `SKxxxx|secret` format. Please make a note of these values to use them in the `Server/.env` file.
+
+<kbd><img width="300px" src="https://github.com/twilio/voice-quickstart-ios/raw/master/Images/keychain-api-key-secret.png"/></kbd>
+
 This app requires the [Serverless plug-in](https://github.com/twilio-labs/plugin-serverless). Install the CLI plugin with:
 
     $ twilio plugins:install @twilio-labs/plugin-serverless
@@ -69,7 +73,7 @@ Update `Server/.env` with your Account SID, auth token, API Key and secret
 
     ACCOUNT_SID=ACxxxx
     AUTH_TOKEN=xxxxxx
-    API_KEY=SKxxxx
+    API_KEY_SID=SKxxxx
     API_SECRET=xxxxxx
     APP_SID=APxxxx
     PUSH_CREDENTIAL_SID=CRxxxx
