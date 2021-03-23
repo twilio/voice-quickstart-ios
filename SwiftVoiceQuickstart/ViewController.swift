@@ -11,10 +11,7 @@ import PushKit
 import CallKit
 import TwilioVoice
 
-let baseURLString = <#URL TO YOUR ACCESS TOKEN SERVER#>
-// If your token server is written in PHP, accessTokenEndpoint needs .php extension at the end. For example : /accessToken.php
-let accessTokenEndpoint = "/accessToken"
-let identity = "alice"
+let accessToken = <#PASTE YOUR ACCESS TOKEN HERE#>
 let twimlParamTo = "to"
 
 let kRegistrationTTLInDays = 365
@@ -92,14 +89,6 @@ class ViewController: UIViewController {
          * In this case we've already initialized our own `TVODefaultAudioDevice` instance which we will now set.
          */
         TwilioVoiceSDK.audioDevice = audioDevice
-    }
-
-    func fetchAccessToken() -> String? {
-        let endpointWithIdentity = String(format: "%@?identity=%@", accessTokenEndpoint, identity)
-        
-        guard let accessTokenURL = URL(string: baseURLString + endpointWithIdentity) else { return nil }
-        
-        return try? String(contentsOf: accessTokenURL, encoding: .utf8)
     }
 
     func toggleUIState(isEnabled: Bool, showCallControl: Bool) {
@@ -262,8 +251,7 @@ extension ViewController: UITextFieldDelegate {
 extension ViewController: PushKitEventDelegate {
     func credentialsUpdated(credentials: PKPushCredentials) {
         guard
-            (registrationRequired() || UserDefaults.standard.data(forKey: kCachedDeviceToken) != credentials.token),
-            let accessToken = fetchAccessToken()
+            (registrationRequired() || UserDefaults.standard.data(forKey: kCachedDeviceToken) != credentials.token)
         else {
             return
         }
@@ -314,8 +302,7 @@ extension ViewController: PushKitEventDelegate {
     }
     
     func credentialsInvalidated() {
-        guard let deviceToken = UserDefaults.standard.data(forKey: kCachedDeviceToken),
-            let accessToken = fetchAccessToken() else { return }
+        guard let deviceToken = UserDefaults.standard.data(forKey: kCachedDeviceToken) else { return }
         
         TwilioVoiceSDK.unregister(accessToken: accessToken, deviceToken: deviceToken) { error in
             if let error = error {
@@ -770,11 +757,6 @@ extension ViewController: CXProviderDelegate {
     }
     
     func performVoiceCall(uuid: UUID, client: String?, completionHandler: @escaping (Bool) -> Void) {
-        guard let accessToken = fetchAccessToken() else {
-            completionHandler(false)
-            return
-        }
-        
         let connectOptions = ConnectOptions(accessToken: accessToken) { builder in
             builder.params = [twimlParamTo: self.outgoingValue.text ?? ""]
             builder.uuid = uuid
