@@ -49,7 +49,6 @@ exports.handler = function(context, event, callback) {
       }
     });
   }
-
 };
 
 function isNumber(to) {
