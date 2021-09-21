@@ -221,6 +221,7 @@ To make client to number calls, first get a verified Twilio number to your accou
 You will also find additional examples that provide more advanced use cases of the Voice SDK:
 
 - [AudioDevice](AudioDeviceExample) - Provide your own means to playback and record audio using a custom `TVOAudioDevice` and [CoreAudio](https://developer.apple.com/documentation/coreaudio).
+- [Making calls from history](https://github.com/twilio/voice-quickstart-ios/blob/master/Docs/call-from-history.md) - Use the `INStartAudioCallIntent` in the user activity delegate method to start a call from the history.
 
 ## More Documentation
 
