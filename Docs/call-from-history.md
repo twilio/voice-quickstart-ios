@@ -14,8 +14,7 @@ The document show a quick example of how to make outgoing calls from recent call
     // Specify supported handle types so the app gets user activity callback when a call is made from call history
     configuration.supportedHandleTypes = [.generic, .phoneNumber]
 
-    callKitProvider = CXProvider(configuration: configuration)
-    if let provider = callKitProvider {
+    if let provider = CXProvider(configuration: configuration) {
         provider.setDelegate(self, queue: nil)
     }
 
