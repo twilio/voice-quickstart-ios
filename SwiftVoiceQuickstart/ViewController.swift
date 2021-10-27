@@ -494,7 +494,7 @@ extension ViewController: CallDelegate {
         placeCallButton.setTitle("Call", for: .normal)
     }
     
-    func call(call: Call, didReceiveQualityWarnings currentWarnings: Set<NSNumber>, previousWarnings: Set<NSNumber>) {
+    func callDidReceiveQualityWarnings(call: Call, currentWarnings: Set<NSNumber>, previousWarnings: Set<NSNumber>) {
         /**
         * currentWarnings: existing quality warnings that have not been cleared yet
         * previousWarnings: last set of warnings prior to receiving this callback
