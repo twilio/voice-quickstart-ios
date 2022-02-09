@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/twilio/twilio-voice-ios",
         "state": {
           "branch": null,
-          "revision": "075cf26abf9b7e4782600f464b564ae6b5cadc4c",
-          "version": "6.3.0"
+          "revision": "299f89b4053fbfb7511751033b41029a42872b56",
+          "version": "6.3.1"
         }
       }
     ]
