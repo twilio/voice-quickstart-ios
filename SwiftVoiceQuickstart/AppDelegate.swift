@@ -9,6 +9,8 @@ import UIKit
 import TwilioVoice
 import PushKit
 
+import Intents
+
 protocol PushKitEventDelegate: AnyObject {
     func credentialsUpdated(credentials: PKPushCredentials) -> Void
     func credentialsInvalidated() -> Void
@@ -39,6 +41,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKPushRegistryDelegate {
         initializePushKit()
 
         return true
+    }
+    
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+        
+        if let callIntent = userActivity.interaction?.intent as? INStartAudioCallIntent,
+           let contact = callIntent.contacts?[0] {
+            guard let handle = contact.personHandle?.value else { return false }
+            makeCall(handle)
+        }
+        
+        return true
+    }
+    
+    func makeCall(_ handle: String) {
+        
     }
     
     func initializePushKit() {

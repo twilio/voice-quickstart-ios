@@ -11,7 +11,7 @@ import PushKit
 import CallKit
 import TwilioVoice
 
-let accessToken = <#PASTE YOUR ACCESS TOKEN HERE#>
+let accessToken = ""
 let twimlParamTo = "to"
 
 let kRegistrationTTLInDays = 365
@@ -78,6 +78,7 @@ class ViewController: UIViewController {
         let configuration = CXProviderConfiguration(localizedName: "Voice Quickstart")
         configuration.maximumCallGroups = 1
         configuration.maximumCallsPerCallGroup = 1
+        configuration.supportedHandleTypes = [.generic, .phoneNumber]
         callKitProvider = CXProvider(configuration: configuration)
         if let provider = callKitProvider {
             provider.setDelegate(self, queue: nil)

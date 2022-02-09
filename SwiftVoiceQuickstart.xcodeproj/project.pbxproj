@@ -313,13 +313,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SwiftVoiceQuickstart/SwiftVoiceQuickstart.entitlements;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = SX5J6BN2KX;
 				INFOPLIST_FILE = SwiftVoiceQuickstart/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.SwiftVoiceQuickstart;
+				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.ProgrammableVoiceTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 			};
@@ -330,13 +330,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SwiftVoiceQuickstart/SwiftVoiceQuickstart.entitlements;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = SX5J6BN2KX;
 				INFOPLIST_FILE = SwiftVoiceQuickstart/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.SwiftVoiceQuickstart;
+				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.ProgrammableVoiceTestApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 			};
