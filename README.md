@@ -149,7 +149,7 @@ Build and run the app. Leave the text field empty and press the call button to s
 
 The Programmable Voice SDK uses Apple’s VoIP Services to let your application know when it is receiving an incoming call. If you want your users to receive incoming calls, you’ll need to enable VoIP Services in your application and generate a VoIP Services Certificate.
 
-Go to [Apple Developer portal](https://developer.apple.com/) and generate a VoIP Service Certificate.
+Go to the [Apple Developer portal](https://developer.apple.com/), sign in under the **Account** menu, click on **Certificates, Identifiers & Profiles** in the left-hand navigation panel, and click the **+** icon to create a new VoIP Service Certificate. The **VoIP Services Certificate** option is down at the bottom of the page: select it, click the **Continue** button, and work through the certificate creation wizard.
 
 Once you have generated the VoIP Services Certificate, you will need to provide the certificate and key to Twilio so that Twilio can send push notifications to your app on your behalf.
 
