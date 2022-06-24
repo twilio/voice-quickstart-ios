@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8FC10337286679690098328F /* CallControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC10336286679690098328F /* CallControl.swift */; };
 		8FC7E6EF26FB9F20002B67F7 /* SwiftUIVoiceQuickstartApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC7E6EE26FB9F20002B67F7 /* SwiftUIVoiceQuickstartApp.swift */; };
 		8FC7E6F126FB9F20002B67F7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC7E6F026FB9F20002B67F7 /* ContentView.swift */; };
 		8FC7E6F326FB9F23002B67F7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8FC7E6F226FB9F23002B67F7 /* Assets.xcassets */; };
@@ -14,6 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8FC10336286679690098328F /* CallControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallControl.swift; sourceTree = "<group>"; };
 		8FC7E6EB26FB9F20002B67F7 /* SwiftUIVoiceQuickstart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUIVoiceQuickstart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FC7E6EE26FB9F20002B67F7 /* SwiftUIVoiceQuickstartApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIVoiceQuickstartApp.swift; sourceTree = "<group>"; };
 		8FC7E6F026FB9F20002B67F7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -53,6 +55,7 @@
 			children = (
 				8FC7E6EE26FB9F20002B67F7 /* SwiftUIVoiceQuickstartApp.swift */,
 				8FC7E6F026FB9F20002B67F7 /* ContentView.swift */,
+				8FC10336286679690098328F /* CallControl.swift */,
 				8FC7E6F226FB9F23002B67F7 /* Assets.xcassets */,
 				8FC7E6F426FB9F23002B67F7 /* Preview Content */,
 			);
@@ -139,6 +142,7 @@
 			files = (
 				8FC7E6F126FB9F20002B67F7 /* ContentView.swift in Sources */,
 				8FC7E6EF26FB9F20002B67F7 /* SwiftUIVoiceQuickstartApp.swift in Sources */,
+				8FC10337286679690098328F /* CallControl.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

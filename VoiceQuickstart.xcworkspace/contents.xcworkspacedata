@@ -10,4 +10,7 @@
    <FileRef
       location = "group:AudioDeviceExample.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:SwiftUIVoiceQuickstart.xcodeproj">
+   </FileRef>
 </Workspace>

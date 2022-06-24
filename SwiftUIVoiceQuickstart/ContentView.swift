@@ -7,8 +7,12 @@
 
 import SwiftUI
 
+let kAccessToken = ""
+
 struct ContentView: View {
     @State private var outgoingTo = ""
+    
+    var callControl = CallControl(accessToken: kAccessToken)
 
     var body: some View {
         VStack(alignment: .center) {
@@ -18,7 +22,7 @@ struct ContentView: View {
                 .padding()
             Button("Call") {
                 //role: "Call", action: makeCall
-                print("Call button tapped")
+                callControl.makeCall(to: "\(outgoingTo)")
             }
         }
     }
