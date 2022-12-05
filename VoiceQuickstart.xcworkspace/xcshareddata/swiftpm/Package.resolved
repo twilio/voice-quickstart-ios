@@ -1,16 +1,14 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "TwilioVoice",
-        "repositoryURL": "https://github.com/twilio/twilio-voice-ios",
-        "state": {
-          "branch": null,
-          "revision": "299f89b4053fbfb7511751033b41029a42872b56",
-          "version": "6.3.1"
-        }
+  "pins" : [
+    {
+      "identity" : "twilio-voice-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/twilio/twilio-voice-ios",
+      "state" : {
+        "revision" : "fd94bbd382ac223b0ccc795e8ecc37bf7dc90814",
+        "version" : "6.5.0"
       }
-    ]
-  },
-  "version": 1
+    }
+  ],
+  "version" : 2
 }
