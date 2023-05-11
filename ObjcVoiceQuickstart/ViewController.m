@@ -21,7 +21,7 @@ static NSInteger const kRegistrationTTLInDays = 365;
 NSString * const kCachedDeviceToken = @"CachedDeviceToken";
 NSString * const kCachedBindingTime = @"CachedBindingTime";
 
-@interface ViewController () <TVONotificationDelegate, TVOCallDelegate, CXProviderDelegate, UITextFieldDelegate, AVAudioPlayerDelegate>
+@interface ViewController () <TVONotificationDelegate, TVOCallDelegate, TVOCallMessageDelegate, CXProviderDelegate, UITextFieldDelegate, AVAudioPlayerDelegate>
 
 @property (nonatomic, strong) void(^incomingPushCompletionCallback)(void);
 @property (nonatomic, strong) void(^callKitCompletionCallback)(BOOL);
@@ -281,7 +281,7 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
 
 - (void)incomingPushReceived:(PKPushPayload *)payload withCompletionHandler:(void (^)(void))completion {
     // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error` when delegate queue is not passed
-    if (![TwilioVoiceSDK handleNotification:payload.dictionaryPayload delegate:self delegateQueue:nil]) {
+    if (![TwilioVoiceSDK handleNotification:payload.dictionaryPayload delegate:self delegateQueue:nil callMessageDelegate:self]) {
         NSLog(@"This is not a valid Twilio Voice notification.");
     }
     

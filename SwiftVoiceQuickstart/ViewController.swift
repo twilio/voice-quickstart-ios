@@ -19,7 +19,7 @@ let kRegistrationTTLInDays = 365
 let kCachedDeviceToken = "CachedDeviceToken"
 let kCachedBindingDate = "CachedBindingDate"
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, CallMessageDelegate {
 
     @IBOutlet weak var qualityWarningsToaster: UILabel!
     @IBOutlet weak var placeCallButton: UIButton!
@@ -320,12 +320,12 @@ extension ViewController: PushKitEventDelegate {
     
     func incomingPushReceived(payload: PKPushPayload) {
         // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error:` when delegate queue is not passed
-        TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
+        TwilioVoiceSDK.handleNotification(payload: payload.dictionaryPayload, delegate: self, delegateQueue: nil, callMessageDelegate:self)
     }
     
     func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void) {
         // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error:` when delegate queue is not passed
-        TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
+        TwilioVoiceSDK.handleNotification(payload: payload.dictionaryPayload, delegate: self, delegateQueue: nil, callMessageDelegate:self)
         
         if let version = Float(UIDevice.current.systemVersion), version < 13.0 {
             // Save for later when the notification is properly handled.
