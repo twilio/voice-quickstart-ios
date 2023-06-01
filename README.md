@@ -156,6 +156,7 @@ Once you have generated the VoIP Services Certificate, you will need to provide 
 Export your VoIP Service Certificate as a `.p12` file from *Keychain Access* and extract the certificate and private key from the `.p12` file using the `openssl` command. 
 
     $ openssl pkcs12 -in PATH_TO_YOUR_P12 -nokeys -out cert.pem -nodes
+    $ openssl x509 -in cert.pem -out cert.pem
     $ openssl pkcs12 -in PATH_TO_YOUR_P12 -nocerts -out key.pem -nodes
     $ openssl rsa -in key.pem -out key.pem
 
