@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/twilio/twilio-voice-ios",
       "state" : {
-        "revision" : "fd94bbd382ac223b0ccc795e8ecc37bf7dc90814",
-        "version" : "6.5.0"
+        "revision" : "dad629fd2c9a3e05ded749f16384b4fa8fa0fc48",
+        "version" : "6.8.0"
       }
     }
   ],
