@@ -76,6 +76,11 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
     self.audioDevice = [TVODefaultAudioDevice audioDevice];
     TwilioVoiceSDK.audioDevice = self.audioDevice;
     
+    /* Example usage of Default logger to print app logs */
+    id<TVOLogger> defaultLogger = TwilioVoiceSDK.logger;
+    TVOLogParameters *params = [[TVOLogParameters alloc] initWithModule:TVOLogModulePlatform logLevel:TVOLogLevelDebug message:@"The default logger is used for app logs"];
+    [defaultLogger log:params];
+    
     self.activeCallInvites = [NSMutableDictionary dictionary];
     self.activeCalls = [NSMutableDictionary dictionary];
     
