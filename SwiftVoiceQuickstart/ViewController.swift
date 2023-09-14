@@ -89,6 +89,12 @@ class ViewController: UIViewController {
          * In this case we've already initialized our own `TVODefaultAudioDevice` instance which we will now set.
          */
         TwilioVoiceSDK.audioDevice = audioDevice
+        
+        /* Example usage of Default logger to print app logs */
+        let defaultLogger = TwilioVoiceSDK.logger
+        if let params = LogParameters.init(module:TwilioVoiceSDK.LogModule.platform , logLevel: TwilioVoiceSDK.LogLevel.debug, message: "The default logger is used for app logs") {
+            defaultLogger.log(params: params)
+        }
     }
 
     func toggleUIState(isEnabled: Bool, showCallControl: Bool) {
