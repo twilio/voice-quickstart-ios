@@ -192,8 +192,6 @@ class ViewController: UIViewController {
     func toggleAudioRoute(toSpeaker: Bool) {
         // The mode set by the Voice SDK is "VoiceChat" so the default audio route is the built-in receiver. Use port override to switch the route.
         audioDevice.block = {
-            DefaultAudioDevice.DefaultAVAudioSessionConfigurationBlock()
-            
             do {
                 if toSpeaker {
                     try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
