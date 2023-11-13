@@ -95,7 +95,7 @@ Follow the instructions in the project's README to get the application server up
 
 ### <a name="bullet3"></a>3. Create a TwiML application for the Access Token
 
-Next, we need to create a TwiML application. A TwiML application identifies a public URL for retrieving [TwiML call control instructions](https://www.twilio.com/docs/api/twiml). When your iOS app makes a call to the Twilio cloud, Twilio will make a webhook request to this URL, your application server will respond with generated TwiML, and Twilio will execute the instructions you’ve provided.
+Next, we need to create a TwiML application. A TwiML application identifies a public URL for retrieving [TwiML call control instructions](https://www.twilio.com/docs/voice/twiml). When your iOS app makes a call to the Twilio cloud, Twilio will make a webhook request to this URL, your application server will respond with generated TwiML, and Twilio will execute the instructions you’ve provided.
 
 Use Twilio CLI to create a TwiML app with the `make-call` endpoint you have just deployed (**Note: replace the value of `--voice-url` parameter with your `make-call` endpoint you just deployed to Twilio Serverless**)
 
@@ -235,11 +235,11 @@ You can find the API documentation of the Voice SDK:
 
 To learn more about how to use TwiML and the Programmable Voice Calls API, check out our TwiML quickstarts:
 
-* [TwiML Quickstart for Python](https://www.twilio.com/docs/quickstart/python/twiml)
-* [TwiML Quickstart for Ruby](https://www.twilio.com/docs/quickstart/ruby/twiml)
-* [TwiML Quickstart for PHP](https://www.twilio.com/docs/quickstart/php/twiml)
-* [TwiML Quickstart for Java](https://www.twilio.com/docs/quickstart/java/twiml)
-* [TwiML Quickstart for C#](https://www.twilio.com/docs/quickstart/csharp/twiml)
+* [TwiML Quickstart for Python](https://www.twilio.com/docs/voice/quickstart/python)
+* [TwiML Quickstart for Ruby](https://www.twilio.com/docs/voice/quickstart/ruby)
+* [TwiML Quickstart for PHP](https://www.twilio.com/docs/voice/quickstart/php)
+* [TwiML Quickstart for Java](https://www.twilio.com/docs/voice/quickstart/java)
+* [TwiML Quickstart for C#](https://www.twilio.com/docs/voice/quickstart/csharp)
 
 ## Issues and Support
 
