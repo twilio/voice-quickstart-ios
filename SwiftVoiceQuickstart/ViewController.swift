@@ -76,7 +76,7 @@ class ViewController: UIViewController {
         
         /* Please note that the designated initializer `CXProviderConfiguration(localizedName: String)` has been deprecated on iOS 14. */
         let configuration = CXProviderConfiguration(localizedName: "Voice Quickstart")
-        configuration.maximumCallGroups = 1
+        configuration.maximumCallGroups = 2
         configuration.maximumCallsPerCallGroup = 1
         callKitProvider = CXProvider(configuration: configuration)
         if let provider = callKitProvider {
@@ -102,8 +102,10 @@ class ViewController: UIViewController {
         
         if showCallControl {
             callControlView.isHidden = false
-            muteSwitch.isOn = false
-            speakerSwitch.isOn = true
+            muteSwitch.isOn = getActiveCall()?.isMuted ?? false
+            for output in AVAudioSession.sharedInstance().currentRoute.outputs {
+                speakerSwitch.isOn = output.portType == AVAudioSessionPortBuiltInSpeaker
+            }
         } else {
             callControlView.isHidden = true
         }
@@ -133,13 +135,23 @@ class ViewController: UIViewController {
         
         present(alertController, animated: true, completion: nil)
     }
-    
+
+    func getActiveCall() -> Call? {
+        if let activeCall = activeCall {
+            return activeCall
+        } else if activeCalls.count == 1 {
+            // This is a scenario when the only remaining call is still on hold after the previous call has ended
+            return activeCalls.first?.value
+        } else {
+            return nil
+        }
+    }
+
     @IBAction func mainButtonPressed(_ sender: Any) {
-        guard activeCall == nil else {
+        if !activeCalls.isEmpty {
+            guard let activeCall = getActiveCall() else { return }
             userInitiatedDisconnect = true
-            performEndCallAction(uuid: activeCall!.uuid!)
-            toggleUIState(isEnabled: false, showCallControl: false)
-            
+            performEndCallAction(uuid: activeCall.uuid!)
             return
         }
         
@@ -176,9 +188,8 @@ class ViewController: UIViewController {
     }
     
     @IBAction func muteSwitchToggled(_ sender: UISwitch) {
-        // The sample app supports toggling mute from app UI only on the last connected call.
-        guard let activeCall = activeCall else { return }
-        
+        guard let activeCall = getActiveCall() else { return }
+
         activeCall.isMuted = sender.isOn
     }
     
@@ -422,13 +433,13 @@ extension ViewController: CallDelegate {
         }
         
         placeCallButton.setTitle("Hang Up", for: .normal)
-        
-        toggleUIState(isEnabled: true, showCallControl: true)
+
         stopSpin()
         toggleAudioRoute(toSpeaker: true)
+        toggleUIState(isEnabled: true, showCallControl: true)
     }
-    
-    func call(call: Call, isReconnectingWithError error: Error) {
+
+    func callIsReconnecting(call: Call, error: Error) {
         NSLog("call:isReconnectingWithError:")
         
         placeCallButton.setTitle("Reconnecting", for: .normal)
@@ -494,8 +505,13 @@ extension ViewController: CallDelegate {
         }
         
         stopSpin()
-        toggleUIState(isEnabled: true, showCallControl: false)
-        placeCallButton.setTitle("Call", for: .normal)
+        if activeCalls.isEmpty {
+            toggleUIState(isEnabled: true, showCallControl: false)
+            placeCallButton.setTitle("Call", for: .normal)
+        } else {
+            guard let activeCall = getActiveCall() else { return }
+            toggleUIState(isEnabled: true, showCallControl: true)
+        }
     }
     
     func callDidReceiveQualityWarnings(call: Call, currentWarnings: Set<NSNumber>, previousWarnings: Set<NSNumber>) {
@@ -671,6 +687,17 @@ extension ViewController: CXProviderDelegate {
         
         if let call = activeCalls[action.callUUID.uuidString] {
             call.isOnHold = action.isOnHold
+
+            // Explicitly enable the TVOAudioDevice.
+            // This is workaround for an iOS issue where the `provider(_:didActivate:)` method is not called after un-holding a PSTN call.
+            // https://developer.apple.com/forums/thread/694836
+            if !call.isOnHold {
+                audioDevice.isEnabled = true
+                activeCall = call
+            }
+
+            toggleUIState(isEnabled: true, showCallControl: true)
+
             action.fulfill()
         } else {
             action.fail()
