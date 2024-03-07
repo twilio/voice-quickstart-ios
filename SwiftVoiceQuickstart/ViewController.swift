@@ -688,9 +688,10 @@ extension ViewController: CXProviderDelegate {
         if let call = activeCalls[action.callUUID.uuidString] {
             call.isOnHold = action.isOnHold
 
-            // Explicitly enable the TVOAudioDevice.
-            // This is workaround for an iOS issue where the `provider(_:didActivate:)` method is not called after un-holding a PSTN call.
-            // https://developer.apple.com/forums/thread/694836
+            /** Explicitly enable the TVOAudioDevice.
+            * This is workaround for an iOS issue where the `provider(_:didActivate:)` method is not called
+            * when un-holding a VoIP call after an ended PSTN call.
+            */ https://developer.apple.com/forums/thread/694836
             if !call.isOnHold {
                 audioDevice.isEnabled = true
                 activeCall = call
