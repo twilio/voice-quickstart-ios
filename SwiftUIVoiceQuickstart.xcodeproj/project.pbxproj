@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8F7444DE2BDAE20100F5C544 /* TwilioVoice in Frameworks */ = {isa = PBXBuildFile; productRef = 8F7444DD2BDAE20100F5C544 /* TwilioVoice */; };
+		8F7444E52BDB031D00F5C544 /* DialpadButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7444E42BDB031D00F5C544 /* DialpadButton.swift */; };
 		8FC10337286679690098328F /* CallControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC10336286679690098328F /* CallControl.swift */; };
 		8FC7E6EF26FB9F20002B67F7 /* SwiftUIVoiceQuickstartApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC7E6EE26FB9F20002B67F7 /* SwiftUIVoiceQuickstartApp.swift */; };
 		8FC7E6F126FB9F20002B67F7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC7E6F026FB9F20002B67F7 /* ContentView.swift */; };
@@ -15,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8F7444E42BDB031D00F5C544 /* DialpadButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialpadButton.swift; sourceTree = "<group>"; };
 		8FC10336286679690098328F /* CallControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallControl.swift; sourceTree = "<group>"; };
 		8FC7E6EB26FB9F20002B67F7 /* SwiftUIVoiceQuickstart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUIVoiceQuickstart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8FC7E6EE26FB9F20002B67F7 /* SwiftUIVoiceQuickstartApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIVoiceQuickstartApp.swift; sourceTree = "<group>"; };
@@ -28,12 +31,29 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F7444DE2BDAE20100F5C544 /* TwilioVoice in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8F7444E32BDB02BD00F5C544 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8F7444E42BDB031D00F5C544 /* DialpadButton.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8F7444E62BDB15F700F5C544 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				8FC10336286679690098328F /* CallControl.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
 		8FC7E6E226FB9F20002B67F7 = {
 			isa = PBXGroup;
 			children = (
@@ -53,9 +73,10 @@
 		8FC7E6ED26FB9F20002B67F7 /* SwiftUIVoiceQuickstart */ = {
 			isa = PBXGroup;
 			children = (
+				8F7444E62BDB15F700F5C544 /* Controllers */,
+				8F7444E32BDB02BD00F5C544 /* Views */,
 				8FC7E6EE26FB9F20002B67F7 /* SwiftUIVoiceQuickstartApp.swift */,
 				8FC7E6F026FB9F20002B67F7 /* ContentView.swift */,
-				8FC10336286679690098328F /* CallControl.swift */,
 				8FC7E6F226FB9F23002B67F7 /* Assets.xcassets */,
 				8FC7E6F426FB9F23002B67F7 /* Preview Content */,
 			);
@@ -86,6 +107,9 @@
 			dependencies = (
 			);
 			name = SwiftUIVoiceQuickstart;
+			packageProductDependencies = (
+				8F7444DD2BDAE20100F5C544 /* TwilioVoice */,
+			);
 			productName = SwiftUIVoiceQuickstart;
 			productReference = 8FC7E6EB26FB9F20002B67F7 /* SwiftUIVoiceQuickstart.app */;
 			productType = "com.apple.product-type.application";
@@ -114,6 +138,9 @@
 				Base,
 			);
 			mainGroup = 8FC7E6E226FB9F20002B67F7;
+			packageReferences = (
+				8F7444DC2BDAE20100F5C544 /* XCRemoteSwiftPackageReference "twilio-voice-ios" */,
+			);
 			productRefGroup = 8FC7E6EC26FB9F20002B67F7 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -141,6 +168,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8FC7E6F126FB9F20002B67F7 /* ContentView.swift in Sources */,
+				8F7444E52BDB031D00F5C544 /* DialpadButton.swift in Sources */,
 				8FC7E6EF26FB9F20002B67F7 /* SwiftUIVoiceQuickstartApp.swift in Sources */,
 				8FC10337286679690098328F /* CallControl.swift in Sources */,
 			);
@@ -281,7 +309,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -311,7 +339,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -347,6 +375,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8F7444DC2BDAE20100F5C544 /* XCRemoteSwiftPackageReference "twilio-voice-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twilio/twilio-voice-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.10.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8F7444DD2BDAE20100F5C544 /* TwilioVoice */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8F7444DC2BDAE20100F5C544 /* XCRemoteSwiftPackageReference "twilio-voice-ios" */;
+			productName = TwilioVoice;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8FC7E6E326FB9F20002B67F7 /* Project object */;
 }

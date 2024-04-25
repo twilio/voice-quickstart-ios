@@ -2,7 +2,7 @@
 //  SwiftUIVoiceQuickstartApp.swift
 //  SwiftUIVoiceQuickstart
 //
-//  Created by Bobie Chen on 9/22/21.
+//  Copyright © 2024 Twilio, Inc. All rights reserved.
 //
 
 import SwiftUI
