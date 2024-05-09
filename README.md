@@ -1,7 +1,5 @@
 ## Twilio Voice Quickstart for iOS
 
-> Please see our [iOS 13 Migration Guide](https://github.com/twilio/twilio-voice-ios/blob/Releases/iOS-13-Migration-Guide.md) for the latest information on iOS 13.
-
 ## Get started with Voice on iOS
 * [Quickstart](#quickstart) - Run the swift quickstart app
 * [Examples](#examples) - Sample applications
