@@ -160,6 +160,13 @@ Export your VoIP Service Certificate as a `.p12` file from *Keychain Access* and
     $ openssl pkcs12 -in PATH_TO_YOUR_P12 -nocerts -out key.pem -nodes
     $ openssl rsa -in key.pem -out key.pem
 
+**Note: if you run into the unsupported encryption algorithm (RC2-40-CBC) issue like below, try adding `-legacy` to the `openssl pkcs12` command.**
+
+```
+Error outputting keys and certificates
+C0EF094DF87F0000:error:0308010C:digital envelope routines:inner_evp_generic_fetch:unsupported:crypto/evp/evp_fetch.c:355:Global default library context, Algorithm (RC2-40-CBC : 0), Properties ()
+```
+
 Use Twilio CLI to create a Push Credential using the cert and key.
 
     $ twilio api:chat:v2:credentials:create \
