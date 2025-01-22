@@ -114,39 +114,9 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
         
         [self checkRecordPermission:^(BOOL permissionGranted) {
             if (!permissionGranted) {
-                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Voice Quick Start"
-                                                                                         message:@"Microphone permission not granted."
-                                                                                  preferredStyle:UIAlertControllerStyleAlert];
-
-                typeof(self) __weak weakSelf = self;
-                UIAlertAction *continueWithoutMic = [UIAlertAction actionWithTitle:@"Continue without microphone"
-                                                                             style:UIAlertActionStyleDefault
-                                                                           handler:^(UIAlertAction *action) {
-                    typeof(self) __strong strongSelf = weakSelf;
-                    [strongSelf performStartCallActionWithUUID:uuid handle:handle];
-                }];
-                [alertController addAction:continueWithoutMic];
-
-                NSDictionary *openURLOptions = @{UIApplicationOpenURLOptionUniversalLinksOnly: @NO};
-                UIAlertAction *goToSettings = [UIAlertAction actionWithTitle:@"Settings"
-                                                                       style:UIAlertActionStyleDefault
-                                                                     handler:^(UIAlertAction *action) {
-                    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]
-                                                       options:openURLOptions
-                                             completionHandler:nil];
-                }];
-                [alertController addAction:goToSettings];
-                
-                UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
-                                                                 style:UIAlertActionStyleCancel
-                                                               handler:^(UIAlertAction *action) {
-                    typeof(self) __strong strongSelf = weakSelf;
-                    [strongSelf toggleUIState:YES showCallControl:NO];
-                    [strongSelf stopSpin];
-                }];
-                [alertController addAction:cancel];
-                
-                [self presentViewController:alertController animated:YES completion:nil];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self showMicrophoneAccessRequestWithUUID:uuid handle:handle];
+                });
             } else {
                 [self performStartCallActionWithUUID:uuid handle:handle];
             }
@@ -178,6 +148,41 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
             completion(NO);
             break;
     }
+}
+
+- (void)showMicrophoneAccessRequestWithUUID:(NSUUID *)uuid handle:(NSString *)handle {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Voice Quick Start"
+                                                                             message:@"Microphone permission not granted."
+                                                                      preferredStyle:UIAlertControllerStyleAlert];
+
+    typeof(self) __weak weakSelf = self;
+    UIAlertAction *continueWithoutMic = [UIAlertAction actionWithTitle:@"Continue without microphone"
+                                                                 style:UIAlertActionStyleDefault
+                                                               handler:^(UIAlertAction *action) {
+        typeof(self) __strong strongSelf = weakSelf;
+        [strongSelf performStartCallActionWithUUID:uuid handle:handle];
+    }];
+    [alertController addAction:continueWithoutMic];
+
+    NSDictionary *openURLOptions = @{UIApplicationOpenURLOptionUniversalLinksOnly: @NO};
+    UIAlertAction *goToSettings = [UIAlertAction actionWithTitle:@"Settings"
+                                                           style:UIAlertActionStyleDefault
+                                                         handler:^(UIAlertAction *action) {
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]
+                                           options:openURLOptions
+                                 completionHandler:nil];
+    }];
+    [alertController addAction:goToSettings];
+
+    UIAlertAction *cancel = [UIAlertAction actionWithTitle:@"Cancel"
+                                                     style:UIAlertActionStyleCancel
+                                                   handler:^(UIAlertAction *action) {
+        typeof(self) __strong strongSelf = weakSelf;
+        [strongSelf toggleUIState:YES showCallControl:NO];
+        [strongSelf stopSpin];
+    }];
+    [alertController addAction:cancel];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 - (void)toggleUIState:(BOOL)isEnabled showCallControl:(BOOL)showCallControl {
@@ -684,6 +689,16 @@ previousWarnings:(NSSet<NSNumber *> *)previousWarnings {
     TVOCall *call = self.activeCalls[action.callUUID.UUIDString];
     if (call) {
         [call setMuted:action.isMuted];
+        [action fulfill];
+    } else {
+        [action fail];
+    }
+}
+
+- (void)provider:(CXProvider *)provider performPlayDTMFCallAction:(CXPlayDTMFCallAction *)action {
+    TVOCall *call = self.activeCalls[action.callUUID.UUIDString];
+    if (call) {
+        [call sendDigits:action.digits];
         [action fulfill];
     } else {
         [action fail];
