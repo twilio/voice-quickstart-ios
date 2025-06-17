@@ -10,7 +10,7 @@
 * [Access Tokens](https://github.com/twilio/voice-quickstart-ios/blob/master/Docs/access-tokens.md) - Using access tokens
 * [Managing Audio Interruptions](https://github.com/twilio/voice-quickstart-ios/blob/master/Docs/managing-audio-interruptions.md) - Managing audio interruptions
 * [Managing Push Credentials](https://github.com/twilio/voice-quickstart-ios/blob/master/Docs/managing-push-credentials.md) - Managing push credentials
-* [Managing Regional Push Credentials using Conversations Credential Resource API](https://github.com/twilio/voice-quickstart-ios/blob/master/Docs/push-credentials-via-conversations-api.md) - Create or update push credentials for regional usage
+* [Managing Regional Push Credentials using Conversations Credential Resource API](https://github.com/twilio/voice-quickstart-ios/blob/master/Docs/push-credentials-via-notify-api.md) - Create or update push credentials for regional usage
 * [More Documentation](#more-documentation) - More documentation related to the Voice iOS SDK
 * [Issues and Support](#issues-and-support) - Filing issues and general support
 
