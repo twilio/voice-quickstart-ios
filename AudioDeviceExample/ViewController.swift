@@ -133,8 +133,9 @@ class ViewController: UIViewController {
                 self?.performStartCallAction(uuid: uuid, handle: handle)
                 return
             }
-        
-            self?.showMicrophoneAccessRequest(uuid, handle)
+            DispatchQueue.main.async {
+                self?.showMicrophoneAccessRequest(uuid, handle)
+            }
         }
     }
     
@@ -298,6 +299,17 @@ extension ViewController: CXProviderDelegate {
 
         if let call = activeCall {
             call.isMuted = action.isMuted
+            action.fulfill()
+        } else {
+            action.fail()
+        }
+    }
+
+    func provider(_ provider: CXProvider, perform action: CXPlayDTMFCallAction) {
+        NSLog("provider:performPlayDTMFCallAction:")
+
+        if let call = activeCall {
+            call.sendDigits(action.digits)
             action.fulfill()
         } else {
             action.fail()
