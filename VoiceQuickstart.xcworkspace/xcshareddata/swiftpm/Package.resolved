@@ -1,10 +1,10 @@
 {
-  "originHash" : "46e3234c59d328eb6dc5ae615861af6e4dc67e9a9557e7135747855673099f3d",
+  "originHash" : "be4d1864dbe2f7d448da3f48c5684400830182ba31395edc93a693caa974e114",
   "pins" : [
     {
       "identity" : "twilio-voice-ios",
       "kind" : "remoteSourceControl",
-      "location" : "git@github.com:twilio/twilio-voice-ios.git",
+      "location" : "https://github.com/twilio/twilio-voice-ios",
       "state" : {
         "revision" : "6178e4135132ee9d44d3124fe3af31b505ae8c5e",
         "version" : "6.13.3"
