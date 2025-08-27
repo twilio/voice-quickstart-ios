@@ -370,8 +370,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/twilio/twilio-voice-ios";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.2.0;
+				kind = upToNextMinorVersion;
+				minimumVersion = 6.13.3;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
