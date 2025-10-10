@@ -28,6 +28,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var callControlView: UIView!
     @IBOutlet weak var muteSwitch: UISwitch!
     @IBOutlet weak var speakerSwitch: UISwitch!
+    @IBOutlet weak var holdSwitch: UISwitch!
 
     var incomingPushCompletionCallback: (() -> Void)?
 
@@ -103,6 +104,7 @@ class ViewController: UIViewController {
         if showCallControl {
             callControlView.isHidden = false
             muteSwitch.isOn = getActiveCall()?.isMuted ?? false
+            holdSwitch.isOn = getActiveCall()?.isOnHold ?? false
             for output in AVAudioSession.sharedInstance().currentRoute.outputs {
                 speakerSwitch.isOn = output.portType == AVAudioSessionPortBuiltInSpeaker
             }
@@ -197,7 +199,21 @@ class ViewController: UIViewController {
     @IBAction func speakerSwitchToggled(_ sender: UISwitch) {
         toggleAudioRoute(toSpeaker: sender.isOn)
     }
-    
+
+    @IBAction func holdSwitchToggled(_ sender: UISwitch) {
+        guard let activeCallUuid = getActiveCall()?.uuid else { return }
+        let holdCallAction = CXSetHeldCallAction(call: activeCallUuid, onHold: sender.isOn)
+        let transaction = CXTransaction(action: holdCallAction)
+
+        callKitCallController.request(transaction) { error in
+            if let error = error {
+                NSLog("SetHeldCallAction transaction request failed: \(error.localizedDescription).")
+            } else {
+                NSLog("SetHeldCallAction transaction request successful")
+            }
+        }
+    }
+
     
     // MARK: AVAudioSession
     

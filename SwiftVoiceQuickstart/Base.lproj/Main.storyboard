@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22505" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24128" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24063"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -43,7 +43,7 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ruy-Jc-pNi">
-                                <rect key="frame" x="67.5" y="501.5" width="240" height="88"/>
+                                <rect key="frame" x="17.5" y="501.5" width="340" height="88"/>
                                 <subviews>
                                     <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="3ee-Gh-QDM">
                                         <rect key="frame" x="52" y="8" width="49" height="31"/>
@@ -73,10 +73,24 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Hold" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kYV-eq-MSV">
+                                        <rect key="frame" x="237" y="47" width="47" height="21"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LyV-Gq-wuE">
+                                        <rect key="frame" x="231" y="8" width="61" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <connections>
+                                            <action selector="holdSwitchToggled:" destination="BYZ-38-t0r" eventType="valueChanged" id="JKG-f1-kW1"/>
+                                        </connections>
+                                    </switch>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="240" id="3ML-aM-WRP"/>
+                                    <constraint firstAttribute="width" constant="340" id="3ML-aM-WRP"/>
                                     <constraint firstAttribute="height" constant="88" id="edv-q4-hws"/>
                                 </constraints>
                             </view>
@@ -119,6 +133,7 @@
                     </view>
                     <connections>
                         <outlet property="callControlView" destination="Ruy-Jc-pNi" id="vQY-i1-hxV"/>
+                        <outlet property="holdSwitch" destination="LyV-Gq-wuE" id="Y4y-ol-oKV"/>
                         <outlet property="iconView" destination="wqn-ZD-zTx" id="Wko-Lc-Lcn"/>
                         <outlet property="muteSwitch" destination="3ee-Gh-QDM" id="d1C-2s-MOF"/>
                         <outlet property="outgoingValue" destination="rhQ-vm-Q9J" id="MSu-Nc-DfV"/>
