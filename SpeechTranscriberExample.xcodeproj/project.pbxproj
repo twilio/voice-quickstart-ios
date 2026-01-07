@@ -15,7 +15,6 @@
 		8FC3F9F42F0F066A0052F861 /* TwilioLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FC3F9EE2F0F066A0052F861 /* TwilioLogo.png */; };
 		8FC3F9F52F0F066A0052F861 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8FC3F9EC2F0F066A0052F861 /* Main.storyboard */; };
 		8FC3F9F62F0F066A0052F861 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8FC3F9E72F0F066A0052F861 /* Assets.xcassets */; };
-		8FC3F9F72F0F066A0052F861 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8FC3F9E82F0F066A0052F861 /* Info.plist */; };
 		8FC3F9FC2F0F07C90052F861 /* DefaultSystemAudioDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 8FC3F9FA2F0F07C90052F861 /* DefaultSystemAudioDevice.m */; };
 /* End PBXBuildFile section */
 
@@ -192,7 +191,6 @@
 				8FC3F9F42F0F066A0052F861 /* TwilioLogo.png in Resources */,
 				8FC3F9F52F0F066A0052F861 /* Main.storyboard in Resources */,
 				8FC3F9F62F0F066A0052F861 /* Assets.xcassets in Resources */,
-				8FC3F9F72F0F066A0052F861 /* Info.plist in Resources */,
 				8F6BABF92399B2F00030BE4F /* ringtone.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

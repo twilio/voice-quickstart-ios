@@ -343,19 +343,15 @@ class ViewController: UIViewController {
     
     func toggleAudioRoute(toSpeaker: Bool) {
         // The mode set by the Voice SDK is "VoiceChat" so the default audio route is the built-in receiver. Use port override to switch the route.
-        audioDevice.block = {
-            do {
-                if toSpeaker {
-                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
-                } else {
-                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
-                }
-            } catch {
-                NSLog(error.localizedDescription)
+        do {
+            if toSpeaker {
+                try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+            } else {
+                try AVAudioSession.sharedInstance().overrideOutputAudioPort(.none)
             }
+        } catch {
+            NSLog(error.localizedDescription)
         }
-        
-        audioDevice.block()
     }
     
     
@@ -757,7 +753,7 @@ extension ViewController: CallDelegate {
 extension ViewController: CXProviderDelegate {
     func providerDidReset(_ provider: CXProvider) {
         NSLog("providerDidReset:")
-        audioDevice.isEnabled = false
+        defaultSystemAudioDevice.isEnabled = false
     }
 
     func providerDidBegin(_ provider: CXProvider) {
@@ -766,12 +762,12 @@ extension ViewController: CXProviderDelegate {
 
     func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
         NSLog("provider:didActivateAudioSession:")
-        audioDevice.isEnabled = true
+        defaultSystemAudioDevice.isEnabled = true
     }
 
     func provider(_ provider: CXProvider, didDeactivate audioSession: AVAudioSession) {
         NSLog("provider:didDeactivateAudioSession:")
-        audioDevice.isEnabled = false
+        defaultSystemAudioDevice.isEnabled = false
     }
 
     func provider(_ provider: CXProvider, timedOutPerforming action: CXAction) {
@@ -838,7 +834,7 @@ extension ViewController: CXProviderDelegate {
             * when un-holding a VoIP call after an ended PSTN call.
             */ https://developer.apple.com/forums/thread/694836
             if !call.isOnHold {
-                audioDevice.isEnabled = true
+                defaultSystemAudioDevice.isEnabled = true
                 activeCall = call
             }
 

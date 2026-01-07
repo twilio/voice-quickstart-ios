@@ -92,6 +92,9 @@ size_t _captureScratchBytes;
     self = [super init];
 
     if (self) {
+        // By default audio device is enabled
+        _enabled = true;
+        
         /*
          * Initialize rendering and capturing context. The deviceContext will be be filled in when startRendering or
          * startCapturing gets called.
@@ -108,6 +111,29 @@ size_t _captureScratchBytes;
     }
 
     return self;
+}
+
+- (void)setEnabled:(BOOL)enabled {
+    @synchronized(self) {
+        if (enabled) {
+            // If the worker block is executed, then context is guaranteed to be valid.
+            TVOAudioDeviceContext context = [self deviceContext];
+            if (context) {
+                TVOAudioDeviceExecuteWorkerBlock(context, ^{
+                    _enabled = enabled;
+                });
+            }
+        }
+    }
+}
+
+- (TVOAudioDeviceContext)deviceContext {
+    if (self.renderingContext->deviceContext) {
+        return self.renderingContext->deviceContext;
+    } else if (self.capturingContext->deviceContext) {
+        return self.capturingContext->deviceContext;
+    }
+    return NULL;
 }
 
 // MARK: - TVOAudioDeviceRenderer

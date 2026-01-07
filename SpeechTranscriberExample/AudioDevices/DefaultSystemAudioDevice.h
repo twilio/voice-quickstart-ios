@@ -1,22 +1,21 @@
 //
 //  DefaultSystemAudioDevice.h
-//  ObjCVoiceQuickstart
-//
 //
 
 #import <Foundation/Foundation.h>
-@import AVFoundation;
-@import AudioToolbox;
+
 @import TwilioVoice;
 
 /**
- A very small, “just the basics” audio device that captures from the built-in mic
- and renders to the system output using RemoteIO. It implements TVOAudioDevice.
+ A very small, "just the basics" audio device which implements the TVOAudioDevice protocol,
+ that captures from the built-in mic and renders to the system output using RemoteIO.
  */
 @interface DefaultSystemAudioDevice : NSObject <TVOAudioDevice>
 
-@property (nonatomic, strong) void(^renderProcessingCallback)(AVAudioPCMBuffer *buffer, AVAudioFormat *format);
-@property (nonatomic, strong) void(^inputProcessingCallback)(AudioBufferList *ioData);
+@property (nonatomic, assign, getter=isEnabled) BOOL enabled;
+
+@property (nonatomic, nonnull, strong) void(^renderProcessingCallback)(AVAudioPCMBuffer * _Nonnull buffer, AVAudioFormat * _Nonnull format);
+@property (nonatomic, nonnull, strong) void(^inputProcessingCallback)(AudioBufferList * _Nonnull ioData);
 
 + (nullable TVOAudioFormat *)activeFormat;
 
