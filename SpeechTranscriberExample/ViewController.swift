@@ -55,6 +55,11 @@ class ViewController: UIViewController {
     let callKitCallController = CXCallController()
     var userInitiatedDisconnect: Bool = false
     
+    // Speech transcription recognizer
+    var inputSequence: AsyncStream<AnalyzerInput>?
+    var inputBuilder: AsyncStream<AnalyzerInput>.Continuation?
+    var recognizerTask: Task<Void, Never>?
+    
     /*
      Custom ringback will be played when this flag is enabled.
      When [answerOnBridge](https://www.twilio.com/docs/voice/twiml/dial#answeronbridge) is enabled in
@@ -92,28 +97,29 @@ class ViewController: UIViewController {
             provider.setDelegate(self, queue: nil)
         }
 
-// TODO: add comments
+        /*
+         * Speech transcription setup:
+         *   - Implement render/input callbacks from DefaultSystemAudioDevice to access the audio buffer.
+         *   - Initialize the speech transcriber and analyzer. See ViewController+SpeechTranscriber.swift for details.
+         */
         defaultSystemAudioDevice.renderProcessingCallback = { (buffer: AVAudioPCMBuffer?, format: AVAudioFormat?) -> Void in
+            // Transcribe the remote audio track
             Task {
                 await self.transcribe(buffer: buffer, format: format)
             }
         }
 
         defaultSystemAudioDevice.inputProcessingCallback = { (buffer: UnsafeMutablePointer<AudioBufferList>?) -> Void in
+            // Audio buffer of the local audio track. Process if needed.
         }
         
-        /*
-         * The important thing to remember when providing a TVOAudioDevice is that the device must be set
-         * before performing any other actions with the SDK (such as connecting a Call, or accepting an incoming Call).
-         * In this case we've already initialized our own `TVODefaultAudioDevice` instance which we will now set.
-         */
         TwilioVoiceSDK.audioDevice = defaultSystemAudioDevice
         
         Task {
             do {
                 try await setUpTranscriber()
-            } catch {
-                
+            } catch let error {
+                print(error.localizedDescription)
             }
         }
         
@@ -121,119 +127,6 @@ class ViewController: UIViewController {
         let defaultLogger = TwilioVoiceSDK.logger
         if let params = LogParameters.init(module:TwilioVoiceSDK.LogModule.platform , logLevel: TwilioVoiceSDK.LogLevel.debug, message: "The default logger is used for app logs") {
             defaultLogger.log(params: params)
-        }
-    }
-    
-    func transcribe(buffer: AVAudioPCMBuffer?, format: AVAudioFormat?) async{
-        var outputSettings = format?.settings//[String : Any]()
-//        outputSettings![AVAudioFileTypeKey] = kAudioFileCAFType
-//        outputSettings![AVFormatIDKey] = kAudioFormatMPEG4AAC
-        
-        do {
-//            let url = URL.documentsDirectory.appending(path: "render-buffer.wav")//URL(fileURLWithPath:"render-buffer.caf")
-//            let outputFile = try AVAudioFile(forWriting: url, settings: outputSettings!)
-//            try outputFile.write(from: buffer!)
-//            try await speechAnalyzer?.analyzeSequence(from: outputFile)
-            
-            guard let inputBuilder, let analyzerFormat else {
-                print("No input-builder or analyzer-format")
-                return
-            }
-            
-            let input = AnalyzerInput(buffer: buffer!)
-            inputBuilder.yield(input)
-            
-        } catch {
-            print("Failed to create output audio file \(error)")
-        }
-        //let outputFile = AVAudioFile(forWriting: URL(fileURLWithPath:"render-buffer.wav"), settings: outputSettings as! [String : Any])
-    }
-    
-    var inputSequence: AsyncStream<AnalyzerInput>?
-    var inputBuilder: AsyncStream<AnalyzerInput>.Continuation?
-    var recognizerTask: Task<Void, Never>?
-    
-    func setUpTranscriber() async throws {
-        speechTranscriber = SpeechTranscriber(locale: Locale.current,
-                                              transcriptionOptions: [],
-                                              reportingOptions: [.volatileResults],
-                                              attributeOptions: [.audioTimeRange])
-        
-        guard let speechTranscriber else {
-            throw NSError(domain: "VoiceQuickStart", code: 1, userInfo: nil)
-        }
-        
-        speechAnalyzer = SpeechAnalyzer(modules: [speechTranscriber])
-        
-        analyzerFormat = await SpeechAnalyzer.bestAvailableAudioFormat(compatibleWith: [speechTranscriber])
-        
-        do {
-            try await ensureModel(transcriber: speechTranscriber, locale: Locale.current)
-        } catch {
-            print("Failed to ensure model")
-            return
-        }
-        
-        (inputSequence, inputBuilder) = AsyncStream<AnalyzerInput>.makeStream()
-        
-        guard let inputSequence else { return }
-        
-        try await speechAnalyzer?.start(inputSequence: inputSequence)
-        
-        recognizerTask = Task {
-            do {
-                for try await case let result in speechTranscriber.results {
-                    let text = result.text
-
-                    if result.isFinal {
-                        // volatile
-                    } else {
-                        print("debug checkpoint: \(String(text.characters))")
-                        DispatchQueue.main.async() {
-                            self.speechToTextLabel.isHidden = false
-                            self.speechToTextLabel.text = String(text.characters)
-                        }
-                    }
-                }
-            } catch {
-                print("Speech recognition failed")
-            }
-        }
-    }
-    
-    func stopTranscribing() async throws {
-        inputBuilder?.finish()
-        try await speechAnalyzer?.finalizeAndFinishThroughEndOfInput()
-        recognizerTask?.cancel()
-        recognizerTask = nil
-        self.speechToTextLabel.isHidden = true
-    }
-    
-    func ensureModel(transcriber: SpeechTranscriber, locale: Locale) async throws {
-        guard await supported(locale: locale) else {
-            throw NSError(domain: "VoiceQuickStart", code: 1, userInfo: nil)
-        }
-        
-        if await installed(locale: locale) {
-            return
-        } else {
-            try await downloadIfNeeded(for: speechTranscriber!)
-        }
-    }
-        
-    func supported(locale: Locale) async -> Bool {
-        let supported = await SpeechTranscriber.supportedLocales
-        return supported.map { $0.identifier(.bcp47) }.contains(locale.identifier(.bcp47))
-    }
-
-    func installed(locale: Locale) async -> Bool {
-        let installed = await Set(SpeechTranscriber.installedLocales)
-        return installed.map { $0.identifier(.bcp47) }.contains(locale.identifier(.bcp47))
-    }
-    
-    func downloadIfNeeded(for module: SpeechTranscriber) async throws {
-        if let downloader = try await AssetInventory.assetInstallationRequest(supporting: [module]) {
-            try await downloader.downloadAndInstall()
         }
     }
 

@@ -335,7 +335,7 @@ size_t _captureScratchBytes;
      * to the `AVAudioSession.preferredIOBufferDuration` that we've requested.
      */
     const size_t sessionFramesPerBuffer = kMaximumFramesPerBuffer;
-    const double sessionSampleRate = 16000; //[AVAudioSession sharedInstance].sampleRate;
+    const double sessionSampleRate = 16000; // en_US transcription only supports 16kHz
 
     return [[TVOAudioFormat alloc] initWithChannels:TVOAudioChannelsMono
                                          sampleRate:sessionSampleRate
@@ -419,7 +419,6 @@ static OSStatus InputCallback(void                        *inRefCon,
     OSStatus s = AudioUnitRender(_rioUnit, ioActionFlags, inTimeStamp, 1, inNumberFrames, &abl);
     if (s != noErr) return s;
 
-    // Deliver to Twilio
     TVOAudioDeviceWriteCaptureData(self.capturingContext->deviceContext,
                                    (int8_t *)abl.mBuffers[0].mData,
                                    bytesNeeded);
