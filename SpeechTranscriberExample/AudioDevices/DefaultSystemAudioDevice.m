@@ -1,6 +1,7 @@
 //
 //  DefaultSystemAudioDevice.m
-//  ObjCVoiceQuickstart
+//
+//  Copyright © Twilio, Inc. All rights reserved.
 //
 
 #import "DefaultSystemAudioDevice.h"
@@ -38,12 +39,6 @@ typedef struct AudioRendererContext {
 
     // Buffer passed to AVAudioEngine's manualRenderingBlock to receive the mixed audio data.
     AudioBufferList *bufferList;
-
-    /*
-     * Points to AVAudioEngine's manualRenderingBlock. This block is called from within the VoiceProcessingIO playout
-     * callback in order to receive mixed audio data from AVAudioEngine in real time.
-     */
-    void *renderBlock;
 } AudioRendererContext;
 
 // Audio renderer contexts used in core audio's record callback to retrieve the sdk's audio device context.
@@ -59,12 +54,6 @@ typedef struct AudioCapturerContext {
 
     // Core Audio's VoiceProcessingIO audio unit.
     AudioUnit audioUnit;
-
-    /*
-     * Points to AVAudioEngine's manualRenderingBlock. This block is called from within the VoiceProcessingIO playout
-     * callback in order to receive mixed audio data from AVAudioEngine in real time.
-     */
-    void *renderBlock;
 } AudioCapturerContext;
 
 AudioComponentInstance _rioUnit;
@@ -172,13 +161,12 @@ size_t _captureScratchBytes;
     [session setPreferredSampleRate:sr error:&error];
 
     // Build a 16-bit LPCM format description Twilio expects
-//    const uint32_t sampleRate = (uint32_t)round([session sampleRate]);
-//    const size_t framesPerBuffer = (size_t)lrint(sampleRate * kPreferredIOBufferDuration);
-//    self.renderingFormat  = [[TVOAudioFormat alloc] initWithChannels:1
-//                                                          sampleRate:sampleRate
-//                                                     framesPerBuffer:framesPerBuffer];
-//    return (self.renderingFormat != nil);
-    return YES;
+    const uint32_t sampleRate = (uint32_t)round([session sampleRate]);
+    const size_t framesPerBuffer = (size_t)lrint(sampleRate * kPreferredIOBufferDuration);
+    self.renderingFormat  = [[TVOAudioFormat alloc] initWithChannels:1
+                                                          sampleRate:sampleRate
+                                                     framesPerBuffer:framesPerBuffer];
+    return (self.renderingFormat != nil);
 }
 
 - (BOOL)startRendering:(TVOAudioDeviceContext)context {
@@ -278,14 +266,13 @@ size_t _captureScratchBytes;
         AudioOutputUnitStop(_rioUnit);
         _ioRunning = NO;
         // Keep unit alive to avoid churn; comment next line to fully tear down.
-        // [self destroyRemoteIO];
+        [self destroyRemoteIO];
         [[AVAudioSession sharedInstance] setActive:NO error:nil];
     }
     return YES;
 }
 
 - (BOOL)createAndConfigureRemoteIO {
-    // Create
     AudioComponentDescription desc = {0};
     desc.componentType         = kAudioUnitType_Output;
     desc.componentSubType      = kAudioUnitSubType_RemoteIO;
@@ -434,7 +421,7 @@ static OSStatus InputCallback(void                        *inRefCon,
 
     // Deliver to Twilio
     TVOAudioDeviceWriteCaptureData(self.capturingContext->deviceContext,
-                                   (const int8_t *)abl.mBuffers[0].mData,
+                                   (int8_t *)abl.mBuffers[0].mData,
                                    bytesNeeded);
     self.inputProcessingCallback(ioData);
     return noErr;
