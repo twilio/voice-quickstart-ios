@@ -157,15 +157,12 @@ size_t _captureScratchBytes;
     [session setPreferredIOBufferDuration:kPreferredIOBufferDuration error:&error];
 
     // Choose sample rate supported by device and Twilio (16/44.1/48 kHz etc.)
-    double sr = session.sampleRate > 0.0 ? session.sampleRate : 48000.0;
-    [session setPreferredSampleRate:sr error:&error];
+    double sampleRate = 16000;
+    [session setPreferredSampleRate:sampleRate error:&error];
 
-    // Build a 16-bit LPCM format description Twilio expects
-    const uint32_t sampleRate = (uint32_t)round([session sampleRate]);
-    const size_t framesPerBuffer = (size_t)lrint(sampleRate * kPreferredIOBufferDuration);
-    self.renderingFormat  = [[TVOAudioFormat alloc] initWithChannels:1
-                                                          sampleRate:sampleRate
-                                                     framesPerBuffer:framesPerBuffer];
+    self.renderingFormat = [[TVOAudioFormat alloc] initWithChannels:1
+                                                        sampleRate:session.sampleRate
+                                                    framesPerBuffer:kMaximumFramesPerBuffer];
     return (self.renderingFormat != nil);
 }
 
@@ -204,12 +201,13 @@ size_t _captureScratchBytes;
     if (!self.renderingFormat) {
         // If renderer hasn’t been initialized, pick a safe default
         AVAudioSession *session = [AVAudioSession sharedInstance];
-        double sr = session.sampleRate > 0.0 ? session.sampleRate : 48000.0;
-        const uint32_t sampleRate = (uint32_t)round(sr);
-        const size_t framesPerBuffer = (size_t)lrint(sampleRate * kPreferredIOBufferDuration);
+        double sampleRate = 16000;
+        
+        NSError *error;
+        [session setPreferredSampleRate:sampleRate error:&error];
         self.renderingFormat = [[TVOAudioFormat alloc] initWithChannels:1
-                                                             sampleRate:sampleRate
-                                                        framesPerBuffer:framesPerBuffer];
+                                                             sampleRate:session.sampleRate
+                                                        framesPerBuffer:kMaximumFramesPerBuffer];
     }
     self.capturingFormat = [[TVOAudioFormat alloc] initWithChannels:self.renderingFormat.numberOfChannels
                                                          sampleRate:self.renderingFormat.sampleRate
