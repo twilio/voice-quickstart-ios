@@ -32,7 +32,8 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+
+        outgoingTextField.delegate = self
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -151,6 +152,15 @@ class ViewController: UIViewController {
     
     @IBAction func playMusicButtonTapped(_ sender: UIButton) {
         audioDevice.playMusic()
+    }
+}
+
+// MARK: - UITextFieldDelegate
+
+extension ViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        outgoingTextField.resignFirstResponder()
+        return true
     }
 }
 

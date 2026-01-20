@@ -62,7 +62,7 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
     self.callKitCallController = [[CXCallController alloc] init];
     /* Please note that the designated initializer `[CXProviderConfiguration initWithLocalizedName:]` has been deprecated on iOS 14. */
     CXProviderConfiguration *configuration = [[CXProviderConfiguration alloc] initWithLocalizedName:@"Voice Quickstart"];
-    configuration.maximumCallGroups = 1;
+    configuration.maximumCallGroups = 2;
     configuration.maximumCallsPerCallGroup = 1;
     
     self.callKitProvider = [[CXProvider alloc] initWithConfiguration:configuration];
@@ -103,15 +103,27 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
     }
 }
 
+- (TVOCall *)getActiveCall {
+    if (self.activeCall) {
+        return self.activeCall;
+    } else if (self.activeCalls.count == 1) {
+        // This is a scenario when the only remaining call is still on hold after the previous call has ended
+        return self.activeCalls.allValues.firstObject;
+    } else {
+        return nil;
+    }
+}
+
 - (IBAction)mainButtonPressed:(id)sender {
-    if (self.activeCall != nil) {
+    if (self.activeCalls.count != 0) {
+        TVOCall *activeCall = [self getActiveCall];
+        if (!activeCall) { return; }
         self.userInitiatedDisconnect = YES;
-        [self performEndCallActionWithUUID:self.activeCall.uuid];
-        [self toggleUIState:NO showCallControl:NO];
+        [self performEndCallActionWithUUID:activeCall.uuid];
     } else {
         NSUUID *uuid = [NSUUID UUID];
         NSString *handle = @"Voice Bot";
-        
+
         [self checkRecordPermission:^(BOOL permissionGranted) {
             if (!permissionGranted) {
                 dispatch_async(dispatch_get_main_queue(), ^{
@@ -189,18 +201,18 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
     self.placeCallButton.enabled = isEnabled;
     if (showCallControl) {
         self.callControlView.hidden = NO;
-        self.muteSwitch.on = NO;
-        self.speakerSwitch.on = YES;
+        self.muteSwitch.on = [self getActiveCall].isMuted;
+        for (AVAudioSessionPortDescription *output in [AVAudioSession sharedInstance].currentRoute.outputs) {
+            self.speakerSwitch.on = output.portType == AVAudioSessionPortBuiltInSpeaker;
+        }
     } else {
         self.callControlView.hidden = YES;
     }
 }
 
 - (IBAction)muteSwitchToggled:(UISwitch *)sender {
-    // The sample app supports toggling mute from app UI only on the last connected call.
-    if (self.activeCall != nil) {
-        self.activeCall.muted = sender.on;
-    }
+    TVOCall *activeCall = [self getActiveCall];
+    activeCall.muted = sender.on;
 }
 
 - (IBAction)speakerSwitchToggled:(UISwitch *)sender {
@@ -402,10 +414,10 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
     self.callKitCompletionCallback(YES);
     
     [self.placeCallButton setTitle:@"Hang Up" forState:UIControlStateNormal];
-    
-    [self toggleUIState:YES showCallControl:YES];
+
     [self stopSpin];
     [self toggleAudioRoute:YES];
+    [self toggleUIState:YES showCallControl:YES];
 }
 
 - (void)call:(TVOCall *)call isReconnectingWithError:(NSError *)error {
@@ -462,8 +474,13 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
     }
     
     [self stopSpin];
-    [self toggleUIState:YES showCallControl:NO];
-    [self.placeCallButton setTitle:@"Call" forState:UIControlStateNormal];
+
+    if (self.activeCalls.count == 0) {
+        [self toggleUIState:YES showCallControl:NO];
+        [self.placeCallButton setTitle:@"Call" forState:UIControlStateNormal];
+    } else {
+        [self toggleUIState:YES showCallControl:YES];
+    }
 }
 
 - (void)call:(TVOCall *)call
@@ -537,6 +554,9 @@ previousWarnings:(NSSet<NSNumber *> *)previousWarnings {
             break;
         case TVOCallQualityWarningConstantAudioInputLevel:
             return @"constant-audio-input-level";
+            break;
+        case TVOCallQualityWarningConstantAudioOutputLevel:
+            return @"constant-audio-output-level";
             break;
         default:
             return @"Unknown warning";
@@ -676,9 +696,23 @@ previousWarnings:(NSSet<NSNumber *> *)previousWarnings {
 }
 
 - (void)provider:(CXProvider *)provider performSetHeldCallAction:(CXSetHeldCallAction *)action {
+    NSLog(@"provider:performSetHeldCallAction:");
     TVOCall *call = self.activeCalls[action.callUUID.UUIDString];
     if (call) {
         [call setOnHold:action.isOnHold];
+
+        /*
+         * Explicitly enable the audio device.
+         * This is a workaround for an iOS issue where the `provider:didActivateAudioSession:` method is not called
+         * when the call is being unheld after an interrupting call was ended by the remote side.
+         * Apple Developer Forums thread: https://developer.apple.com/forums/thread/694836
+         */
+        if (!call.isOnHold) {
+            self.audioDevice.enabled = YES;
+            self.activeCall = call;
+        }
+
+        [self toggleUIState:YES showCallControl:YES];
         [action fulfill];
     } else {
         [action fail];

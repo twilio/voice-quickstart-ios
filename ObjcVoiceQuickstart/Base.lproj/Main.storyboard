@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -34,7 +34,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V5R-Ky-YRW">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V5R-Ky-YRW">
                                 <rect key="frame" x="172.5" y="469" width="30" height="30"/>
                                 <state key="normal" title="Call"/>
                                 <connections>
@@ -90,11 +90,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Warnings Raised" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a2r-Q4-Duu">
-                                <rect key="frame" x="16" y="20" width="343" height="18"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="343" id="Q5b-8P-pyc"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="121" id="Vm1-db-4g2"/>
-                                </constraints>
+                                <rect key="frame" x="16" y="40" width="343" height="18"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -107,13 +103,13 @@
                             <constraint firstItem="V5R-Ky-YRW" firstAttribute="top" secondItem="r25-bA-TjD" secondAttribute="bottom" constant="8" id="Cf6-jr-cUl"/>
                             <constraint firstItem="LCr-Ji-S0e" firstAttribute="top" secondItem="V5R-Ky-YRW" secondAttribute="bottom" constant="8" id="JLB-FW-qyu"/>
                             <constraint firstItem="V5R-Ky-YRW" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="Sje-sA-ye7"/>
-                            <constraint firstItem="a2r-Q4-Duu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="16" id="Vdl-O0-maL"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="a2r-Q4-Duu" secondAttribute="trailing" id="U4r-xQ-izX"/>
                             <constraint firstItem="KbF-3Z-6Zb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="VeB-Km-SPV"/>
                             <constraint firstItem="KbF-3Z-6Zb" firstAttribute="top" secondItem="Yv2-Ab-jqI" secondAttribute="bottom" constant="24" id="evG-yH-jC4"/>
                             <constraint firstItem="a2r-Q4-Duu" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="20" id="mVf-Fn-3Mz"/>
                             <constraint firstItem="Yv2-Ab-jqI" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="o83-xB-gqy"/>
-                            <constraint firstItem="a2r-Q4-Duu" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="tDg-UQ-eBv"/>
                             <constraint firstItem="LCr-Ji-S0e" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="xTc-1X-DGJ"/>
+                            <constraint firstItem="a2r-Q4-Duu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="yS9-72-23d"/>
                             <constraint firstItem="r25-bA-TjD" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="zyz-9B-31r"/>
                         </constraints>
                     </view>
@@ -132,8 +128,8 @@
             <point key="canvasLocation" x="-98.400000000000006" y="118.29085457271366"/>
         </scene>
     </scenes>
+    <color key="tintColor" red="0.8862745098" green="0.1137254902" blue="0.1450980392" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
     <resources>
         <image name="TwilioLogo.png" width="296" height="296"/>
     </resources>
-    <color key="tintColor" red="0.8862745098" green="0.1137254902" blue="0.1450980392" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
 </document>
