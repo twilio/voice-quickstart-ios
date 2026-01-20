@@ -539,11 +539,11 @@ extension ViewController: CallDelegate {
         }
         
         stopSpin()
+        
         if activeCalls.isEmpty {
             toggleUIState(isEnabled: true, showCallControl: false)
             placeCallButton.setTitle("Call", for: .normal)
         } else {
-            guard let activeCall = getActiveCall() else { return }
             toggleUIState(isEnabled: true, showCallControl: true)
         }
     }
@@ -611,6 +611,7 @@ extension ViewController: CallDelegate {
         case .highPacketsLostFraction: return "high-packets-lost-fraction"
         case .lowMos: return "low-mos"
         case .constantAudioInputLevel: return "constant-audio-input-level"
+        case .constantAudioOutputLevel: return "constant-audio-output-level"
         default: return "Unknown warning"
         }
     }
@@ -722,17 +723,18 @@ extension ViewController: CXProviderDelegate {
         if let call = activeCalls[action.callUUID.uuidString] {
             call.isOnHold = action.isOnHold
 
-            /** Explicitly enable the TVOAudioDevice.
-            * This is workaround for an iOS issue where the `provider(_:didActivate:)` method is not called
-            * when un-holding a VoIP call after an ended PSTN call.
-            */ https://developer.apple.com/forums/thread/694836
+            /*
+             * Explicitly enable the audio device.
+             * This is a workaround for an iOS issue where the `provider:didActivateAudioSession:` method is not called
+             * when the call is being unheld after an interrupting call was ended by the remote side.
+             * Apple Developer Forums thread: https://developer.apple.com/forums/thread/694836
+             */
             if !call.isOnHold {
                 defaultSystemAudioDevice.isEnabled = true
                 activeCall = call
             }
 
             toggleUIState(isEnabled: true, showCallControl: true)
-
             action.fulfill()
         } else {
             action.fail()
