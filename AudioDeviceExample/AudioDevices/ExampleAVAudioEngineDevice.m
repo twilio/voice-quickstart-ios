@@ -63,7 +63,7 @@ typedef struct AudioCapturerContext {
     void *renderBlock;
 } AudioCapturerContext;
 
-// The VoiceProcessingIO audio unit uses bus 0 for ouptut, and bus 1 for input.
+// The VoiceProcessingIO audio unit uses bus 0 for output, and bus 1 for input.
 static int kOutputBus = 0;
 static int kInputBus = 1;
 
@@ -536,7 +536,7 @@ static size_t kMaximumFramesPerBuffer = 3072;
 
 - (BOOL)stopRendering {
     @synchronized(self) {
-        // If the capturer is runnning, we will not stop the audio unit.
+        // If the capturer is running, we will not stop the audio unit.
         if (!self.capturingContext->deviceContext) {
 
             // We will make sure AVAudioEngine and AVAudioPlayerNode is accessed on the main queue.
@@ -597,7 +597,7 @@ static size_t kMaximumFramesPerBuffer = 3072;
 - (BOOL)startCapturing:(nonnull TVOAudioDeviceContext)context {
     @synchronized (self) {
 
-        // Restart the audio unit if the audio graph is alreay setup and if we publish an audio track.
+        // Restart the audio unit if the audio graph is already setup and if we publish an audio track.
         if (_audioUnit && _enabled) {
             [self stopAudioUnit];
             [self teardownAudioUnit];
@@ -632,7 +632,7 @@ static size_t kMaximumFramesPerBuffer = 3072;
 
 - (BOOL)stopCapturing {
     @synchronized(self) {
-        // If the renderer is runnning, we will not stop the audio unit.
+        // If the renderer is running, we will not stop the audio unit.
         if (!self.renderingContext->deviceContext) {
 
             // We will make sure AVAudioEngine and AVAudioPlayerNode is accessed on the main queue.
@@ -759,7 +759,7 @@ static OSStatus ExampleAVAudioEngineDeviceRecordCallback(void *refCon,
 
 + (nullable TVOAudioFormat *)activeFormat {
     /*
-     * Use the pre-determined maximum frame size. AudioUnit callbacks are variable, and in most sitations will be close
+     * Use the pre-determined maximum frame size. AudioUnit callbacks are variable, and in most situations will be close
      * to the `AVAudioSession.preferredIOBufferDuration` that we've requested.
      */
     const size_t sessionFramesPerBuffer = kMaximumFramesPerBuffer;
@@ -1056,7 +1056,7 @@ static OSStatus ExampleAVAudioEngineDeviceRecordCallback(void *refCon,
         return;
     }
 
-    NSLog(@"A route change ocurred while the AudioUnit was started. Checking the active audio format.");
+    NSLog(@"A route change occurred while the AudioUnit was started. Checking the active audio format.");
 
     // Determine if the format actually changed. We only care about sample rate and number of channels.
     TVOAudioFormat *activeFormat = [[self class] activeFormat];
