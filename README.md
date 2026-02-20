@@ -39,7 +39,7 @@ To get started with the quickstart application follow these steps. Steps 1-5 wil
 
 **Swift Package Manager**
 
-Twilio Voice is now distributed via Swift Package Manager. To consume Twilio Voice using Swift Package Manager, add the `https://github.com/twilio/twilio-voice-ios` repository as a `Swift Pacakge`.
+Twilio Voice is now distributed via Swift Package Manager. To consume Twilio Voice using Swift Package Manager, add the `https://github.com/twilio/twilio-voice-ios` repository as a `Swift Package`.
 
 ### <a name="bullet2"></a>2. Use Twilio CLI to deploy access token and TwiML application to Twilio Serverless
 

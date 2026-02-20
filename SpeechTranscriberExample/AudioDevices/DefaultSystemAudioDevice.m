@@ -329,7 +329,7 @@ size_t _captureScratchBytes;
 
 + (nullable TVOAudioFormat *)activeFormat {
     /*
-     * Use the pre-determined maximum frame size. AudioUnit callbacks are variable, and in most sitations will be close
+     * Use the pre-determined maximum frame size. AudioUnit callbacks are variable, and in most situations will be close
      * to the `AVAudioSession.preferredIOBufferDuration` that we've requested.
      */
     const size_t sessionFramesPerBuffer = kMaximumFramesPerBuffer;

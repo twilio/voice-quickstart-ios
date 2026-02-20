@@ -1,6 +1,6 @@
 ## Managing Audio Interruptions
 
-Different versions of iOS deal with **AVAudioSession** interruptions sightly differently. This section documents how the Programmable Voice iOS SDK manages audio interruptions and resumes call audio after the interruption ends. There are currently some cases that the SDK cannot resume call audio automatically because iOS does not provide the necessary notifications to indicate that the interruption has ended.
+Different versions of iOS deal with **AVAudioSession** interruptions slightly differently. This section documents how the Programmable Voice iOS SDK manages audio interruptions and resumes call audio after the interruption ends. There are currently some cases that the SDK cannot resume call audio automatically because iOS does not provide the necessary notifications to indicate that the interruption has ended.
 
 ### How Programmable Voice iOS SDK handles audio interruption
 - The `TVOCall` object registers itself as an observer of `AVAudioSessionInterruptionNotification` when it's created.
@@ -36,7 +36,7 @@ By enabling the `supportsHolding` flag of the `CXCallUpdate` object when reporti
 4. When the interrupting call ends, instead of getting the `AVAudioSessionInterruptionNotification` notification, the system will notify that you can resume the call audio that was put on-hold when the interruption began by calling the `provider:performSetHeldCallAction:` method again. **Note** that this callback is not fired if the interrupting call is disconnected by the remote party.
 5. The AVAudioSession of the app will be activated again and you should re-enable the audio device of the SDK `TwilioVoice.audioDevice.enabled = YES` in the `provider:didActivateAudioSession:` method.
 
-|Scenario|Audio resumes after interrupion?|Note|
+|Scenario|Audio resumes after interruption?|Note|
 |---|---|---|
 |A.<br>Hold & Accept<br>Hang up PSTN interruption on the local end|:white_check_mark: iOS 10<br>:white_check_mark: iOS 11| |
 |B.<br>Hold & Accept<br>Remote party hangs up PSTN interruption|:x: iOS 10<br>:x: iOS 11|`provider:performSetHeldCallAction:` not called after the interruption ends.|
