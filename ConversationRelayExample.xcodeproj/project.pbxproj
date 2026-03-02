@@ -11,9 +11,9 @@
 		8F556D162F56445100647092 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F556D132F56445100647092 /* ViewController.swift */; };
 		8F556D172F56445100647092 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F556D112F56445100647092 /* Main.storyboard */; };
 		8F556D182F56445100647092 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F556D0B2F56445100647092 /* Assets.xcassets */; };
-		8F556D192F56445100647092 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8F556D0D2F56445100647092 /* Info.plist */; };
 		8F556D1A2F56445100647092 /* TwilioLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 8F556D122F56445100647092 /* TwilioLogo.png */; };
 		8F556D1B2F56445100647092 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8F556D0F2F56445100647092 /* LaunchScreen.storyboard */; };
+		8F556D1E2F564BB700647092 /* TwilioVoice in Frameworks */ = {isa = PBXBuildFile; productRef = 8F556D1D2F564BB700647092 /* TwilioVoice */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,7 +21,6 @@
 		8F556D0A2F56445100647092 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8F556D0B2F56445100647092 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8F556D0C2F56445100647092 /* ConversationRelayExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ConversationRelayExample.entitlements; sourceTree = "<group>"; };
-		8F556D0D2F56445100647092 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8F556D0E2F56445100647092 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8F556D102F56445100647092 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8F556D122F56445100647092 /* TwilioLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TwilioLogo.png; sourceTree = "<group>"; };
@@ -33,6 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F556D1E2F564BB700647092 /* TwilioVoice in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,7 +61,6 @@
 				8F556D0A2F56445100647092 /* AppDelegate.swift */,
 				8F556D0B2F56445100647092 /* Assets.xcassets */,
 				8F556D0C2F56445100647092 /* ConversationRelayExample.entitlements */,
-				8F556D0D2F56445100647092 /* Info.plist */,
 				8F556D0F2F56445100647092 /* LaunchScreen.storyboard */,
 				8F556D112F56445100647092 /* Main.storyboard */,
 				8F556D122F56445100647092 /* TwilioLogo.png */,
@@ -87,6 +86,7 @@
 			);
 			name = ConversationRelayExample;
 			packageProductDependencies = (
+				8F556D1D2F564BB700647092 /* TwilioVoice */,
 			);
 			productName = ConversationRelayExample;
 			productReference = 8F556CEB2F5642C500647092 /* ConversationRelayExample.app */;
@@ -116,6 +116,9 @@
 			);
 			mainGroup = 8F556CE22F5642C500647092;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				8F556D1C2F564BB700647092 /* XCRemoteSwiftPackageReference "twilio-voice-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8F556CEC2F5642C500647092 /* Products */;
 			projectDirPath = "";
@@ -133,7 +136,6 @@
 			files = (
 				8F556D172F56445100647092 /* Main.storyboard in Resources */,
 				8F556D182F56445100647092 /* Assets.xcassets in Resources */,
-				8F556D192F56445100647092 /* Info.plist in Resources */,
 				8F556D1A2F56445100647092 /* TwilioLogo.png in Resources */,
 				8F556D1B2F56445100647092 /* LaunchScreen.storyboard in Resources */,
 			);
@@ -393,6 +395,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8F556D1C2F564BB700647092 /* XCRemoteSwiftPackageReference "twilio-voice-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:twilio/twilio-voice-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.13.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8F556D1D2F564BB700647092 /* TwilioVoice */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8F556D1C2F564BB700647092 /* XCRemoteSwiftPackageReference "twilio-voice-ios" */;
+			productName = TwilioVoice;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8F556CE32F5642C500647092 /* Project object */;
 }
