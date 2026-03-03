@@ -13,6 +13,7 @@ import TwilioVoice
 
 let accessToken = <#PASTE YOUR ACCESS TOKEN HERE#>
 let twimlParamTo = "to"
+let conversationRelayUrl = <#PASTE YOUR CONVERSATION RELAY URL HERE#>
 
 let kRegistrationTTLInDays = 365
 
