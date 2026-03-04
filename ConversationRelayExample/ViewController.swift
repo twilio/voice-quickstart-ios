@@ -14,6 +14,7 @@ import TwilioVoice
 let accessToken = <#PASTE YOUR ACCESS TOKEN HERE#>
 let twimlParamTo = "to"
 let conversationRelayUrl = <#PASTE YOUR CONVERSATION RELAY URL HERE#>
+let twimlParamCrelayUrl = "ConversationRelayUrl"
 
 let kRegistrationTTLInDays = 365
 
@@ -805,7 +806,7 @@ extension ViewController: CXProviderDelegate {
     
     func performVoiceCall(uuid: UUID, client: String?, completionHandler: @escaping (Bool) -> Void) {
         let connectOptions = ConnectOptions(accessToken: accessToken) { builder in
-            builder.params = [twimlParamTo: self.outgoingValue.text ?? ""]
+            builder.params = [twimlParamTo: self.outgoingValue.text ?? "",  twimlParamCrelayUrl: conversationRelayUrl]
             builder.uuid = uuid
         }
         

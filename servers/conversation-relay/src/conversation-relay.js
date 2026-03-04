@@ -29,6 +29,7 @@ fastify.register(async function (fastify) {
             if (!process.env.SERVER_PUBLIC_URL) {
                 throw new Error("Missing SERVER_PUBLIC_URL in environment variables");
             }
+            console.log(headers['x-twilio-signature']);
             if (!Twilio.validateRequest(
                     process.env.TWILIO_AUTH_TOKEN,
                     headers['x-twilio-signature'],
@@ -50,7 +51,7 @@ fastify.register(async function (fastify) {
                 ws.callSid = json_message.callSid;
                 sessions.set(ws.callSid, [{
                     role: 'system',
-                    content: "Hi! I am a Android S D K voice assistant powered by Twilio and Open A I . Ask me anything!"
+                    content: "Hi! I am a I O S S D K voice assistant powered by Twilio and Open A I . Ask me anything!"
                 }]);
                 break;
             case "prompt":

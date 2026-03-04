@@ -13,4 +13,7 @@
    <FileRef
       location = "group:SpeechTranscriberExample.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:ConversationRelayExample.xcodeproj">
+   </FileRef>
 </Workspace>
