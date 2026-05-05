@@ -1,7 +1,7 @@
 // CallKitManager.swift
 // Twilio Voice Quickstart - SwiftUI
 //
-// Copyright © 2024 Twilio, Inc. All rights reserved.
+// Copyright © Twilio, Inc. All rights reserved.
 
 import CallKit
 import AVFoundation
@@ -15,7 +15,7 @@ final class CallKitManager: NSObject {
     let callController = CXCallController()
 
     private override init() {
-        let config = CXProviderConfiguration(localizedName: "Voice Quickstart")
+        let config = CXProviderConfiguration()
         config.maximumCallGroups = 2
         config.maximumCallsPerCallGroup = 1
         provider = CXProvider(configuration: config)

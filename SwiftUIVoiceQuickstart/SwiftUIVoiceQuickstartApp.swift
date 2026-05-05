@@ -1,7 +1,7 @@
 // SwiftUIVoiceQuickstartApp.swift
 // Twilio Voice Quickstart - SwiftUI
 //
-// Copyright © 2024 Twilio, Inc. All rights reserved.
+// Copyright © Twilio, Inc. All rights reserved.
 
 import SwiftUI
 

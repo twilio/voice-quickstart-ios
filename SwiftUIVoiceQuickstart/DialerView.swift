@@ -1,7 +1,7 @@
 // DialerView.swift
 // Twilio Voice Quickstart - SwiftUI
 //
-// Copyright © 2024 Twilio, Inc. All rights reserved.
+// Copyright © Twilio, Inc. All rights reserved.
 
 import SwiftUI
 
@@ -24,8 +24,8 @@ struct DialerView: View {
 
                 // Display / identity field
                 VStack(spacing: 8) {
-                    Text(dialedNumber.isEmpty ? "Enter number or client ID" : dialedNumber)
-                        .font(.system(size: 28, weight: .light, design: .monospaced))
+                    Text("Enter number or client ID")
+                        .font(.system(size: 28, weight: .light))
                         .foregroundColor(dialedNumber.isEmpty ? .secondary : .primary)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .lineLimit(1)
@@ -39,14 +39,14 @@ struct DialerView: View {
                         .autocorrectionDisabled()
                         .keyboardType(.asciiCapable)
                         .multilineTextAlignment(.center)
-                        .font(.subheadline)
+                        .font(.body)
                         .foregroundColor(.secondary)
                         .padding(.horizontal, 40)
                         .opacity(identityFieldFocused ? 1 : 0.6)
 
                     if !dialedNumber.isEmpty {
                         Button {
-                            dialedNumber = ""
+                            dialedNumber.remove(at: dialedNumber.index(before: dialedNumber.endIndex))
                         } label: {
                             Image(systemName: "delete.left")
                                 .font(.title3)
@@ -89,7 +89,7 @@ struct DialerView: View {
                 }
                 .padding(.bottom, 40)
             }
-            .navigationTitle("Voice Quickstart")
+            .navigationTitle("SwiftUI Quickstart")
             .navigationBarTitleDisplayMode(.inline)
             .contentShape(Rectangle())
             .onTapGesture { identityFieldFocused = false }

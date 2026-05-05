@@ -1,7 +1,7 @@
 // InCallView.swift
 // Twilio Voice Quickstart - SwiftUI
 //
-// Copyright © 2024 Twilio, Inc. All rights reserved.
+// Copyright © Twilio, Inc. All rights reserved.
 
 import SwiftUI
 
@@ -17,7 +17,7 @@ struct InCallView: View {
                     .foregroundColor(.secondary)
                     .padding(.top, 60)
 
-                Text(callManager.pendingOutgoingRecipient ?? "Incoming Call")
+                Text(callManager.pendingOutgoingRecipient ?? "Voice Call")
                     .font(.title2.weight(.semibold))
 
                 Text(statusText)

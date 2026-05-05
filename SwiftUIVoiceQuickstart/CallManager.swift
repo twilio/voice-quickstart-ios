@@ -223,51 +223,18 @@ final class CallManager: NSObject, ObservableObject {
 extension CallManager {
 
     func credentialsUpdated(credentials: PKPushCredentials) {
-        guard registrationRequired() ||
-              UserDefaults.standard.data(forKey: kCachedDeviceToken) != credentials.token else { return }
-
         let token = credentials.token
         TwilioVoiceSDK.register(accessToken: accessToken, deviceToken: token) { error in
             if let error = error {
                 NSLog("Registration error: \(error.localizedDescription)")
             } else {
                 NSLog("Successfully registered for VoIP push.")
-                UserDefaults.standard.set(token, forKey: kCachedDeviceToken)
-                UserDefaults.standard.set(Date(), forKey: kCachedBindingDate)
             }
         }
-    }
-
-    func credentialsInvalidated() {
-        guard let token = UserDefaults.standard.data(forKey: kCachedDeviceToken) else { return }
-        TwilioVoiceSDK.unregister(accessToken: accessToken, deviceToken: token) { error in
-            if let error = error {
-                NSLog("Unregistration error: \(error.localizedDescription)")
-            } else {
-                NSLog("Successfully unregistered.")
-            }
-        }
-        UserDefaults.standard.removeObject(forKey: kCachedDeviceToken)
-        UserDefaults.standard.removeObject(forKey: kCachedBindingDate)
-    }
-
-    func incomingPushReceived(payload: PKPushPayload) {
-        TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
     }
 
     func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void) {
         TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
-        if let version = Float(UIDevice.current.systemVersion), version < 13.0 {
-            incomingPushCompletionCallback = completion
-        }
-    }
-
-    private func registrationRequired() -> Bool {
-        guard let lastBinding = UserDefaults.standard.object(forKey: kCachedBindingDate) as? Date else { return true }
-        var components = DateComponents()
-        components.setValue(kRegistrationTTLInDays / 2, for: .day)
-        let expiry = Calendar.current.date(byAdding: components, to: lastBinding)!
-        return expiry <= Date()
     }
 }
 
@@ -277,7 +244,6 @@ extension CallManager: NotificationDelegate {
 
     func callInviteReceived(callInvite: CallInvite) {
         NSLog("callInviteReceived:")
-        UserDefaults.standard.set(Date(), forKey: kCachedBindingDate)
 
         let from = (callInvite.from ?? "Voice Bot").replacingOccurrences(of: "client:", with: "")
         CallKitManager.shared.reportIncomingCall(from: from, uuid: callInvite.uuid)
