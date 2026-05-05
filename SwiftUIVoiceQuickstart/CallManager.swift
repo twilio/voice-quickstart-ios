@@ -40,6 +40,8 @@ final class CallManager: NSObject, ObservableObject {
     @Published var qualityWarning: String? = nil
     @Published var activeCallUUID: UUID? = nil
     @Published var callDuration: TimeInterval = 0
+    @Published var incomingCallInviteUUID: UUID? = nil
+    @Published var incomingCaller: String? = nil
 
     private var callTimer: Timer? = nil
 
@@ -86,6 +88,24 @@ final class CallManager: NSObject, ObservableObject {
         }
         callKitCompletionCallback = completion
         callState = .connecting
+    }
+
+    // MARK: Incoming call actions
+
+    func acceptIncomingCall() {
+        guard let uuid = incomingCallInviteUUID else { return }
+        let action = CXAnswerCallAction(call: uuid)
+        let transaction = CXTransaction(action: action)
+        CallKitManager.shared.callController.request(transaction) { error in
+            if let error = error {
+                NSLog("AnswerCallAction failed: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    func declineIncomingCall() {
+        guard let uuid = incomingCallInviteUUID else { return }
+        CallKitManager.shared.endCall(uuid: uuid)
     }
 
     // MARK: Hang up
@@ -141,6 +161,10 @@ final class CallManager: NSObject, ObservableObject {
         if let invite = activeCallInvites[uuid.uuidString] {
             invite.reject()
             activeCallInvites.removeValue(forKey: uuid.uuidString)
+            if uuid == incomingCallInviteUUID {
+                incomingCaller = nil
+                incomingCallInviteUUID = nil
+            }
         } else if let call = activeCalls[uuid.uuidString] {
             call.disconnect()
         }
@@ -189,6 +213,8 @@ final class CallManager: NSObject, ObservableObject {
         }
         callKitCompletionCallback = completion
         activeCallInvites.removeValue(forKey: uuid.uuidString)
+        incomingCaller = nil
+        incomingCallInviteUUID = nil
 
         incomingPushHandled()
     }
@@ -261,6 +287,8 @@ extension CallManager: NotificationDelegate {
 
         let from = (callInvite.from ?? "Voice Bot").replacingOccurrences(of: "client:", with: "")
         pendingOutgoingRecipient = from
+        incomingCaller = from
+        incomingCallInviteUUID = callInvite.uuid
         CallKitManager.shared.reportIncomingCall(from: from, uuid: callInvite.uuid)
         activeCallInvites[callInvite.uuid.uuidString] = callInvite
     }
@@ -268,6 +296,10 @@ extension CallManager: NotificationDelegate {
     func cancelledCallInviteReceived(cancelledCallInvite: CancelledCallInvite, error: Error) {
         NSLog("cancelledCallInviteReceived: \(error.localizedDescription)")
         guard let invite = activeCallInvites.values.first(where: { $0.callSid == cancelledCallInvite.callSid }) else { return }
+        if invite.uuid == incomingCallInviteUUID {
+            incomingCaller = nil
+            incomingCallInviteUUID = nil
+        }
         CallKitManager.shared.endCall(uuid: invite.uuid)
         activeCallInvites.removeValue(forKey: invite.uuid.uuidString)
     }

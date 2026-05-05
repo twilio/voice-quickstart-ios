@@ -10,12 +10,15 @@ struct ContentView: View {
 
     var body: some View {
         Group {
-            if callManager.callState == .idle {
+            if callManager.incomingCaller != nil && callManager.callState == .idle {
+                IncomingCallView()
+            } else if callManager.callState == .idle {
                 DialerView()
             } else {
                 InCallView()
             }
         }
         .animation(.easeInOut, value: callManager.callState == .idle)
+        .animation(.easeInOut, value: callManager.incomingCaller)
     }
 }
