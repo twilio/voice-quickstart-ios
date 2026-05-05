@@ -94,6 +94,7 @@ final class CallManager: NSObject, ObservableObject {
 
     func acceptIncomingCall() {
         guard let uuid = incomingCallInviteUUID else { return }
+        callState = .connecting
         let action = CXAnswerCallAction(call: uuid)
         let transaction = CXTransaction(action: action)
         CallKitManager.shared.callController.request(transaction) { error in
