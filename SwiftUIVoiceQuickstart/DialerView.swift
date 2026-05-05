@@ -58,20 +58,21 @@ struct DialerView: View {
 
                 Divider().padding(.horizontal)
 
-                // Dial pad
-                VStack(spacing: 12) {
-                    ForEach(dialPadKeys, id: \.self) { row in
-                        HStack(spacing: 20) {
-                            ForEach(row, id: \.self) { key in
-                                DialPadButton(key: key) {
-                                    identityFieldFocused = false
-                                    dialedNumber += key
+                // Dial pad (hidden when keyboard is active)
+                if !identityFieldFocused {
+                    VStack(spacing: 12) {
+                        ForEach(dialPadKeys, id: \.self) { row in
+                            HStack(spacing: 20) {
+                                ForEach(row, id: \.self) { key in
+                                    DialPadButton(key: key) {
+                                        dialedNumber += key
+                                    }
                                 }
                             }
                         }
                     }
+                    .padding(.horizontal)
                 }
-                .padding(.horizontal)
 
                 Spacer()
 
