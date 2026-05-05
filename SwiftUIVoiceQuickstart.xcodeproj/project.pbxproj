@@ -1,0 +1,376 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8F03802C2F9188F0002198DE /* TwilioVoice in Frameworks */ = {isa = PBXBuildFile; productRef = 8F03802B2F9188F0002198DE /* TwilioVoice */; };
+		8F03802E2F9188F0002198DE /* TwilioVoice-static in Frameworks */ = {isa = PBXBuildFile; productRef = 8F03802D2F9188F0002198DE /* TwilioVoice-static */; };
+		AA000001AA000001AA000001 /* SwiftUIVoiceQuickstartApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002AA000002AA000002 /* SwiftUIVoiceQuickstartApp.swift */; };
+		AA000003AA000003AA000003 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000004AA000004AA000004 /* AppDelegate.swift */; };
+		AA000005AA000005AA000005 /* PushKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000006AA000006AA000006 /* PushKitManager.swift */; };
+		AA000007AA000007AA000007 /* CallKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000008AA000008AA000008 /* CallKitManager.swift */; };
+		AA000009AA000009AA000009 /* CallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000010AA000010AA000010 /* CallManager.swift */; };
+		AA000011AA000011AA000011 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000012AA000012AA000012 /* ContentView.swift */; };
+		AA000013AA000013AA000013 /* DialerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000014AA000014AA000014 /* DialerView.swift */; };
+		AA000015AA000015AA000015 /* InCallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000016AA000016AA000016 /* InCallView.swift */; };
+		AA000017AA000017AA000017 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA000018AA000018AA000018 /* Assets.xcassets */; };
+		AA000019AA000019AA000019 /* ringtone.wav in Resources */ = {isa = PBXBuildFile; fileRef = AA000020AA000020AA000020 /* ringtone.wav */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		AA000002AA000002AA000002 /* SwiftUIVoiceQuickstartApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIVoiceQuickstartApp.swift; sourceTree = "<group>"; };
+		AA000004AA000004AA000004 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		AA000006AA000006AA000006 /* PushKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushKitManager.swift; sourceTree = "<group>"; };
+		AA000008AA000008AA000008 /* CallKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallKitManager.swift; sourceTree = "<group>"; };
+		AA000010AA000010AA000010 /* CallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallManager.swift; sourceTree = "<group>"; };
+		AA000012AA000012AA000012 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		AA000014AA000014AA000014 /* DialerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialerView.swift; sourceTree = "<group>"; };
+		AA000016AA000016AA000016 /* InCallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InCallView.swift; sourceTree = "<group>"; };
+		AA000018AA000018AA000018 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA000020AA000020AA000020 /* ringtone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringtone.wav; sourceTree = "<group>"; };
+		AA000023AA000023AA000023 /* SwiftUIVoiceQuickstart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUIVoiceQuickstart.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA000024AA000024AA000024 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AA000025AA000025AA000025 /* SwiftUIVoiceQuickstart.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SwiftUIVoiceQuickstart.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA000030AA000030AA000030 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8F03802C2F9188F0002198DE /* TwilioVoice in Frameworks */,
+				8F03802E2F9188F0002198DE /* TwilioVoice-static in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA000040AA000040AA000040 = {
+			isa = PBXGroup;
+			children = (
+				AA000041AA000041AA000041 /* SwiftUIVoiceQuickstart */,
+				AA000042AA000042AA000042 /* ringtone */,
+				AA000043AA000043AA000043 /* Products */,
+				AA000044AA000044AA000044 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		AA000041AA000041AA000041 /* SwiftUIVoiceQuickstart */ = {
+			isa = PBXGroup;
+			children = (
+				AA000025AA000025AA000025 /* SwiftUIVoiceQuickstart.entitlements */,
+				AA000002AA000002AA000002 /* SwiftUIVoiceQuickstartApp.swift */,
+				AA000004AA000004AA000004 /* AppDelegate.swift */,
+				AA000006AA000006AA000006 /* PushKitManager.swift */,
+				AA000008AA000008AA000008 /* CallKitManager.swift */,
+				AA000010AA000010AA000010 /* CallManager.swift */,
+				AA000012AA000012AA000012 /* ContentView.swift */,
+				AA000014AA000014AA000014 /* DialerView.swift */,
+				AA000016AA000016AA000016 /* InCallView.swift */,
+				AA000018AA000018AA000018 /* Assets.xcassets */,
+				AA000024AA000024AA000024 /* Info.plist */,
+			);
+			path = SwiftUIVoiceQuickstart;
+			sourceTree = "<group>";
+		};
+		AA000042AA000042AA000042 /* ringtone */ = {
+			isa = PBXGroup;
+			children = (
+				AA000020AA000020AA000020 /* ringtone.wav */,
+			);
+			path = ringtone;
+			sourceTree = "<group>";
+		};
+		AA000043AA000043AA000043 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA000023AA000023AA000023 /* SwiftUIVoiceQuickstart.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		AA000044AA000044AA000044 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA000050AA000050AA000050 /* SwiftUIVoiceQuickstart */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA000060AA000060AA000060 /* Build configuration list for PBXNativeTarget "SwiftUIVoiceQuickstart" */;
+			buildPhases = (
+				AA000031AA000031AA000031 /* Sources */,
+				AA000030AA000030AA000030 /* Frameworks */,
+				AA000032AA000032AA000032 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SwiftUIVoiceQuickstart;
+			packageProductDependencies = (
+				8F03802B2F9188F0002198DE /* TwilioVoice */,
+				8F03802D2F9188F0002198DE /* TwilioVoice-static */,
+			);
+			productName = SwiftUIVoiceQuickstart;
+			productReference = AA000023AA000023AA000023 /* SwiftUIVoiceQuickstart.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA000051AA000051AA000051 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				ORGANIZATIONNAME = "Twilio, Inc.";
+				TargetAttributes = {
+					AA000050AA000050AA000050 = {
+						CreatedOnToolsVersion = 15.0;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = AA000061AA000061AA000061 /* Build configuration list for PBXProject "SwiftUIVoiceQuickstart" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = AA000040AA000040AA000040;
+			packageReferences = (
+				8F03802A2F9188F0002198DE /* XCRemoteSwiftPackageReference "twilio-voice-ios" */,
+			);
+			productRefGroup = AA000043AA000043AA000043 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA000050AA000050AA000050 /* SwiftUIVoiceQuickstart */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		AA000032AA000032AA000032 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000017AA000017AA000017 /* Assets.xcassets in Resources */,
+				AA000019AA000019AA000019 /* ringtone.wav in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA000031AA000031AA000031 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA000001AA000001AA000001 /* SwiftUIVoiceQuickstartApp.swift in Sources */,
+				AA000003AA000003AA000003 /* AppDelegate.swift in Sources */,
+				AA000005AA000005AA000005 /* PushKitManager.swift in Sources */,
+				AA000007AA000007AA000007 /* CallKitManager.swift in Sources */,
+				AA000009AA000009AA000009 /* CallManager.swift in Sources */,
+				AA000011AA000011AA000011 /* ContentView.swift in Sources */,
+				AA000013AA000013AA000013 /* DialerView.swift in Sources */,
+				AA000015AA000015AA000015 /* InCallView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AA000062AA000062AA000062 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		AA000063AA000063AA000063 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		AA000064AA000064AA000064 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SwiftUIVoiceQuickstart/SwiftUIVoiceQuickstart.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SX5J6BN2KX;
+				INFOPLIST_FILE = SwiftUIVoiceQuickstart/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.ProgrammableVoiceTestApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		AA000065AA000065AA000065 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SwiftUIVoiceQuickstart/SwiftUIVoiceQuickstart.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SX5J6BN2KX;
+				INFOPLIST_FILE = SwiftUIVoiceQuickstart/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.twilio.ProgrammableVoiceTestApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA000060AA000060AA000060 /* Build configuration list for PBXNativeTarget "SwiftUIVoiceQuickstart" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000064AA000064AA000064 /* Debug */,
+				AA000065AA000065AA000065 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA000061AA000061AA000061 /* Build configuration list for PBXProject "SwiftUIVoiceQuickstart" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA000062AA000062AA000062 /* Debug */,
+				AA000063AA000063AA000063 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		8F03802A2F9188F0002198DE /* XCRemoteSwiftPackageReference "twilio-voice-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/twilio/twilio-voice-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.13.6;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8F03802B2F9188F0002198DE /* TwilioVoice */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8F03802A2F9188F0002198DE /* XCRemoteSwiftPackageReference "twilio-voice-ios" */;
+			productName = TwilioVoice;
+		};
+		8F03802D2F9188F0002198DE /* TwilioVoice-static */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8F03802A2F9188F0002198DE /* XCRemoteSwiftPackageReference "twilio-voice-ios" */;
+			productName = "TwilioVoice-static";
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = AA000051AA000051AA000051 /* Project object */;
+}

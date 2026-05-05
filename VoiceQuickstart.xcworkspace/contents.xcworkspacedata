@@ -16,4 +16,7 @@
    <FileRef
       location = "group:ConversationRelayExample.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:SwiftUIVoiceQuickstart.xcodeproj">
+   </FileRef>
 </Workspace>
