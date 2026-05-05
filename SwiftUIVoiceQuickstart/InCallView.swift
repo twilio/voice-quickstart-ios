@@ -23,8 +23,14 @@ struct InCallView: View {
                 Text(statusText)
                     .font(.subheadline)
                     .foregroundColor(statusColor)
-                    .padding(.bottom, 40)
+
+                if callManager.callState == .connected && !callManager.isOnHold {
+                    Text(formattedDuration)
+                        .font(.subheadline.monospacedDigit())
+                        .foregroundColor(.secondary)
+                }
             }
+            .padding(.bottom, 40)
             .frame(maxWidth: .infinity)
             .background(Color(.systemGroupedBackground))
 
@@ -112,6 +118,12 @@ struct InCallView: View {
         case .disconnected: return .red
         default: return .secondary
         }
+    }
+
+    private var formattedDuration: String {
+        let minutes = Int(callManager.callDuration) / 60
+        let seconds = Int(callManager.callDuration) % 60
+        return String(format: "%02d:%02d", minutes, seconds)
     }
 }
 

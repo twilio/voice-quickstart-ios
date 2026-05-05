@@ -39,6 +39,9 @@ final class CallManager: NSObject, ObservableObject {
     @Published var isSpeakerOn: Bool = false
     @Published var qualityWarning: String? = nil
     @Published var activeCallUUID: UUID? = nil
+    @Published var callDuration: TimeInterval = 0
+
+    private var callTimer: Timer? = nil
 
     // MARK: Internal
 
@@ -187,9 +190,7 @@ final class CallManager: NSObject, ObservableObject {
         callKitCompletionCallback = completion
         activeCallInvites.removeValue(forKey: uuid.uuidString)
 
-        if #unavailable(iOS 13) {
-            incomingPushHandled()
-        }
+        incomingPushHandled()
     }
 
     // MARK: Ringback
@@ -209,6 +210,19 @@ final class CallManager: NSObject, ObservableObject {
     private func stopRingback() {
         guard let player = ringtonePlayer, player.isPlaying else { return }
         player.stop()
+    }
+
+    private func startCallTimer() {
+        callDuration = 0
+        callTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.callDuration += 1
+        }
+    }
+
+    private func stopCallTimer() {
+        callTimer?.invalidate()
+        callTimer = nil
+        callDuration = 0
     }
 
     private func incomingPushHandled() {
@@ -246,6 +260,7 @@ extension CallManager: NotificationDelegate {
         NSLog("callInviteReceived:")
 
         let from = (callInvite.from ?? "Voice Bot").replacingOccurrences(of: "client:", with: "")
+        pendingOutgoingRecipient = from
         CallKitManager.shared.reportIncomingCall(from: from, uuid: callInvite.uuid)
         activeCallInvites[callInvite.uuid.uuidString] = callInvite
     }
@@ -277,6 +292,7 @@ extension CallManager: CallDelegate {
         isMuted = call.isMuted
         toggleAudioRoute(toSpeaker: true)
         isSpeakerOn = true
+        startCallTimer()
     }
 
     func callIsReconnecting(call: Call, error: Error) {
@@ -316,6 +332,7 @@ extension CallManager: CallDelegate {
         userInitiatedDisconnect = false
         if playCustomRingback { stopRingback() }
         if activeCalls.isEmpty {
+            stopCallTimer()
             callState = .idle
             activeCallUUID = nil
             isMuted = false
