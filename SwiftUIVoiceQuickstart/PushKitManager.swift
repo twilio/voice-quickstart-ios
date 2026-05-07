@@ -39,7 +39,7 @@ final class PushKitManager: NSObject, PKPushRegistryDelegate {
                       for type: PKPushType,
                       completion: @escaping () -> Void) {
         NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:completion:")
-        CallManager.shared.incomingPushReceived(payload: payload, completion: completion)
+        CallManager.shared.incomingPushReceived(payload: payload)
         completion()
     }
 }

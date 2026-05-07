@@ -4,8 +4,6 @@
 // Copyright © Twilio, Inc. All rights reserved.
 
 import UIKit
-import TwilioVoice
-import PushKit
 
 @MainActor
 class AppDelegate: NSObject, UIApplicationDelegate {

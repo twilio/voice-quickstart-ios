@@ -53,7 +53,6 @@ final class CallManager: NSObject, ObservableObject {
     private var activeCall: Call? = nil
     private var callKitCompletionCallback: ((Bool) -> Void)? = nil
     var userInitiatedDisconnect: Bool = false
-    private var incomingPushCompletionCallback: (() -> Void)? = nil
 
     var playCustomRingback = false
     private var ringtonePlayer: AVAudioPlayer? = nil
@@ -216,8 +215,6 @@ final class CallManager: NSObject, ObservableObject {
         activeCallInvites.removeValue(forKey: uuid.uuidString)
         incomingCaller = nil
         incomingCallInviteUUID = nil
-
-        incomingPushHandled()
     }
 
     // MARK: Ringback
@@ -251,12 +248,6 @@ final class CallManager: NSObject, ObservableObject {
         callTimer = nil
         callDuration = 0
     }
-
-    private func incomingPushHandled() {
-        guard let cb = incomingPushCompletionCallback else { return }
-        incomingPushCompletionCallback = nil
-        cb()
-    }
 }
 
 // MARK: - PushKit forwarding
@@ -274,7 +265,7 @@ extension CallManager {
         }
     }
 
-    func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void) {
+    func incomingPushReceived(payload: PKPushPayload) {
         TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
     }
 }
