@@ -6,3 +6,5 @@ Cartfile.resolved
 
 xcuserdata/
 *.xcuserstate
+
+ClientNotificationWebhookExample/websocket-server/node_modules/*

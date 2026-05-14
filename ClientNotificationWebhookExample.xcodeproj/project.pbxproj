@@ -16,6 +16,7 @@
 		8FC06CDF2FB6731C00D2D9A9 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8FC06CD32FB6731C00D2D9A9 /* Info.plist */; };
 		8FC06CE02FB6731C00D2D9A9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC06CD02FB6731C00D2D9A9 /* AppDelegate.swift */; };
 		8FC06CE12FB6731C00D2D9A9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC06CD92FB6731C00D2D9A9 /* ViewController.swift */; };
+		8FC06CE22FB6731C00D2D9A9 /* WebSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC06CE32FB6731C00D2D9A9 /* WebSocketClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		8FC06CD62FB6731C00D2D9A9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8FC06CD82FB6731C00D2D9A9 /* TwilioLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TwilioLogo.png; sourceTree = "<group>"; };
 		8FC06CD92FB6731C00D2D9A9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		8FC06CE32FB6731C00D2D9A9 /* WebSocketClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebSocketClient.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 			children = (
 				8FC06CD02FB6731C00D2D9A9 /* AppDelegate.swift */,
 				8FC06CD92FB6731C00D2D9A9 /* ViewController.swift */,
+				8FC06CE32FB6731C00D2D9A9 /* WebSocketClient.swift */,
 				8FC06CD32FB6731C00D2D9A9 /* Info.plist */,
 				8FC06CD12FB6731C00D2D9A9 /* Assets.xcassets */,
 				8FC06CD22FB6731C00D2D9A9 /* ClientNotificationWebhookExample.entitlements */,
@@ -190,6 +193,7 @@
 			files = (
 				8FC06CE02FB6731C00D2D9A9 /* AppDelegate.swift in Sources */,
 				8FC06CE12FB6731C00D2D9A9 /* ViewController.swift in Sources */,
+				8FC06CE22FB6731C00D2D9A9 /* WebSocketClient.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
