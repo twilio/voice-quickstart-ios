@@ -8,3 +8,4 @@ xcuserdata/
 *.xcuserstate
 
 ClientNotificationWebhookExample/websocket-server/node_modules/*
+ClientNotificationWebhookExample/websocket-server/.env

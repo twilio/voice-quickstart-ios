@@ -14,10 +14,6 @@ protocol WebSocketClientDelegate: AnyObject {
     func webSocketClient(_ client: WebSocketClient, didDisconnectWithError error: Error?)
 }
 
-extension WebSocketClientDelegate {
-    func webSocketClient(_ client: WebSocketClient, didReceiveData data: Data) {}
-}
-
 enum WebSocketClientError: Error {
     case invalidServerResponse
     case missingWebSocketURL
@@ -25,7 +21,6 @@ enum WebSocketClientError: Error {
     case notConnected
 }
 
-@available(iOS 13.0, *)
 final class WebSocketClient: NSObject {
 
     let serverBaseURL: URL
@@ -40,22 +35,13 @@ final class WebSocketClient: NSObject {
     private var isConnected = false
 
     init(serverBaseURL: URL,
-         connectionId: String = WebSocketClient.generateConnectionId(),
+         connectionId: String,
          delegateQueue: DispatchQueue = .main) {
         self.serverBaseURL = serverBaseURL
         self.connectionId = connectionId
         self.delegateQueue = delegateQueue
         self.httpSession = URLSession(configuration: .ephemeral)
         super.init()
-    }
-
-    /// Generates an identifier in the `bob[0-9a-fA-F]{32}` form expected by the
-    /// websocket-server's `/ws/:id` upgrade route.
-    static func generateConnectionId() -> String {
-        var bytes = [UInt8](repeating: 0, count: 16)
-        _ = SecRandomCopyBytes(kSecRandomDefault, bytes.count, &bytes)
-        let hex = bytes.map { String(format: "%02x", $0) }.joined()
-        return "bob" + hex
     }
 
     // MARK: - Public API
@@ -99,17 +85,6 @@ final class WebSocketClient: NSObject {
             case .failure(let error):
                 self.dispatchToDelegateQueue { completion?(.failure(error)) }
             }
-        }
-    }
-
-    /// Sends a text frame over the WebSocket.
-    func send(_ message: String, completion: ((Error?) -> Void)? = nil) {
-        guard let task = task, isConnected else {
-            completion?(WebSocketClientError.notConnected)
-            return
-        }
-        task.send(.string(message)) { error in
-            completion?(error)
         }
     }
 
@@ -221,7 +196,6 @@ final class WebSocketClient: NSObject {
 
 // MARK: - URLSessionWebSocketDelegate
 
-@available(iOS 13.0, *)
 extension WebSocketClient: URLSessionWebSocketDelegate {
     func urlSession(_ session: URLSession,
                     webSocketTask: URLSessionWebSocketTask,

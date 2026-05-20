@@ -13,7 +13,6 @@
 		8FC06CDC2FB6731C00D2D9A9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8FC06CD72FB6731C00D2D9A9 /* Main.storyboard */; };
 		8FC06CDD2FB6731C00D2D9A9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8FC06CD12FB6731C00D2D9A9 /* Assets.xcassets */; };
 		8FC06CDE2FB6731C00D2D9A9 /* TwilioLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 8FC06CD82FB6731C00D2D9A9 /* TwilioLogo.png */; };
-		8FC06CDF2FB6731C00D2D9A9 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8FC06CD32FB6731C00D2D9A9 /* Info.plist */; };
 		8FC06CE02FB6731C00D2D9A9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC06CD02FB6731C00D2D9A9 /* AppDelegate.swift */; };
 		8FC06CE12FB6731C00D2D9A9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC06CD92FB6731C00D2D9A9 /* ViewController.swift */; };
 		8FC06CE22FB6731C00D2D9A9 /* WebSocketClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC06CE32FB6731C00D2D9A9 /* WebSocketClient.swift */; };
@@ -180,7 +179,6 @@
 				8FC06CDC2FB6731C00D2D9A9 /* Main.storyboard in Resources */,
 				8FC06CDD2FB6731C00D2D9A9 /* Assets.xcassets in Resources */,
 				8FC06CDE2FB6731C00D2D9A9 /* TwilioLogo.png in Resources */,
-				8FC06CDF2FB6731C00D2D9A9 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,7 +318,9 @@
 				CODE_SIGN_ENTITLEMENTS = SwiftVoiceQuickstart/SwiftVoiceQuickstart.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
-				INFOPLIST_FILE = SwiftVoiceQuickstart/Info.plist;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ClientNotificationWebhookExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -338,8 +338,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = SwiftVoiceQuickstart/SwiftVoiceQuickstart.entitlements;
 				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = SwiftVoiceQuickstart/Info.plist;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ClientNotificationWebhookExample/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -13,7 +13,6 @@ const PORT = process.env.PORT || 3000;
 const NGROK_AUTHTOKEN = process.env.NGROK_AUTHTOKEN;
 const TWILIO_ACCOUNT_SID = process.env.TEST_ACCOUNT_SID;
 const TWILIO_AUTH_TOKEN = process.env.TEST_ACCOUNT_AUTH_TOKEN;
-const TWILIO_PHONE_NUMBER_SID = process.env.TEST_ACCOUNT_PHONENUMBER_SID;
 
 const app = express();
 app.use(express.json());
@@ -30,7 +29,7 @@ const connections = new Map();
 // Handle WebSocket upgrade requests on /ws/:id
 server.on('upgrade', (request, socket, head) => {
   const url = new URL(request.url, `http://${request.headers.host}`);
-  const match = url.pathname.match(/^\/ws\/bob[0-9a-fA-F]{32}$/);
+  const match = url.pathname.match(/^\/ws\/*/);
   if (!match) {
     console.warn(`[upgrade] rejected: invalid path "${url.pathname}". Expected /ws/<connectionId>`);
     socket.write('HTTP/1.1 400 Bad Request\r\n\r\n');
@@ -38,7 +37,7 @@ server.on('upgrade', (request, socket, head) => {
     return;
   }
 
-  const connectionIdMatch = match[0].match(/bob[0-9a-fA-F]{32}$/);
+  const connectionIdMatch = url.pathname.match(/(?<=^\/ws\/).+$/);
   if (!connectionIdMatch) {
     console.warn(`[upgrade] rejected: invalid connectionId "${match[0]}".`);
     socket.write('HTTP/1.1 400 Bad Request\r\n\r\n');
@@ -92,11 +91,7 @@ app.post('/connect', (req, res) => {
   }
 
   connections.set(connectionId, { ws: null, id: connectionId });
-  const keys = [...connections.keys()];
-
-  const host = req.headers.host || `localhost:${PORT}`;
-  // Return the localhost URL for the tests to connect to the websocket
-  const wsUrl = `ws://localhost:${PORT}/ws/${connectionId}`;
+  const wsUrl = `wss://${publicBaseUrl.replace(/^https?:\/\//, '')}/ws/${connectionId}`;
 
   console.log(`[connection ${connectionId}] slot created, WebSocket URL: ${wsUrl}`);
 
@@ -166,6 +161,76 @@ app.post('/message', (req, res) => {
 });
 
 /**
+ * POST /triggerIncomingCall
+ * Uses the Twilio Calls API to create a call whose TwiML <Dial><Client> verb
+ * delivers an incoming call invite to the specified connection's identity.
+ *
+ * Body: { "connectionId": <string>, "to": <e.164>, "from": <e.164> }
+ */
+app.post('/triggerIncomingCall', (req, res) => {
+  if (!publicBaseUrl) {
+    return res.status(400).json({ error: 'ngrok tunnel not established — publicBaseUrl unavailable' });
+  }
+
+  const { connectionId, to, from } = req.body;
+  if (connectionId === undefined) {
+    return res.status(400).json({ error: 'connectionId is required' });
+  }
+  if (to === undefined) {
+    return res.status(400).json({ error: 'to is required' });
+  }
+  if (from === undefined) {
+    return res.status(400).json({ error: 'from is required' });
+  }
+
+  const entry = connections.get(connectionId);
+  if (!entry) {
+    return res.status(400).json({ error: `Connection ${connectionId} not found` });
+  }
+
+  const body = new URLSearchParams({
+    To: to,
+    From: from,
+    ClientNotificationUrl: `${publicBaseUrl}/callNotificationWebhook`,
+    Url: "http://demo.twilio.com/docs/voice.xml"
+  }).toString();
+
+  const options = {
+    hostname: 'api.twilio.com',
+    path: `/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/Calls.json`,
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Length': Buffer.byteLength(body),
+      'Authorization': `Basic ${Buffer.from(`${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`).toString('base64')}`,
+    },
+  };
+
+  const twilioReq = https.request(options, (twilioRes) => {
+    let data = '';
+    twilioRes.on('data', (chunk) => { data += chunk; });
+    twilioRes.on('end', () => {
+      const parsed = JSON.parse(data);
+      if (twilioRes.statusCode >= 200 && twilioRes.statusCode < 300) {
+        console.log(`[triggerIncomingCall] call created: ${parsed.sid}`);
+        res.status(200).json({ callSid: parsed.sid });
+      } else {
+        console.error(`[triggerIncomingCall] Twilio error ${twilioRes.statusCode}:`, data);
+        res.status(twilioRes.statusCode).json({ error: parsed.message || 'Twilio request failed' });
+      }
+    });
+  });
+
+  twilioReq.on('error', (err) => {
+    console.error('[triggerIncomingCall] request error:', err.message);
+    res.status(500).json({ error: err.message });
+  });
+
+  twilioReq.write(body);
+  twilioReq.end();
+});
+
+/**
  * POST /callNotificationWebhook
  * 
  * Receives an HTTP POST from Twilio Programmable Voice with a payload of information
@@ -216,90 +281,6 @@ app.post('/callNotificationWebhook', (req, res) => {
 
 app.get('/publicUrl', (req, res) => {
   res.status(200).json({ publicUrl: `${publicBaseUrl}`});
-});
-
-/**
- * POST /updateStirNumberVoiceUrl
- * Updates the VoiceUrl of the Twilio Incoming Phone Number to the public ngrok URL
- * of this server's /stirVerificationTwiml endpoint.
- */
-app.post('/updateStirNumberVoiceUrl', (req, res) => {
-  if (!publicBaseUrl) {
-    return res.status(400).json({ error: 'ngrok tunnel not established — publicBaseUrl unavailable' });
-  }
-
-  const { connectionId } = req.body;
-  if (connectionId === undefined) {
-    return res.status(400).json({ error: 'connectionId is required' });
-  }
-  const entry = connections.get(connectionId);
-  if (!entry) {
-    return res.status(400).json({ error: `Connection ${connectionId} not found` });
-  }
-
-  stirVerificationClientIdentity = connectionId;
-
-  const voiceUrl = `${publicBaseUrl}/stirVerificationTwiml`;
-  const body = `VoiceUrl=${encodeURIComponent(voiceUrl)}`;
-
-  const options = {
-    hostname: 'api.twilio.com',
-    path: `/2010-04-01/Accounts/${TWILIO_ACCOUNT_SID}/IncomingPhoneNumbers/${TWILIO_PHONE_NUMBER_SID}.json`,
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': Buffer.byteLength(body),
-      'Authorization': `Basic ${Buffer.from(`${TWILIO_ACCOUNT_SID}:${TWILIO_AUTH_TOKEN}`).toString('base64')}`,
-    },
-  };
-
-  const twilioReq = https.request(options, (twilioRes) => {
-    let data = '';
-    twilioRes.on('data', (chunk) => { data += chunk; });
-    twilioRes.on('end', () => {
-      const parsed = JSON.parse(data);
-      if (twilioRes.statusCode >= 200 && twilioRes.statusCode < 300) {
-        console.log(`[updateStirNumberVoiceUrl] VoiceUrl updated to ${voiceUrl}`);
-        res.status(200).json({ voiceUrl: parsed.voice_url });
-      } else {
-        console.error(`[updateStirNumberVoiceUrl] Twilio error ${twilioRes.statusCode}:`, data);
-        res.status(twilioRes.statusCode).json({ error: parsed.message || 'Twilio request failed' });
-      }
-    });
-  });
-
-  twilioReq.on('error', (err) => {
-    console.error('[updateStirNumberVoiceUrl] request error:', err.message);
-    res.status(500).json({ error: err.message });
-  });
-
-  twilioReq.write(body);
-  twilioReq.end();
-});
-
-/**
- * POST /stirVerificationTwiml
- * Returns TwiML that dials a Twilio Client identity.
- * The <Client> verb includes a notification URL pointing to /callNotificationWebhook
- * so Twilio can push call info to the recipient before they answer.
- */
-app.post('/stirVerificationTwiml', (req, res) => {
-  if (!publicBaseUrl) {
-    return res.status(400).json({ error: 'ngrok tunnel not established — publicBaseUrl unavailable' });
-  }
-  if (!stirVerificationClientIdentity) {
-    return res.status(400).json({ error: 'Callee identity not available' });
-  }
-
-  const response = new VoiceResponse();
-  const dial = response.dial();
-  const client = dial.client({
-    clientNotificationUrl: `${publicBaseUrl}/callNotificationWebhook`,
-  });
-  client.identity(stirVerificationClientIdentity);
-
-  res.type('text/xml');
-  res.send(response.toString());
 });
 
 /**

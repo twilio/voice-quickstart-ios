@@ -7,17 +7,12 @@
 
 import UIKit
 import AVFoundation
-import PushKit
 import CallKit
 import TwilioVoice
 
 let accessToken = <#PASTE YOUR ACCESS TOKEN HERE#>
 let twimlParamTo = "to"
-
-let kRegistrationTTLInDays = 365
-
-let kCachedDeviceToken = "CachedDeviceToken"
-let kCachedBindingDate = "CachedBindingDate"
+let websocketServerURL = <#PASTE YOUR PUBLIC WEBSOCKET SERVER URL HERE#>
 
 class ViewController: UIViewController {
 
@@ -45,6 +40,8 @@ class ViewController: UIViewController {
     var callKitProvider: CXProvider?
     let callKitCallController = CXCallController()
     var userInitiatedDisconnect: Bool = false
+    
+    let websocketClient = WebSocketClient(serverBaseURL: websocketServerURL!, connectionId: "qs4144")
     
     /*
      Custom ringback will be played when this flag is enabled.
@@ -75,7 +72,7 @@ class ViewController: UIViewController {
         outgoingValue.delegate = self
         
         /* Please note that the designated initializer `CXProviderConfiguration(localizedName: String)` has been deprecated on iOS 14. */
-        let configuration = CXProviderConfiguration(localizedName: "Voice Quickstart")
+        let configuration = CXProviderConfiguration()
         configuration.maximumCallGroups = 2
         configuration.maximumCallsPerCallGroup = 1
         callKitProvider = CXProvider(configuration: configuration)
@@ -95,6 +92,16 @@ class ViewController: UIViewController {
         if let params = LogParameters.init(module:TwilioVoiceSDK.LogModule.platform , logLevel: TwilioVoiceSDK.LogLevel.debug, message: "The default logger is used for app logs") {
             defaultLogger.log(params: params)
         }
+        
+        websocketClient.delegate = self
+        websocketClient.connect { result in
+            switch result {
+                case .success:
+                    NSLog("WebSocket connected successfully")
+                case .failure(let error):
+                    NSLog("WebSocket failed to connect: \(error.localizedDescription)")
+            }
+        }
     }
 
     func toggleUIState(isEnabled: Bool, showCallControl: Bool) {
@@ -104,7 +111,7 @@ class ViewController: UIViewController {
             callControlView.isHidden = false
             muteSwitch.isOn = getActiveCall()?.isMuted ?? false
             for output in AVAudioSession.sharedInstance().currentRoute.outputs {
-                speakerSwitch.isOn = output.portType == AVAudioSessionPortBuiltInSpeaker
+                speakerSwitch.isOn = output.portType == AVAudioSession.Port.builtInSpeaker
             }
         } else {
             callControlView.isHidden = true
@@ -121,8 +128,8 @@ class ViewController: UIViewController {
         }
         
         let goToSettings = UIAlertAction(title: "Settings", style: .default) { _ in
-            UIApplication.shared.open(URL(string: UIApplicationOpenSettingsURLString)!,
-                                      options: [UIApplicationOpenURLOptionUniversalLinksOnly: false],
+            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!,
+                                      options: [UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: false],
                                       completionHandler: nil)
         }
         
@@ -170,7 +177,7 @@ class ViewController: UIViewController {
     }
     
     func checkRecordPermission(completion: @escaping (_ permissionGranted: Bool) -> Void) {
-        let permissionStatus = AVAudioSession.sharedInstance().recordPermission()
+        let permissionStatus = AVAudioSession.sharedInstance().recordPermission
         
         switch permissionStatus {
         case .granted:
@@ -225,14 +232,14 @@ class ViewController: UIViewController {
         guard !isSpinning else { return }
         
         isSpinning = true
-        spin(options: UIViewAnimationOptions.curveEaseIn)
+        spin(options: UIView.AnimationOptions.curveEaseIn)
     }
     
     func stopSpin() {
         isSpinning = false
     }
     
-    func spin(options: UIViewAnimationOptions) {
+    func spin(options: UIView.AnimationOptions) {
         UIView.animate(withDuration: 0.5, delay: 0.0, options: options, animations: { [weak iconView] in
             if let iconView = iconView {
                 iconView.transform = iconView.transform.rotated(by: CGFloat(Double.pi/2))
@@ -242,9 +249,9 @@ class ViewController: UIViewController {
 
             if finished {
                 if strongSelf.isSpinning {
-                    strongSelf.spin(options: UIViewAnimationOptions.curveLinear)
-                } else if options != UIViewAnimationOptions.curveEaseOut {
-                    strongSelf.spin(options: UIViewAnimationOptions.curveEaseOut)
+                    strongSelf.spin(options: UIView.AnimationOptions.curveLinear)
+                } else if options != UIView.AnimationOptions.curveEaseOut {
+                    strongSelf.spin(options: UIView.AnimationOptions.curveEaseOut)
                 }
             }
         }
@@ -260,116 +267,44 @@ extension ViewController: UITextFieldDelegate {
         return true
     }
 }
-    
-    
-// MARK: - PushKitEventDelegate
 
-extension ViewController: PushKitEventDelegate {
-    func credentialsUpdated(credentials: PKPushCredentials) {
-        guard
-            (registrationRequired() || UserDefaults.standard.data(forKey: kCachedDeviceToken) != credentials.token)
-        else {
+// MARK: - WebSocketClientDelegate
+
+extension ViewController: WebSocketClientDelegate {
+    func webSocketClientDidConnect(_ client: WebSocketClient) {
+    }
+    
+    func webSocketClient(_ client: WebSocketClient, didReceiveMessage message: String) {
+        guard let data = message.data(using: .utf8) else {
+            NSLog("failed to convert message to Data")
             return
         }
 
-        let cachedDeviceToken = credentials.token
-        /*
-         * Perform registration if a new device token is detected.
-         */
-        TwilioVoiceSDK.register(accessToken: accessToken, deviceToken: cachedDeviceToken) { error in
-            if let error = error {
-                NSLog("An error occurred while registering: \(error.localizedDescription)")
-            } else {
-                NSLog("Successfully registered for VoIP push notifications.")
-                
-                // Save the device token after successfully registered.
-                UserDefaults.standard.set(cachedDeviceToken, forKey: kCachedDeviceToken)
-                
-                /**
-                 * The TTL of a registration is 1 year. The TTL for registration for this device/identity
-                 * pair is reset to 1 year whenever a new registration occurs or a push notification is
-                 * sent to this device/identity pair.
-                 */
-                UserDefaults.standard.set(Date(), forKey: kCachedBindingDate)
+        do {
+            guard let dictionary = try JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                NSLog("message is not a JSON object")
+                return
             }
-        }
-    }
-    
-    /**
-     * The TTL of a registration is 1 year. The TTL for registration for this device/identity pair is reset to
-     * 1 year whenever a new registration occurs or a push notification is sent to this device/identity pair.
-     * This method checks if binding exists in UserDefaults, and if half of TTL has been passed then the method
-     * will return true, else false.
-     */
-    func registrationRequired() -> Bool {
-        guard
-            let lastBindingCreated = UserDefaults.standard.object(forKey: kCachedBindingDate)
-        else { return true }
-        
-        let date = Date()
-        var components = DateComponents()
-        components.setValue(kRegistrationTTLInDays/2, for: .day)
-        let expirationDate = Calendar.current.date(byAdding: components, to: lastBindingCreated as! Date)!
+            NSLog("parsed message dictionary: \(dictionary)")
 
-        if expirationDate.compare(date) == ComparisonResult.orderedDescending {
-            return false
-        }
-        return true;
-    }
-    
-    func credentialsInvalidated() {
-        guard let deviceToken = UserDefaults.standard.data(forKey: kCachedDeviceToken) else { return }
-        
-        TwilioVoiceSDK.unregister(accessToken: accessToken, deviceToken: deviceToken) { error in
-            if let error = error {
-                NSLog("An error occurred while unregistering: \(error.localizedDescription)")
-            } else {
-                NSLog("Successfully unregistered from VoIP push notifications.")
-            }
-        }
-        
-        UserDefaults.standard.removeObject(forKey: kCachedDeviceToken)
-        
-        // Remove the cached binding as credentials are invalidated
-        UserDefaults.standard.removeObject(forKey: kCachedBindingDate)
-    }
-    
-    func incomingPushReceived(payload: PKPushPayload) {
-        // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error:` when delegate queue is not passed
-        TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
-    }
-    
-    func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void) {
-        // The Voice SDK will use main queue to invoke `cancelledCallInviteReceived:error:` when delegate queue is not passed
-        TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
-        
-        if let version = Float(UIDevice.current.systemVersion), version < 13.0 {
-            // Save for later when the notification is properly handled.
-            incomingPushCompletionCallback = completion
+            TwilioVoiceSDK.handleNotification(dictionary, delegate: self, delegateQueue: nil)
+        } catch {
+            NSLog("failed to parse message JSON: \(error.localizedDescription)")
         }
     }
-
-    func incomingPushHandled() {
-        guard let completion = incomingPushCompletionCallback else { return }
-        
-        incomingPushCompletionCallback = nil
-        completion()
+    
+    func webSocketClient(_ client: WebSocketClient, didReceiveData data: Data) {
+    }
+    
+    func webSocketClient(_ client: WebSocketClient, didDisconnectWithError error: Error?) {
     }
 }
-
 
 // MARK: - TVONotificaitonDelegate
 
 extension ViewController: NotificationDelegate {
     func callInviteReceived(callInvite: CallInvite) {
         NSLog("callInviteReceived:")
-        
-        /**
-         * The TTL of a registration is 1 year. The TTL for registration for this device/identity
-         * pair is reset to 1 year whenever a new registration occurs or a push notification is
-         * sent to this device/identity pair.
-         */
-        UserDefaults.standard.set(Date(), forKey: kCachedBindingDate)
         
         let callerInfo: TVOCallerInfo = callInvite.callerInfo
         if let verified: NSNumber = callerInfo.verified {
@@ -830,11 +765,6 @@ extension ViewController: CXProviderDelegate {
         callKitCompletionCallback = completionHandler
         
         activeCallInvites.removeValue(forKey: uuid.uuidString)
-        
-        guard #available(iOS 13, *) else {
-            incomingPushHandled()
-            return
-        }
     }
 }
 
