@@ -13,6 +13,7 @@ import TwilioVoice
 let accessToken = <#PASTE YOUR ACCESS TOKEN HERE#>
 let twimlParamTo = "to"
 let websocketServerURL = <#PASTE YOUR PUBLIC WEBSOCKET SERVER URL HERE#>
+let clientIdentity = <#YOUR CLIENT IDENTITY#>
 
 class ViewController: UIViewController {
 
@@ -41,7 +42,7 @@ class ViewController: UIViewController {
     let callKitCallController = CXCallController()
     var userInitiatedDisconnect: Bool = false
     
-    let websocketClient = WebSocketClient(serverBaseURL: websocketServerURL!, connectionId: "qs4144")
+    let websocketClient = WebSocketClient(serverBaseURL: websocketServerURL!, connectionId: clientIdentity)
     
     /*
      Custom ringback will be played when this flag is enabled.

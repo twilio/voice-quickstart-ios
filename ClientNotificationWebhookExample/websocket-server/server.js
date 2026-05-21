@@ -11,8 +11,8 @@ const { twiml: { VoiceResponse } } = require('twilio');
 
 const PORT = process.env.PORT || 3000;
 const NGROK_AUTHTOKEN = process.env.NGROK_AUTHTOKEN;
-const TWILIO_ACCOUNT_SID = process.env.TEST_ACCOUNT_SID;
-const TWILIO_AUTH_TOKEN = process.env.TEST_ACCOUNT_AUTH_TOKEN;
+const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
+const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
 
 const app = express();
 app.use(express.json());
