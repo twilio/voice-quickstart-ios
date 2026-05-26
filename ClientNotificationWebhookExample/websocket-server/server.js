@@ -21,7 +21,6 @@ const server = http.createServer(app);
 const wss = new WebSocketServer({ noServer: true });
 
 let publicBaseUrl = null;
-let stirVerificationClientIdentity = null;
 
 // Tracks active WebSocket connections keyed by connection ID.
 const connections = new Map();
@@ -124,40 +123,6 @@ app.post('/disconnect', (req, res) => {
   console.log(`[connection ${connectionId}] torn down`);
 
   res.status(200).json({ message: `Connection ${connectionId} disconnected` });
-});
-
-/**
- * POST /message
- * Receives an HTTP POST payload and forwards it to the specified WebSocket connection.
- *
- * Body: { "connectionId": <number>, "payload": <any> }
- */
-app.post('/message', (req, res) => {
-  const { connectionId, payload } = req.body;
-
-  if (connectionId === undefined) {
-    return res.status(400).json({ error: 'connectionId is required' });
-  }
-
-  if (payload === undefined) {
-    return res.status(400).json({ error: 'payload is required' });
-  }
-
-  const entry = connections.get(connectionId);
-  if (!entry) {
-    return res.status(404).json({ error: `Connection ${connectionId} not found` });
-  }
-
-  if (!entry.ws || entry.ws.readyState !== WebSocket.OPEN) {
-    return res.status(409).json({ error: `WebSocket for connection ${connectionId} is not open` });
-  }
-
-  const message = typeof payload === 'string' ? payload : JSON.stringify(payload);
-  entry.ws.send(message);
-
-  console.log(`[connection ${connectionId}] sent message:`, message);
-
-  res.status(200).json({ message: 'Payload sent to WebSocket connection' });
 });
 
 /**
@@ -277,10 +242,6 @@ app.post('/callNotificationWebhook', (req, res) => {
   console.log(`[connection ${connectionId}] sent message:`, message);
 
   res.status(200).json({ message: 'Payload sent to WebSocket connection' });
-});
-
-app.get('/publicUrl', (req, res) => {
-  res.status(200).json({ publicUrl: `${publicBaseUrl}`});
 });
 
 /**
