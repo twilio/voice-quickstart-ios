@@ -8,6 +8,7 @@ const { WebSocketServer, WebSocket } = require('ws');
 const http = require('http');
 const https = require('https');
 const { twiml: { VoiceResponse } } = require('twilio');
+const { Twilio, validateRequest } = require('twilio');
 
 const PORT = process.env.PORT || 3000;
 const NGROK_AUTHTOKEN = process.env.NGROK_AUTHTOKEN;
@@ -213,6 +214,26 @@ app.post('/triggerIncomingCall', (req, res) => {
  * }
  */
 app.post('/callNotificationWebhook', (req, res) => {
+  // Verify Twilio request signature
+  const headers = req.headers;
+  try {
+    if (!headers['x-twilio-signature']) {
+      throw new Error("Missing Twilio signature");
+    }
+    if (!TWILIO_AUTH_TOKEN) {
+      throw new Error("Missing TWILIO_AUTH_TOKEN in environment variables");
+    }
+    if (!validateRequest( TWILIO_AUTH_TOKEN,
+                          headers['x-twilio-signature'],
+                          publicBaseUrl,
+                          {})) {
+       throw new Error("Invalid Twilio signature");
+    }
+  } catch (error) {
+    console.log("Twilio request validation failed: " + error.message);
+    return;
+  }
+
   const payload = JSON.stringify(req.body, null, 2);
   const { twi_account_sid, twi_bridge_token, twi_call_sid, twi_from, twi_to, twi_message_id, twi_message_type } = JSON.parse(payload);
 

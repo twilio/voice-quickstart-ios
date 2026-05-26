@@ -120,7 +120,7 @@
 			packageProductDependencies = (
 				8F56E8D525C8B25E00B5AB19 /* TwilioVoice */,
 			);
-			productName = SwiftVoiceQuickstart;
+			productName = ClientNotificationWebhookExample;
 			productReference = 24BA34331D874AC800B0B4F7 /* ClientNotificationWebhookExample.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -315,9 +315,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = SwiftVoiceQuickstart/SwiftVoiceQuickstart.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
+				CODE_SIGN_ENTITLEMENTS = ClientNotificationWebhookExample/ClientNotificationWebhookExample.entitlements;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ClientNotificationWebhookExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
@@ -336,9 +336,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = SwiftVoiceQuickstart/SwiftVoiceQuickstart.entitlements;
 				CODE_SIGN_STYLE = Manual;
 				INFOPLIST_FILE = SwiftVoiceQuickstart/Info.plist;
+				CODE_SIGN_ENTITLEMENTS = ClientNotificationWebhookExample/ClientNotificationWebhookExample.entitlements;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = ClientNotificationWebhookExample/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.0;

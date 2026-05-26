@@ -7,5 +7,5 @@ Cartfile.resolved
 xcuserdata/
 *.xcuserstate
 
-ClientNotificationWebhookExample/websocket-server/node_modules/*
-ClientNotificationWebhookExample/websocket-server/.env
+servers/websocket-server/node_modules/*
+servers/websocket-server/.env
