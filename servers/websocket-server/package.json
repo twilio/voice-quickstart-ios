@@ -1,0 +1,23 @@
+{
+  "name": "websocket-server",
+  "version": "1.0.0",
+  "description": "HTTP-controlled WebSocket server for relaying messages to WebSocket clients",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^5.2.1",
+    "twilio": "^5.13.1",
+    "ws": "^8.19.0"
+  },
+  "devDependencies": {
+    "@ngrok/ngrok": "1.2.0"
+  }
+}

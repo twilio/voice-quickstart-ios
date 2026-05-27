@@ -6,3 +6,6 @@ Cartfile.resolved
 
 xcuserdata/
 *.xcuserstate
+
+servers/websocket-server/node_modules/*
+servers/websocket-server/.env

@@ -231,6 +231,10 @@ You will also find additional examples that provide more advanced use cases of t
 
 - [AudioDevice](https://github.com/twilio/voice-quickstart-ios/tree/master/AudioDeviceExample) - Provide your own means to playback and record audio using a custom `TVOAudioDevice` and [CoreAudio](https://developer.apple.com/documentation/coreaudio).
 - [Making calls from history](https://github.com/twilio/voice-quickstart-ios/blob/master/Docs/call-from-history.md) - Use the `INStartAudioCallIntent` in the user activity delegate method to start a call from the history.
+- [Twilio Conversation Relay](https://github.com/twilio/voice-quickstart-ios/tree/master/ConversationRelayExample) - Connect the iOS client to your LLM of choice using the `<ConversationRelay>` TwiML.
+- [Speech Transcriber](https://github.com/twilio/voice-quickstart-ios/tree/master/SpeechTranscriberExample) - Speech recognition on the remote audio using the `SpeechTranscriber` class from the iOS `Speech` framework.
+- [SwiftUI example app](https://github.com/twilio/voice-quickstart-ios/tree/master/SwiftUIVoiceQuickstart) - A compact VoIP app built using SwiftUI.
+- [Client Notification Webhook example app](https://github.com/twilio/voice-quickstart-ios/tree/master/ClientNotificationWebhookExample) - Deliver incoming call notification via a websocket connection using the Twilio [Client Notification Webhook feature](https://www.twilio.com/docs/voice/sdks/client-call-notification-webhook).
 
 ## More Documentation
 
