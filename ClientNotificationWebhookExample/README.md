@@ -1,6 +1,8 @@
 ### Client Notification Webhook Example
 
-This example shows how to leverage the Twilio [Client Notification Webhook feature](https://www.twilio.com/docs/voice/sdks/client-call-notification-webhook) and manage your own client instances and notification delivery. In this example, a websocket connection will be used to deliver the incoming call notification to the app.
+This example shows how to leverage the Twilio [Client Notification Webhook feature](https://www.twilio.com/docs/voice/sdks/client-call-notification-webhook) and manage your own client instances and notification delivery. 
+
+In this example, a websocket connection will be used to deliver the incoming call notification to the app. Developers can choose the best channel for their application use case, for example delivering the incoming call notification via push notifications to optimize reachability and battery management.
 
 #### How this works
 
@@ -44,14 +46,14 @@ sequenceDiagram
 1. Install dependencies for the websocket server
 
 ```
-cd ClientNotificationWebhookExample/websocket-server
+cd servers/websocket-server
 npm install
 ```
 
 2. Start the server
 
 ```
-cd ClientNotificationWebhookExample/websocket-server
+cd servers/websocket-server
 NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN TWILIO_ACCOUNT_SID=$TWILIO_ACCOUNT_SID TWILIO_AUTH_TOKEN=$TWILIO_AUTH_TOKEN node server.js
 ```
 
@@ -90,3 +92,7 @@ curl --location 'https://********.ngrok.app/triggerIncomingCall' \
     "from": "client:alice"
 }'
 ```
+
+The `/triggerIncomingCall` endpoint specifies `https://********.ngrok.app/callNotificationWebhook` as value of the `ClientNotificationUrl` parameter so Twilio will deliver the call notification to the `/callNotificationWebhook` endpoint.
+
+5. The notification payload is sent to the `/callNotificationWebhook` endpoint and sent to the iOS app. Parse the JSON string into **NSDictionary** format and use the `TwilioVoiceSDK.handleNotification()` method to kick off the incoming call invite display.
