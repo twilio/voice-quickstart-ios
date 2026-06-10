@@ -14,11 +14,6 @@ import TwilioVoice
 let accessToken = "PASTE_YOUR_ACCESS_TOKEN_HERE"
 let twimlParamTo = "to"
 
-let kRegistrationTTLInDays = 365
-
-let kCachedDeviceToken = "CachedDeviceToken"
-let kCachedBindingDate = "CachedBindingDate"
-
 @available(iOS 17.4, *)
 class ViewController: UIViewController {
 
@@ -129,7 +124,7 @@ class ViewController: UIViewController {
 
         let goToSettings = UIAlertAction(title: "Settings", style: .default) { _ in
             UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!,
-                                      options: [UIApplication.OpenExternalURLOptionsKey.universalLinksOnly: false],
+                                      options: [:],
                                       completionHandler: nil)
         }
 
@@ -177,7 +172,7 @@ class ViewController: UIViewController {
     }
 
     func checkRecordPermission(completion: @escaping (_ permissionGranted: Bool) -> Void) {
-        let permissionStatus = AVAudioSession.sharedInstance().recordPermission
+        let permissionStatus = AVAudioApplication.shared.recordPermission
 
         switch permissionStatus {
         case .granted:
@@ -185,7 +180,7 @@ class ViewController: UIViewController {
         case .denied:
             completion(false)
         case .undetermined:
-            AVAudioSession.sharedInstance().requestRecordPermission { granted in completion(granted) }
+            AVAudioApplication.requestRecordPermission { granted in completion(granted) }
         default:
             completion(false)
         }
@@ -276,12 +271,6 @@ extension ViewController: UITextFieldDelegate {
 @available(iOS 17.4, *)
 extension ViewController: PushKitEventDelegate {
     func credentialsUpdated(credentials: PKPushCredentials) {
-        guard
-            (registrationRequired() || UserDefaults.standard.data(forKey: kCachedDeviceToken) != credentials.token)
-        else {
-            return
-        }
-
         let cachedDeviceToken = credentials.token
         /*
          * Perform registration if a new device token is detected.
@@ -291,59 +280,8 @@ extension ViewController: PushKitEventDelegate {
                 NSLog("An error occurred while registering: \(error.localizedDescription)")
             } else {
                 NSLog("Successfully registered for VoIP push notifications.")
-
-                // Save the device token after successfully registered.
-                UserDefaults.standard.set(cachedDeviceToken, forKey: kCachedDeviceToken)
-
-                /**
-                 * The TTL of a registration is 1 year. The TTL for registration for this device/identity
-                 * pair is reset to 1 year whenever a new registration occurs or a push notification is
-                 * sent to this device/identity pair.
-                 */
-                UserDefaults.standard.set(Date(), forKey: kCachedBindingDate)
             }
         }
-    }
-
-    /**
-     * The TTL of a registration is 1 year. The TTL for registration for this device/identity pair is reset to
-     * 1 year whenever a new registration occurs or a push notification is sent to this device/identity pair.
-     * This method checks if binding exists in UserDefaults, and if half of TTL has been passed then the method
-     * will return true, else false.
-     */
-    func registrationRequired() -> Bool {
-        guard
-            let lastBindingCreated = UserDefaults.standard.object(forKey: kCachedBindingDate)
-        else { return true }
-
-        let date = Date()
-        var components = DateComponents()
-        components.setValue(kRegistrationTTLInDays/2, for: .day)
-        let expirationDate = Calendar.current.date(byAdding: components, to: lastBindingCreated as! Date)!
-
-        if expirationDate.compare(date) == ComparisonResult.orderedDescending {
-            return false
-        }
-        return true
-    }
-
-    func credentialsInvalidated() {
-        guard let deviceToken = UserDefaults.standard.data(forKey: kCachedDeviceToken) else { return }
-
-        TwilioVoiceSDK.unregister(accessToken: accessToken, deviceToken: deviceToken) { error in
-            if let error = error {
-                NSLog("An error occurred while unregistering: \(error.localizedDescription)")
-            } else {
-                NSLog("Successfully unregistered from VoIP push notifications.")
-            }
-        }
-
-        UserDefaults.standard.removeObject(forKey: kCachedDeviceToken)
-        UserDefaults.standard.removeObject(forKey: kCachedBindingDate)
-    }
-
-    func incomingPushReceived(payload: PKPushPayload) {
-        TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
     }
 
     func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void) {
@@ -364,8 +302,6 @@ extension ViewController: PushKitEventDelegate {
 extension ViewController: NotificationDelegate {
     func callInviteReceived(callInvite: CallInvite) {
         NSLog("callInviteReceived:")
-
-        UserDefaults.standard.set(Date(), forKey: kCachedBindingDate)
 
         let callerInfo: TVOCallerInfo = callInvite.callerInfo
         if let verified: NSNumber = callerInfo.verified {

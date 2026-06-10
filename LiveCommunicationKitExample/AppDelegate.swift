@@ -11,12 +11,10 @@ import PushKit
 
 protocol PushKitEventDelegate: AnyObject {
     func credentialsUpdated(credentials: PKPushCredentials) -> Void
-    func credentialsInvalidated() -> Void
-    func incomingPushReceived(payload: PKPushPayload) -> Void
     func incomingPushReceived(payload: PKPushPayload, completion: @escaping () -> Void) -> Void
 }
 
-@UIApplicationMain
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate, PKPushRegistryDelegate {
 
     var window: UIWindow?
@@ -26,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKPushRegistryDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         NSLog("Twilio Voice Version: %@", TwilioVoiceSDK.sdkVersion())
 
-        let viewController = UIApplication.shared.windows.first?.rootViewController as? ViewController
+        let viewController = (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.rootViewController as? ViewController
         self.pushKitEventDelegate = viewController
         /*
          * Your app must initialize PKPushRegistry with PushKit push type VoIP at the launch time. As mentioned in the
@@ -58,10 +56,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, PKPushRegistryDelegate {
 
     func pushRegistry(_ registry: PKPushRegistry, didInvalidatePushTokenFor type: PKPushType) {
         NSLog("pushRegistry:didInvalidatePushTokenForType:")
-
-        if let delegate = self.pushKitEventDelegate {
-            delegate.credentialsInvalidated()
-        }
     }
 
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
