@@ -18,6 +18,7 @@
 		A001003000000000000000A1 /* PushKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001003100000000000000A1 /* PushKitManager.swift */; };
 		A001003200000000000000A1 /* LiveCommunicationKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001003300000000000000A1 /* LiveCommunicationKitManager.swift */; };
 		A001003400000000000000A1 /* CallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001003500000000000000A1 /* CallManager.swift */; };
+		A001003600000000000000A1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001003700000000000000A1 /* SceneDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		A001003100000000000000A1 /* PushKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushKitManager.swift; sourceTree = "<group>"; };
 		A001003300000000000000A1 /* LiveCommunicationKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCommunicationKitManager.swift; sourceTree = "<group>"; };
 		A001003500000000000000A1 /* CallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallManager.swift; sourceTree = "<group>"; };
+		A001003700000000000000A1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +64,7 @@
 			isa = PBXGroup;
 			children = (
 				A001000600000000000000A1 /* AppDelegate.swift */,
+				A001003700000000000000A1 /* SceneDelegate.swift */,
 				A001000800000000000000A1 /* ViewController.swift */,
 				A001003500000000000000A1 /* CallManager.swift */,
 				A001003100000000000000A1 /* PushKitManager.swift */,
@@ -180,6 +183,7 @@
 			files = (
 				A001000700000000000000A1 /* ViewController.swift in Sources */,
 				A001000500000000000000A1 /* AppDelegate.swift in Sources */,
+				A001003600000000000000A1 /* SceneDelegate.swift in Sources */,
 				A001003400000000000000A1 /* CallManager.swift in Sources */,
 				A001003000000000000000A1 /* PushKitManager.swift in Sources */,
 				A001003200000000000000A1 /* LiveCommunicationKitManager.swift in Sources */,
