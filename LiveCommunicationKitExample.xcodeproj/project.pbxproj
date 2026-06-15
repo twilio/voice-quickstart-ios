@@ -7,14 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8F7D18322FE0A89C00EFBC88 /* LiveCommunicationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A001000400000000000000A1 /* LiveCommunicationKit.framework */; };
 		A001000100000000000000A1 /* TwilioVoice in Frameworks */ = {isa = PBXBuildFile; productRef = A001000200000000000000A1 /* TwilioVoice */; };
-		A001000300000000000000A1 /* LiveCommunicationKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A001000400000000000000A1 /* LiveCommunicationKit.framework */; };
 		A001000500000000000000A1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001000600000000000000A1 /* AppDelegate.swift */; };
 		A001000700000000000000A1 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001000800000000000000A1 /* ViewController.swift */; };
 		A001000900000000000000A1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A001000A00000000000000A1 /* Assets.xcassets */; };
 		A001000B00000000000000A1 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A001000C00000000000000A1 /* LaunchScreen.storyboard */; };
 		A001000D00000000000000A1 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A001000E00000000000000A1 /* Main.storyboard */; };
 		A001000F00000000000000A1 /* TwilioLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = A001001000000000000000A1 /* TwilioLogo.png */; };
+		A001003000000000000000A1 /* PushKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001003100000000000000A1 /* PushKitManager.swift */; };
+		A001003200000000000000A1 /* LiveCommunicationKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001003300000000000000A1 /* LiveCommunicationKitManager.swift */; };
+		A001003400000000000000A1 /* CallManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A001003500000000000000A1 /* CallManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +31,9 @@
 		A001001300000000000000A1 /* LiveCommunicationKitExample.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LiveCommunicationKitExample.entitlements; sourceTree = "<group>"; };
 		A001001400000000000000A1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A001001500000000000000A1 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		A001003100000000000000A1 /* PushKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushKitManager.swift; sourceTree = "<group>"; };
+		A001003300000000000000A1 /* LiveCommunicationKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveCommunicationKitManager.swift; sourceTree = "<group>"; };
+		A001003500000000000000A1 /* CallManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,7 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A001000300000000000000A1 /* LiveCommunicationKit.framework in Frameworks */,
+				8F7D18322FE0A89C00EFBC88 /* LiveCommunicationKit.framework in Frameworks */,
 				A001000100000000000000A1 /* TwilioVoice in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -57,6 +63,9 @@
 			children = (
 				A001000600000000000000A1 /* AppDelegate.swift */,
 				A001000800000000000000A1 /* ViewController.swift */,
+				A001003500000000000000A1 /* CallManager.swift */,
+				A001003100000000000000A1 /* PushKitManager.swift */,
+				A001003300000000000000A1 /* LiveCommunicationKitManager.swift */,
 				A001000A00000000000000A1 /* Assets.xcassets */,
 				A001001200000000000000A1 /* Info.plist */,
 				A001000C00000000000000A1 /* LaunchScreen.storyboard */,
@@ -118,7 +127,6 @@
 				TargetAttributes = {
 					A001001B00000000000000A1 = {
 						CreatedOnToolsVersion = 15.3;
-						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -172,6 +180,9 @@
 			files = (
 				A001000700000000000000A1 /* ViewController.swift in Sources */,
 				A001000500000000000000A1 /* AppDelegate.swift in Sources */,
+				A001003400000000000000A1 /* CallManager.swift in Sources */,
+				A001003000000000000000A1 /* PushKitManager.swift in Sources */,
+				A001003200000000000000A1 /* LiveCommunicationKitManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
