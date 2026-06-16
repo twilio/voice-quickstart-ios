@@ -140,6 +140,7 @@ final class CallManager: NSObject {
         let call = callInvite.accept(options: acceptOptions, delegate: self)
         activeCall = call
         conversationCompletionCallback = completion
+        activeCallInvite = nil
     }
 
     func performEndCall(uuid: UUID) {
