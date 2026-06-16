@@ -8,7 +8,7 @@
 import UIKit
 import PushKit
 
-/// Owns the PKPushRegistry and forwards VoIP push events to CallManager.
+/// Owns the PKPushRegistry and forwards VoIP push events to LiveCommunicationKitManager.
 final class PushKitManager: NSObject, PKPushRegistryDelegate {
 
     static let shared = PushKitManager()

@@ -345,16 +345,4 @@ extension CallManager: CallDelegate {
 
         publish(state: .idle)
     }
-
-    private func warningString(_ warning: Call.QualityWarning) -> String {
-        switch warning {
-        case .highRtt: return "high-rtt"
-        case .highJitter: return "high-jitter"
-        case .highPacketsLostFraction: return "high-packets-lost-fraction"
-        case .lowMos: return "low-mos"
-        case .constantAudioInputLevel: return "constant-audio-input-level"
-        case .constantAudioOutputLevel: return "constant-audio-output-level"
-        default: return "Unknown warning"
-        }
-    }
 }
