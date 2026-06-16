@@ -56,7 +56,11 @@ final class LiveCommunicationKitManager: NSObject {
 
     // MARK: Incoming conversation
 
-    func reportIncomingConversation(from: String, uuid: UUID) {
+    /// Reports an incoming conversation to the system. The `await` here MUST complete before
+    /// PushKit's `completion()` is invoked — otherwise iOS terminates the app for failing to
+    /// surface the call. The framework method is `async throws`, so callers must `await` this
+    /// from a `Task` that the push handler can wait on before calling completion.
+    func reportIncomingConversation(from: String, uuid: UUID) async {
         let lckHandle = Handle(type: .generic, value: from, displayName: from)
         let update = Conversation.Update(
             localMember: nil,
@@ -64,13 +68,11 @@ final class LiveCommunicationKitManager: NSObject {
             activeRemoteMembers: [lckHandle],
             capabilities: []
         )
-        Task {
-            do {
-                try await manager.reportNewIncomingConversation(uuid: uuid, update: update)
-                NSLog("Incoming conversation successfully reported.")
-            } catch {
-                NSLog("Failed to report incoming conversation: \(error.localizedDescription)")
-            }
+        do {
+            try await manager.reportNewIncomingConversation(uuid: uuid, update: update)
+            NSLog("Incoming conversation successfully reported.")
+        } catch {
+            NSLog("Failed to report incoming conversation: \(error.localizedDescription)")
         }
     }
 

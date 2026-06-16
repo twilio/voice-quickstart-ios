@@ -42,6 +42,10 @@ final class CallManager: NSObject {
     private(set) var activeCall: Call? = nil
     private(set) var activeCallInvite: CallInvite? = nil
 
+    /// Set synchronously inside `callInviteReceived` so the push handler can await the LCK
+    /// report on the very next line after `TwilioVoiceSDK.handleNotification` returns.
+    fileprivate var pendingIncomingReport: (from: String, uuid: UUID)? = nil
+
     private var conversationCompletionCallback: ((Bool) -> Void)? = nil
     var userInitiatedDisconnect: Bool = false
 
@@ -218,8 +222,21 @@ extension CallManager {
         }
     }
 
-    func incomingPushReceived(payload: PKPushPayload) {
+    /// Processes an incoming VoIP push and reports the resulting CallInvite to LiveCommunicationKit.
+    ///
+    /// The PushKit contract requires that the call be surfaced to the system BEFORE the push
+    /// completion fires; otherwise iOS terminates the app. `reportNewIncomingConversation` is
+    /// `async`, so the push handler must `await` this method (and only then invoke its own
+    /// `completion()` callback).
+    func incomingPushReceived(payload: PKPushPayload) async {
+        // Twilio's `handleNotification` is synchronous: by the time it returns, our
+        // `callInviteReceived` delegate method has already fired and stashed the invite (and the
+        // caller string) on `pendingIncomingReport`. We then await the LCK report on that.
         TwilioVoiceSDK.handleNotification(payload.dictionaryPayload, delegate: self, delegateQueue: nil)
+
+        guard let report = pendingIncomingReport else { return }
+        pendingIncomingReport = nil
+        await LiveCommunicationKitManager.shared.reportIncomingConversation(from: report.from, uuid: report.uuid)
     }
 }
 
@@ -239,7 +256,8 @@ extension CallManager: NotificationDelegate {
         }
 
         let from = (callInvite.from ?? "Voice Bot").replacingOccurrences(of: "client:", with: "")
-        LiveCommunicationKitManager.shared.reportIncomingConversation(from: from, uuid: callInvite.uuid)
+        // Hand off to the push handler — it awaits the LCK report before calling PushKit completion.
+        pendingIncomingReport = (from: from, uuid: callInvite.uuid)
     }
 
     func cancelledCallInviteReceived(cancelledCallInvite: CancelledCallInvite, error: Error) {

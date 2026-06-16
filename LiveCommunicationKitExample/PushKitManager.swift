@@ -35,12 +35,11 @@ final class PushKitManager: NSObject, PKPushRegistryDelegate {
         NSLog("pushRegistry:didInvalidatePushTokenForType:")
     }
 
+    // Use the async callback to handle and report the incoming VoIP push to LiveCommunicationKit
     func pushRegistry(_ registry: PKPushRegistry,
                       didReceiveIncomingPushWith payload: PKPushPayload,
-                      for type: PKPushType,
-                      completion: @escaping () -> Void) {
-        NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType:completion:")
-        CallManager.shared.incomingPushReceived(payload: payload)
-        completion()
+                      for type: PKPushType) async {
+        NSLog("pushRegistry:didReceiveIncomingPushWithPayload:forType: async")
+        await CallManager.shared.incomingPushReceived(payload: payload)
     }
 }

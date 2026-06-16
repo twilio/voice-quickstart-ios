@@ -77,8 +77,9 @@ class ViewController: UIViewController {
         }
 
         let recipient = outgoingValue.text ?? ""
-        checkRecordPermission { [weak self] granted in
-            DispatchQueue.main.async {
+        Task { [weak self] in
+            let granted = await self?.checkRecordPermission() ?? false
+            await MainActor.run {
                 if granted {
                     CallManager.shared.startCall(to: recipient)
                 } else {
@@ -96,14 +97,14 @@ class ViewController: UIViewController {
         CallManager.shared.toggleAudioRoute(toSpeaker: sender.isOn)
     }
 
-    private func checkRecordPermission(completion: @escaping (_ permissionGranted: Bool) -> Void) {
+    private func checkRecordPermission() async -> Bool {
         switch AVAudioApplication.shared.recordPermission {
-        case .granted: completion(true)
-        case .denied:  completion(false)
+        case .granted: return true
+        case .denied:  return false
         case .undetermined:
-            AVAudioApplication.requestRecordPermission { granted in completion(granted) }
+            return await AVAudioApplication.requestRecordPermission()
         @unknown default:
-            completion(false)
+            return false
         }
     }
 
