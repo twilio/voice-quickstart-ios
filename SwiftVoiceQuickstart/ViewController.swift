@@ -71,6 +71,9 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        let appDelegate = UIApplication.shared.delegate as? AppDelegate
+        appDelegate?.pushKitEventDelegate = self
+
         toggleUIState(isEnabled: true, showCallControl: false)
         outgoingValue.delegate = self
         

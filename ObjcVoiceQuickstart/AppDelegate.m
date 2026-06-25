@@ -12,7 +12,6 @@
 
 @interface AppDelegate () <PKPushRegistryDelegate>
 
-@property (nonatomic, weak) id<PushKitEventDelegate> pushKitEventDelegate;
 @property (nonatomic, strong) PKPushRegistry *voipRegistry;
 
 @end
@@ -21,9 +20,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"Twilio Voice Version: %@", [TwilioVoiceSDK sdkVersion]);
-    
-    ViewController* viewController = (ViewController*)self.window.rootViewController;
-    self.pushKitEventDelegate = viewController;
+
     /*
      * Your app must initialize PKPushRegistry with PushKit push type VoIP at the launch time. As mentioned in the
      * [PushKit guidelines](https://developer.apple.com/documentation/pushkit/supporting_pushkit_notifications_in_your_app),
@@ -33,7 +30,7 @@
      * terminate your app.
      */
     [self initializePushKit];
-    
+
     return YES;
 }
 

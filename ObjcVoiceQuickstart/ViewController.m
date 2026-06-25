@@ -56,6 +56,9 @@ NSString * const kCachedBindingTime = @"CachedBindingTime";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    appDelegate.pushKitEventDelegate = self;
+
     [self toggleUIState:YES showCallControl:NO];
     self.outgoingValue.delegate = self;
 
