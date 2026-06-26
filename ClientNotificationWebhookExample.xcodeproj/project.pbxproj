@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		208C51B82FEEDC7400CF305A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 208C51B72FEEDC7400CF305A /* SceneDelegate.swift */; };
 		8F56E8D625C8B25E00B5AB19 /* TwilioVoice in Frameworks */ = {isa = PBXBuildFile; productRef = 8F56E8D525C8B25E00B5AB19 /* TwilioVoice */; };
 		8F6BABF92399B2F00030BE4F /* ringtone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8F6BABF82399B2F00030BE4F /* ringtone.wav */; };
 		8FC06CDB2FB6731C00D2D9A9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8FC06CD52FB6731C00D2D9A9 /* LaunchScreen.storyboard */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		208C51B72FEEDC7400CF305A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		24BA34331D874AC800B0B4F7 /* ClientNotificationWebhookExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ClientNotificationWebhookExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F6BABF82399B2F00030BE4F /* ringtone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringtone.wav; sourceTree = "<group>"; };
 		8FC06CD02FB6731C00D2D9A9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -89,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				8FC06CD02FB6731C00D2D9A9 /* AppDelegate.swift */,
+				208C51B72FEEDC7400CF305A /* SceneDelegate.swift */,
 				8FC06CD92FB6731C00D2D9A9 /* ViewController.swift */,
 				8FC06CE32FB6731C00D2D9A9 /* WebSocketClient.swift */,
 				8FC06CD32FB6731C00D2D9A9 /* Info.plist */,
@@ -192,6 +195,7 @@
 				8FC06CE02FB6731C00D2D9A9 /* AppDelegate.swift in Sources */,
 				8FC06CE12FB6731C00D2D9A9 /* ViewController.swift in Sources */,
 				8FC06CE22FB6731C00D2D9A9 /* WebSocketClient.swift in Sources */,
+				208C51B82FEEDC7400CF305A /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,7 +386,7 @@
 			repositoryURL = "https://github.com/twilio/twilio-voice-ios";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 6.13.5;
+				minimumVersion = 6.13.6;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

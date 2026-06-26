@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		208C51B12FEEC32100CF305A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 208C51B02FEEC32100CF305A /* SceneDelegate.swift */; };
 		8F56E8D625C8B25E00B5AB19 /* TwilioVoice in Frameworks */ = {isa = PBXBuildFile; productRef = 8F56E8D525C8B25E00B5AB19 /* TwilioVoice */; };
 		8F6BABF92399B2F00030BE4F /* ringtone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 8F6BABF82399B2F00030BE4F /* ringtone.wav */; };
 		8FC3F9F12F0F066A0052F861 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC3F9EF2F0F066A0052F861 /* ViewController.swift */; };
@@ -20,6 +21,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		208C51B02FEEC32100CF305A /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		24BA34331D874AC800B0B4F7 /* SpeechTranscriberExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpeechTranscriberExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F6BABF82399B2F00030BE4F /* ringtone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ringtone.wav; sourceTree = "<group>"; };
 		8FC3F9E62F0F066A0052F861 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				8FC3F9E62F0F066A0052F861 /* AppDelegate.swift */,
+				208C51B02FEEC32100CF305A /* SceneDelegate.swift */,
 				8FC3F9EF2F0F066A0052F861 /* ViewController.swift */,
 				8FFAFC432F10376F0046E201 /* ViewController+SpeechTranscriber.swift */,
 				8FC3F9E72F0F066A0052F861 /* Assets.xcassets */,
@@ -205,6 +208,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				208C51B12FEEC32100CF305A /* SceneDelegate.swift in Sources */,
 				8FC3F9F12F0F066A0052F861 /* ViewController.swift in Sources */,
 				8FC3F9F22F0F066A0052F861 /* AppDelegate.swift in Sources */,
 				8FFAFC442F10376F0046E201 /* ViewController+SpeechTranscriber.swift in Sources */,
@@ -395,7 +399,7 @@
 			repositoryURL = "https://github.com/twilio/twilio-voice-ios";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 6.13.5;
+				minimumVersion = 6.13.6;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
