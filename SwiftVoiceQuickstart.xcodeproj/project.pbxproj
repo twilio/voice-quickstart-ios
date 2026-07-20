@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		20866FC42FEE05BE00F781A1 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20866FC32FEE05BE00F781A1 /* SceneDelegate.swift */; };
 		24BA34371D874AC800B0B4F7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24BA34361D874AC800B0B4F7 /* AppDelegate.swift */; };
 		24BA34391D874AC800B0B4F7 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24BA34381D874AC800B0B4F7 /* ViewController.swift */; };
 		24BA343C1D874AC800B0B4F7 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 24BA343A1D874AC800B0B4F7 /* Main.storyboard */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		20866FC32FEE05BE00F781A1 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		24BA34331D874AC800B0B4F7 /* SwiftVoiceQuickstart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftVoiceQuickstart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24BA34361D874AC800B0B4F7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		24BA34381D874AC800B0B4F7 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 			children = (
 				8FAD20B72332DC3900E5B42F /* SwiftVoiceQuickstart.entitlements */,
 				24BA34361D874AC800B0B4F7 /* AppDelegate.swift */,
+				20866FC32FEE05BE00F781A1 /* SceneDelegate.swift */,
 				24BA34381D874AC800B0B4F7 /* ViewController.swift */,
 				24BA343A1D874AC800B0B4F7 /* Main.storyboard */,
 				24BA343D1D874AC800B0B4F7 /* Assets.xcassets */,
@@ -189,6 +192,7 @@
 			files = (
 				24BA34391D874AC800B0B4F7 /* ViewController.swift in Sources */,
 				24BA34371D874AC800B0B4F7 /* AppDelegate.swift in Sources */,
+				20866FC42FEE05BE00F781A1 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -371,7 +375,7 @@
 			repositoryURL = "https://github.com/twilio/twilio-voice-ios";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 6.13.5;
+				minimumVersion = 6.13.6;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
