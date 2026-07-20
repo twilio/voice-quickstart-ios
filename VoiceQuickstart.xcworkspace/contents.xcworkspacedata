@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:ObjcVoiceQuickstart.xcodeproj">
+      location = "group:ObjCVoiceQuickstart.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:SwiftVoiceQuickstart.xcodeproj">

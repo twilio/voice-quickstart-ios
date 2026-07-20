@@ -1,6 +1,6 @@
 //
 //  SceneDelegate.h
-//  ObjcVoiceQuickstart
+//  ObjCVoiceQuickstart
 //
 //  Created by Andrejs Semivragovs on 15/06/2026.
 //  Copyright © 2026 Twilio, Inc. All rights reserved.

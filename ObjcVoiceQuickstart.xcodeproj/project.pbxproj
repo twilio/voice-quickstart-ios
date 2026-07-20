@@ -20,7 +20,7 @@
 
 /* Begin PBXFileReference section */
 		208C51AB2FEEBDDE00CF305A /* SceneDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SceneDelegate.h; sourceTree = "<group>"; };
-		208C51AC2FEEBE0900CF305A /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SceneDelegate.m; path = ObjcVoiceQuickstart/SceneDelegate.m; sourceTree = SOURCE_ROOT; };
+		208C51AC2FEEBE0900CF305A /* SceneDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SceneDelegate.m; path = ObjCVoiceQuickstart/SceneDelegate.m; sourceTree = SOURCE_ROOT; };
 		2459FDC61D83664300917CA9 /* ObjCVoiceQuickstart.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ObjCVoiceQuickstart.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2459FDCA1D83664300917CA9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2459FDCC1D83664300917CA9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -155,7 +155,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 2459FDC11D83664300917CA9 /* Build configuration list for PBXProject "ObjcVoiceQuickstart" */;
+			buildConfigurationList = 2459FDC11D83664300917CA9 /* Build configuration list for PBXProject "ObjCVoiceQuickstart" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -348,7 +348,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2459FDC11D83664300917CA9 /* Build configuration list for PBXProject "ObjcVoiceQuickstart" */ = {
+		2459FDC11D83664300917CA9 /* Build configuration list for PBXProject "ObjCVoiceQuickstart" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2459FDDB1D83664300917CA9 /* Debug */,
