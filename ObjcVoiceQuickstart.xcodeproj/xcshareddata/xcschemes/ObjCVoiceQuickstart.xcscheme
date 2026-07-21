@@ -17,7 +17,7 @@
                BlueprintIdentifier = "2459FDC51D83664300917CA9"
                BuildableName = "ObjCVoiceQuickstart.app"
                BlueprintName = "ObjCVoiceQuickstart"
-               ReferencedContainer = "container:ObjcVoiceQuickstart.xcodeproj">
+               ReferencedContainer = "container:ObjCVoiceQuickstart.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,7 +47,7 @@
             BlueprintIdentifier = "2459FDC51D83664300917CA9"
             BuildableName = "ObjCVoiceQuickstart.app"
             BlueprintName = "ObjCVoiceQuickstart"
-            ReferencedContainer = "container:ObjcVoiceQuickstart.xcodeproj">
+            ReferencedContainer = "container:ObjCVoiceQuickstart.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -64,7 +64,7 @@
             BlueprintIdentifier = "2459FDC51D83664300917CA9"
             BuildableName = "ObjCVoiceQuickstart.app"
             BlueprintName = "ObjCVoiceQuickstart"
-            ReferencedContainer = "container:ObjcVoiceQuickstart.xcodeproj">
+            ReferencedContainer = "container:ObjCVoiceQuickstart.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
